@@ -36,6 +36,6 @@ public class ObsidianSet extends EquipmentSet
 	@Override
 	public double getMultiplier()
 	{
-		return 1.1;
+		return 0.1;
 	}
 }

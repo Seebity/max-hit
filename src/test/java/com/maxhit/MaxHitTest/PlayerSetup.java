@@ -50,6 +50,16 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
 		129.0f, 3.0, 32.0),
+	MAX_OBSIDIAN(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.OBSIDIAN_HELMET, 1),
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TZHAAR_SPLITSWORD, 1),
+			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.OBSIDIAN_PLATEBODY, 1),
+			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.OBSIDIAN_PLATELEGS, 1),
+			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		97.0f, 3.0, 36.0),
 	MAX_DHAROK(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_HEAD, 1),
@@ -104,6 +114,13 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
 		0.27f, 6.0, 40.0
+	),
+	EYE_OF_AYAK(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EYE_OF_AYAK, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		0.27f, 1.0, 34.0
 	),
 	SHADOW(
 		createEquipment(Map.of(
