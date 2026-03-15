@@ -206,7 +206,7 @@ public enum MagicSpell
     SARADOMIN_STRIKE(52, "Saradomin Strike", 60, 20, Spellbook.STANDARD, "GOD"),
     CRUMBLE_UNDEAD(17, "Crumble Undead", 39, 15, Spellbook.STANDARD, ""),
     IBAN_BLAST(47, "Iban Blast", 50, 25, Spellbook.STANDARD, ""),
-    MAGIC_DART(18, "Magic Dart", 50, 10, Spellbook.STANDARD, ""),
+    MAGIC_DART(18, "Magic Dart", 50, 15, Spellbook.STANDARD, ""),
 
     // arceuus
     INFERIOR_DEMONBANE(53, "Inferior Demonbane", 44, 16, Spellbook.ARCEUUS, ""),

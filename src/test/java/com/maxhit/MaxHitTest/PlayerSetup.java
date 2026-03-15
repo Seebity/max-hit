@@ -1,5 +1,6 @@
 package com.maxhit.MaxHitTest;
 
+import com.maxhit.MagicSpell;
 import com.maxhit.calculators.MagicMaxHitCalculator;
 import com.maxhit.calculators.MeleeMaxHitCalculator;
 import com.maxhit.calculators.RangedMaxHitCalculator;
@@ -18,7 +19,7 @@ public enum PlayerSetup
 {
 	BASE(
 		createEquipment(Map.of()),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		0.0f, 1.0, 11.0),
 	MELEE_VOID(
 		createEquipment(Map.of(
@@ -27,7 +28,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.PEST_VOID_KNIGHT_ROBES, 1),
 			EquipmentInventorySlot.GLOVES.getSlotIdx(), new Item(ItemID.PEST_VOID_KNIGHT_GLOVES, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		0.0f, 1.0, 12.0),
 	INQUISITORS(
 		createEquipment(Map.of(
@@ -36,19 +37,19 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.INQUISITORS_BODY, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.INQUISITORS_SKIRT, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		159.0f, 3.0, 39.0),
 	FANG(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OSMUMTENS_FANG, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		181.0f, 3.0, 35.0),
 	DINHS(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DINHS_BULWARK_ORNAMENT, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		129.0f, 3.0, 32.0),
 	MAX_OBSIDIAN(
 		createEquipment(Map.of(
@@ -58,7 +59,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.OBSIDIAN_PLATELEGS, 1),
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, null, MeleeMaxHitCalculator.class,
 		97.0f, 3.0, 36.0),
 	MAX_DHAROK(
 		createEquipment(Map.of(
@@ -67,7 +68,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_BODY, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_LEGS, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
+		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		157.0f, 3.0, 72.0),
 	BOWFA_AND_CRYSTAL(
 		createEquipment(Map.of(
@@ -76,13 +77,13 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.CRYSTAL_CHESTPLATE, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS, 1)
 		)),
-		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
+		CombatStyle.RANGED, AttackStyle.ACCURATE, null, RangedMaxHitCalculator.class,
 		121.0f, 3.0, 36.0),
 	MAX_RANGE_BALLISTA(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.HEAVY_BALLISTA, 1)
 		)),
-		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
+		CombatStyle.RANGED, AttackStyle.ACCURATE, null, RangedMaxHitCalculator.class,
 		189.0f, 5.0, 43.0),
 	VIRTUS_MAGE(
 	createEquipment(Map.of(
@@ -91,42 +92,49 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.VIRTUS_TOP, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.VIRTUS_LEGS, 1)
 		)),
-	CombatStyle.MAGE, AttackStyle.CASTING, MagicMaxHitCalculator.class,
+	CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.ICE_BARRAGE,MagicMaxHitCalculator.class,
 	0.33f, 39.0, 39.0
+	),
+	MAX_MAGIC_DART(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SLAYER_STAFF, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.MAGIC_DART,MagicMaxHitCalculator.class,
+		0.27f, 12.0, 24.0
 	),
 	WARPED_SCEPTRE(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.WARPED_SCEPTRE, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.ACCURATE, null, MagicMaxHitCalculator.class,
 		0.27f, 2.0, 30.0
 	),
 	BONE_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.RAT_BONE_STAFF, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.ACCURATE, null, MagicMaxHitCalculator.class,
 		0.27f, 6.0, 48.0
 	),
 	SANGUINE_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SANGUINESTI_STAFF_OR, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.ACCURATE, null, MagicMaxHitCalculator.class,
 		0.27f, 6.0, 40.0
 	),
 	EYE_OF_AYAK(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EYE_OF_AYAK, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.ACCURATE, null, MagicMaxHitCalculator.class,
 		0.27f, 1.0, 34.0
 	),
 	SHADOW(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TUMEKENS_SHADOW, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.ACCURATE, null, MagicMaxHitCalculator.class,
 		0.81f, 2.0, 68.0
 	);
 
@@ -144,6 +152,7 @@ public enum PlayerSetup
 	private final Item[] equippedItems;
 	private final CombatStyle combatStyle;
 	private final AttackStyle attackStyle;
+	private final MagicSpell magicSpell;
 	private final Class maxHitCalculatorClass;
 	private final float strengthBonus;
 	private final double standardMaxHit;

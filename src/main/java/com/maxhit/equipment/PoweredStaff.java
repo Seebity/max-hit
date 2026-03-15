@@ -34,7 +34,7 @@ public enum PoweredStaff
 	SANGUINESTI_STAFF_OR(ItemID.SANGUINESTI_STAFF_OR,
 		(skillLevel) -> Math.max(5.0, Math.floor((skillLevel / 3.0) - 1.0))),
 	EYE_OF_AYAK(ItemID.EYE_OF_AYAK,
-		(skillLevel) -> Math.floor((skillLevel / 3.0)) - 6.0),
+		(skillLevel) -> Math.max(1.0, Math.floor((skillLevel / 3.0)) - 6.0)),
 	TUMEKENS_SHADOW(ItemID.TUMEKENS_SHADOW,
 		(skillLevel) -> Math.max(1.0, Math.floor((skillLevel / 3.0) + 1.0))),
 	CRYSTAL_STAFF_BASIC(ItemID.GAUNTLET_MAGIC_T1,

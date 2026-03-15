@@ -1,12 +1,15 @@
 package com.maxhit.MaxHitTest;
 
+import com.maxhit.MagicSpell;
 import com.maxhit.MockedTest;
 import com.maxhit.calculators.MaxHitCalculator;
 import com.maxhit.calculators.MaxHitCalculatorFactory;
 import com.maxhit.calculators.StrengthBonusCalculator;
+import com.maxhit.styles.AttackStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +50,10 @@ public class PlayerSetupsTest extends MockedTest
 			try(MockedStatic<StrengthBonusCalculator> strengthBonusCalculatorMockedStatic = mockStatic(StrengthBonusCalculator.class))
 			{
 				final Skill skill = maxHitCalculator.getSkill();
+				if (setup.getAttackStyle() == AttackStyle.CASTING)
+				{
+					when(client.getVarbitValue(VarbitID.AUTOCAST_SPELL)).thenReturn(setup.getMagicSpell().getVarbValue());
+				}
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getDinhsBonus(setup.getAttackStyle(), mockedItemContainer, itemManager)).thenCallRealMethod();
 				strengthBonusCalculatorMockedStatic.when(() ->StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
 				assertEquals(setup.getMaxHitCalculatorClass(), maxHitCalculator.getClass());

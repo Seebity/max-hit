@@ -74,6 +74,6 @@ public abstract class MockedTest extends MockedTestBase
 		when(client.getTopLevelWorldView()).thenReturn(mockedWorldView);
 		when(client.getWorldView(anyInt())).thenReturn(mockedWorldView);
 		when(client.getRealSkillLevel(Skill.HITPOINTS)).thenReturn(99);
-		when(client.getVarbitValue(VarbitID.AUTOCAST_SPELL)).thenReturn(MagicSpell.ICE_BARRAGE.getVarbValue());
+
 	}
 }

@@ -118,6 +118,12 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		return false;
 	}
 
+	private void getMagicDartBaseMaxDamage()
+	{
+		int magicLevel = client.getBoostedSkillLevel(Skill.MAGIC);
+		baseSpellDamage = Math.floor(magicLevel * 0.1) + 10;
+	}
+
 	private void getSpellBaseMaxDamage()
 	{
 
@@ -132,10 +138,10 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 					return;
 				}
 			}
-
 		}
 
 		int activeSpellVarbit = client.getVarbitValue(VarbitID.AUTOCAST_SPELL);
+
 		// Spellbook Spells
 		for (MagicSpell spell : MagicSpell.values())
 		{
@@ -144,7 +150,15 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 				continue;
 			}
 			activeSpell = spell;
+
+			// Magic Dart
+			if (activeSpell == MagicSpell.MAGIC_DART)
+			{
+				getMagicDartBaseMaxDamage();
+				return;
+			}
 			baseSpellDamage = activeSpell.getBaseMaxHit(client);
+			return;
 		}
 	}
 
