@@ -2,6 +2,8 @@
 
 Utility for calculating the user's max hit base on current equipment, levels, and prayer
 
+NOTE: Unfortunately due to my work schedule and wanting to particpate in Leagues 6 myself, support for relics and pacts will not be added. I will do my best to fix bugs/crashes if they pop up.
+
 [![Active Installs](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/maxhitplugin)](https://runelite.net/plugin-hub/show/maxhitplugin)
 [![Plugin Rank](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/maxhitplugin)](https://runelite.net/plugin-hub/show/maxhitplugin)
 
@@ -28,4 +30,6 @@ Flat Armor effect<br>
 
 If you've experienced an issue with this plugin, or have a recommendation on how to improve it, please [create an issue](https://github.com/Matt12yearslater/max-hit/issues) with the relevant details.
 
-Also, feel free to contact or add me on Discord, `@seebity`
+Also, feel free to contact or add me on Discord<br>
+<br>
+[![Discord Presence](https://lanyard.cnrad.dev/api/192119897185189891)](https://discord.com/users/192119897185189891)
