@@ -4,9 +4,13 @@ import com.maxhit.MagicSpell;
 import com.maxhit.MockedTest;
 import com.maxhit.calculators.MaxHitCalculator;
 import com.maxhit.calculators.MaxHitCalculatorFactory;
+import com.maxhit.calculators.SpecialAttackCalculator;
 import com.maxhit.calculators.StrengthBonusCalculator;
+import com.maxhit.equipment.SpecialAttackWeapon;
 import com.maxhit.styles.AttackStyle;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.VarbitID;
@@ -47,6 +51,7 @@ public class PlayerSetupsTest extends MockedTest
 				return setup.getEquippedItems()[slotIndex];  // Return the item from the corresponding array index
 			});
 			maxHitCalculator = maxHitCalculatorFactory.create(setup.getCombatStyle(), setup.getAttackStyle());
+
 			try(MockedStatic<StrengthBonusCalculator> strengthBonusCalculatorMockedStatic = mockStatic(StrengthBonusCalculator.class))
 			{
 				final Skill skill = maxHitCalculator.getSkill();
@@ -55,7 +60,7 @@ public class PlayerSetupsTest extends MockedTest
 					when(client.getVarbitValue(VarbitID.AUTOCAST_SPELL)).thenReturn(setup.getMagicSpell().getVarbValue());
 				}
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getDinhsBonus(setup.getAttackStyle(), mockedItemContainer, itemManager)).thenCallRealMethod();
-				strengthBonusCalculatorMockedStatic.when(() ->StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
+				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
 				assertEquals(setup.getMaxHitCalculatorClass(), maxHitCalculator.getClass());
 				maxHitCalculator.calculateMaxHit();
 				if (standard)
@@ -65,8 +70,26 @@ public class PlayerSetupsTest extends MockedTest
 				{
 					assertEquals(setup.getMaxedMaxHit(), maxHitCalculator.getMaxHit(),
 						() -> String.format("%s maxed max hit should be %.0f", setup.name(), setup.getMaxedMaxHit()));
+
+					Item weapon = setup.getEquippedItems()[EquipmentInventorySlot.WEAPON.getSlotIdx()];
+
+					// Check for special max hit
+					if (weapon == null)
+						continue;
+
+					SpecialAttackCalculator calc = new SpecialAttackCalculator(client);
+					calc.setEquippedItems(mockedItemContainer);
+					for (SpecialAttackWeapon specialAttackWeapon : SpecialAttackWeapon.values())
+					{
+						if (specialAttackWeapon.getItemId() == weapon.getId())
+						{
+							assertEquals(setup.getMaxedSpecialHit(), calc.getSpecialMaxHit(maxHitCalculator.getMaxHit()),
+								() -> String.format("%s special max hit should be %.0f", setup.name(), setup.getMaxedMaxHit()));
+						}
+					}
 				}
 			}
+
 
 		}
 	}

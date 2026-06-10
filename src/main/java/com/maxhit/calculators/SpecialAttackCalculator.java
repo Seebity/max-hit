@@ -28,7 +28,7 @@ public class SpecialAttackCalculator
 		{
 			return maxHitBase;
 		}
-		String weaponName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.WEAPON);
+
 		for (SpecialAttackWeapon specialAttackWeapon : SpecialAttackWeapon.values())
 		{
 			if (specialAttackWeapon.getItemId() == weapon.getId())
@@ -36,6 +36,8 @@ public class SpecialAttackCalculator
 				return specialAttackWeapon.getSpecialAttackDamage(client, maxHitBase);
 			}
 		}
+
+		String weaponName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.WEAPON);
 
 		if (weaponName.contains("rossbo"))
 		{
