@@ -2,8 +2,6 @@
 
 Utility for calculating the user's max hit base on current equipment, levels, and prayer
 
-NOTE: Unfortunately due to my work schedule and wanting to particpate in Leagues 6 myself, support for relics and pacts will not be added. I will do my best to fix bugs/crashes if they pop up.
-
 [![Active Installs](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/maxhitplugin)](https://runelite.net/plugin-hub/show/maxhitplugin)
 [![Plugin Rank](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/maxhitplugin)](https://runelite.net/plugin-hub/show/maxhitplugin)
 
