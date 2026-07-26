@@ -43,6 +43,30 @@ public enum SpecialAttackWeapon
 				return 2.0 * Math.floor(maxHitBase * 1.15);
 			}
 		},
+	DRAGON_DAGGER_P(ItemID.DRAGON_DAGGER_P, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			{
+				return 2.0 * Math.floor(maxHitBase * 1.15);
+			}
+		},
+	DRAGON_DAGGER_P_PLUS(ItemID.DRAGON_DAGGER_P_, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			{
+				return 2.0 * Math.floor(maxHitBase * 1.15);
+			}
+		},
+	DRAGON_DAGGER_P_PLUS_PLUS(ItemID.DRAGON_DAGGER_P__, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			{
+				return 2.0 * Math.floor(maxHitBase * 1.15);
+			}
+		},
 	DRAGON_HALBERD(ItemID.DRAGON_HALBERD, 1.1),
 	DRAGON_HASTA(ItemID.BRUT_DRAGON_SPEAR, -1.0)
 		{
