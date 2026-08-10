@@ -127,7 +127,7 @@ public class StyleFactory {
 			return CombatStyle.MELEE;
 		if (attackStyle.getName().contains("ang")) return CombatStyle.RANGED;
 		if (attackStyle.getName().contains("Casting")) return CombatStyle.MAGE;
-		log.debug("Null combat stlye: {}", attackStyle.getName());
+		log.debug("Null combat style: {}", attackStyle.getName());
 		return null;
 	}
 }
