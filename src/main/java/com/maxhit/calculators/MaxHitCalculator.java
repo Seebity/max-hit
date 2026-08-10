@@ -20,7 +20,7 @@ public abstract class MaxHitCalculator
     protected final ItemManager itemManager;
 	protected ItemContainer equippedItems;
 	@Getter
-    protected final Skill skill;
+    protected Skill skill;
 	@Setter
 	protected AttackStyle attackStyle;
 	protected BonusCalculator bonusCalculator;

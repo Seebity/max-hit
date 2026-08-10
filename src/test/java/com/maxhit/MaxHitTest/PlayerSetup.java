@@ -70,6 +70,12 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		157.0f, 3.0, 72.0, 0.0),
+	ATLATL(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.ECLIPSE_ATLATL, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE, null, RangedMaxHitCalculator.class,
+		99.0f, 3.0, 28.0, 0.0),
 	BOWFA_AND_CRYSTAL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET, 1),

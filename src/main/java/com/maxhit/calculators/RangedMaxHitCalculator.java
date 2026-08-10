@@ -26,6 +26,12 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	protected RangedMaxHitCalculator(Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
 		super(client, itemManager, Skill.RANGED, attackStyle);
+
+		if (this.equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx()).equals(ItemID.ECLIPSE_ATLATL))
+		{
+			this.skill = Skill.STRENGTH;
+		}
+
 		reset();
 	}
 
