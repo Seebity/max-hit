@@ -119,7 +119,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	protected void calculateNextMaxHitRequirements()
 	{
 		final double nextMaxHit = maxHit + 1.0;
-		double nextBaseDamage = nextMaxHit / specialBonus;
+		double nextBaseDamage = Math.ceil(nextMaxHit / specialBonus);
 
 		// Calculate needed strength bonus
 		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;

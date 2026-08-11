@@ -2,6 +2,7 @@ package com.maxhit.MaxHitTest;
 
 import com.maxhit.MagicSpell;
 import com.maxhit.MockedTest;
+import com.maxhit.NextMaxHitReqs;
 import com.maxhit.calculators.MaxHitCalculator;
 import com.maxhit.calculators.MaxHitCalculatorFactory;
 import com.maxhit.calculators.SpecialAttackCalculator;
@@ -15,6 +16,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,6 +89,18 @@ public class PlayerSetupsTest extends MockedTest
 								() -> String.format("%s special max hit should be %.0f", setup.name(), setup.getMaxedMaxHit()));
 						}
 					}
+
+					NextMaxHitReqs reqs = maxHitCalculator.getNextMaxHitReqs();
+					if (reqs == null)
+					{
+						continue;
+					}
+					assertTrue(reqs.getNextRequiredLevel() > 0,
+								() -> String.format("%s - Next required levels should be positive for ", setup.name()));
+					assertTrue(reqs.getNextRequiredStrength() > 0,
+								() -> String.format("%s - Next required strength bonus should be positive for ", setup.name()));
+					assertTrue(reqs.getNextRequiredPrayer() > 0,
+								() -> String.format("%s - Next required prayer bonus should be positive for ", setup.name()));
 				}
 			}
 

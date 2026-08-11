@@ -125,7 +125,17 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	protected void calculateNextMaxHitRequirements()
 	{
 		final double nextMaxHit = maxHit + 1.0;
-		double nextBaseDamage = nextMaxHit / specialBonus;
+		double nextBaseDamage = Math.ceil(nextMaxHit / specialBonus);
+
+		// The Fang calculation is a bit different. Confirmed in-game
+		for(int itemId : FANGS)
+		{
+			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
+			{
+				nextBaseDamage = Math.ceil(nextBaseDamage / 0.85);
+				break;
+			}
+		}
 
 		// Calculate needed strength bonus
 		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;
