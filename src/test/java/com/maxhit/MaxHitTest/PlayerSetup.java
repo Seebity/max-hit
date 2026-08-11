@@ -37,8 +37,8 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.INQUISITORS_BODY, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.INQUISITORS_SKIRT, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
-		159.0f, 3.0, 39.0, 0.0),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, null, MeleeMaxHitCalculator.class,
+		160.0f, 4.0, 39.0, 0.0),
 	FANG(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OSMUMTENS_FANG, 1)
