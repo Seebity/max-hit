@@ -80,25 +80,31 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			return;
 		}
 
-		if (!ItemVariationMapping.getVariations(ItemID.BOW_OF_FAERDHINEN).contains(weaponItem.getId()))
+		if (!ItemVariationMapping.getVariations(ItemID.BOW_OF_FAERDHINEN_INACTIVE).contains(weaponItem.getId()))
 		{
 			return;
 		}
 
 		Item headSlotItem = equippedItems.getItem(EquipmentInventorySlot.HEAD.getSlotIdx());
-		if (headSlotItem != null && ItemVariationMapping.getVariations(ItemID.CRYSTAL_HELMET).contains(headSlotItem.getId()))
+		if (headSlotItem != null &&
+			ItemVariationMapping.getVariations(
+				ItemVariationMapping.map(ItemID.CRYSTAL_HELMET)).contains(headSlotItem.getId()))
 		{
 			specialBonus += 0.025;
 		}
 
 		Item bodySlotItem = equippedItems.getItem(EquipmentInventorySlot.BODY.getSlotIdx());
-		if (bodySlotItem != null && ItemVariationMapping.getVariations(ItemID.CRYSTAL_CHESTPLATE).contains(bodySlotItem.getId()))
+		if (bodySlotItem != null &&
+			ItemVariationMapping.getVariations(
+				ItemVariationMapping.map(ItemID.CRYSTAL_CHESTPLATE)).contains(bodySlotItem.getId()))
 		{
 			specialBonus += 0.075;
 		}
 
 		Item legsSlotItem = equippedItems.getItem(EquipmentInventorySlot.LEGS.getSlotIdx());
-		if (bodySlotItem != null && ItemVariationMapping.getVariations(ItemID.CRYSTAL_PLATELEGS).contains(legsSlotItem.getId()))
+		if (legsSlotItem != null &&
+			ItemVariationMapping.getVariations(
+				ItemVariationMapping.map(ItemID.CRYSTAL_PLATELEGS)).contains(legsSlotItem.getId()))
 		{
 			specialBonus += 0.05;
 		}

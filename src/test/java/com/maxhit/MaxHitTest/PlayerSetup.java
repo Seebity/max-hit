@@ -85,6 +85,15 @@ public enum PlayerSetup
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, null, RangedMaxHitCalculator.class,
 		121.0f, 3.0, 36.0, 0.0),
+	BOWFA_AND_CRYSTAL_COLORED(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET_AMLODD, 1),
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.BOW_OF_FAERDHINEN_INFINITE_AMLODD, 1),
+			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.CRYSTAL_CHESTPLATE_AMLODD, 1),
+			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS_AMLODD, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE, null, RangedMaxHitCalculator.class,
+		121.0f, 3.0, 36.0, 0.0),
 	MAX_RANGE_BALLISTA(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.HEAVY_BALLISTA, 1)
