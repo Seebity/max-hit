@@ -36,8 +36,11 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		MagicSpell.WATER_BOLT.getVarbValue(),
 		MagicSpell.EARTH_BOLT.getVarbValue(),
 		MagicSpell.FIRE_BOLT.getVarbValue());
-	private static final Set<Integer> SMOKE_BATTLESTAVES = new ImmutableSet.Builder<Integer>()
-		.addAll(ItemVariationMapping.getVariations(ItemID.SMOKE_BATTLESTAFF)).build();
+	
+	private static final Set<Integer> SMOKE_BATTLESTAVES = ImmutableSet.of(
+		ItemID.SMOKE_BATTLESTAFF,
+		ItemID.MYSTIC_SMOKE_BATTLESTAFF
+	);
 
 	private static final Set<Integer> TUMEKEN_SHADOWS = ImmutableSet.of(
 		ItemID.TUMEKENS_SHADOW,
