@@ -36,6 +36,7 @@ public class UndeadMonsters {
 		12739, //Armoured zombie (Defender of Varrock)
 		12761, //Armoured zombie (Defender of Varrock)
 		12763, //Armoured zombie (Defender of Varrock)
+		12764, //Armoured zombie (Defender of Varrock)
 		14135, //Armoured zombie (The Curse of Arrav)
 		14136, //Armoured zombie (The Curse of Arrav)
 		12720, //Armoured zombie (Zemouregal's Base)
@@ -58,6 +59,7 @@ public class UndeadMonsters {
 		14120, //Armoured zombie (Zemouregal's Fort)
 		14121, //Armoured zombie (Zemouregal's Fort)
 		14122, //Armoured zombie (Zemouregal's Fort)
+		14132, //Arrav
 		1284, //Asyn Shade
 		1283, //Asyn Shade
 		5632, //Asyn shadow (Temple Trekking)
@@ -104,11 +106,8 @@ public class UndeadMonsters {
 		91, //Ghost
 		92, //Ghost
 		93, //Ghost
-		94, //Ghost
 		95, //Ghost
-		96, //Ghost
 		97, //Ghost
-		98, //Ghost
 		99, //Ghost
 		472, //Ghost
 		473, //Ghost
@@ -140,6 +139,9 @@ public class UndeadMonsters {
 		5282, //Monkey Zombie
 		5283, //Monkey Zombie
 		5281, //Monkey Zombie
+		5355, //Nazastarool
+		5354, //Nazastarool
+		5353, //Nazastarool
 		10812, //Pestilent Bloat
 		10813, //Pestilent Bloat
 		8359, //Pestilent Bloat
@@ -255,6 +257,8 @@ public class UndeadMonsters {
 		878, //Skogre
 		879, //Skogre
 		882, //Slash Bash
+		562, //Sorebones
+		561, //Sorebones
 		69, //Summoned Zombie
 		6476, //Tarn
 		3922, //The Draugen
