@@ -1,6 +1,8 @@
 package com.maxhit.calculators;
 
 import com.maxhit.NextMaxHitReqs;
+import com.maxhit.monsters.MonsterFlatArmour;
+import com.maxhit.monsters.MonsterWeaknesses;
 import com.maxhit.sets.EquipmentSet;
 import com.maxhit.styles.AttackStyle;
 import javax.annotation.Nullable;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.game.ItemManager;
@@ -30,6 +33,7 @@ public abstract class MaxHitCalculator
     protected double styleBonus;
 	protected double salveBonus;
     protected double voidBonus;
+	protected double flatArmour;
 
 	@Nullable
     public Actor opponent;
@@ -51,6 +55,7 @@ public abstract class MaxHitCalculator
         maxHit = 0.0;
         voidBonus = 1.0;
 		salveBonus = 0.0;
+		flatArmour = 0.0;
     }
 
 	public void setEquippedItems(ItemContainer equippedItems)
@@ -64,6 +69,7 @@ public abstract class MaxHitCalculator
 		styleBonus = 0.0;
 		voidBonus = 1.0;
 		prayerBonus = 1.0;
+		flatArmour = 0.0;
 	}
 
 	protected abstract void getStyleBonus();
@@ -92,6 +98,31 @@ public abstract class MaxHitCalculator
     protected void getStrengthBonus()
 	{
 		strengthBonus = StrengthBonusCalculator.getStrengthBonus(equippedItems, itemManager, skill);
+	}
+
+	protected void getFlatArmour()
+	{
+		flatArmour = 0.0;
+		for (MonsterFlatArmour monster : MonsterFlatArmour.values())
+		{
+			if (opponent == null)
+			{
+				continue;
+			}
+			NPC npc = (NPC) opponent;
+			String npcName = npc.getName();
+			if (npcName == null)
+			{
+				continue;
+			}
+			if (monster.getId() != npc.getId())
+			{
+				continue;
+			}
+
+			flatArmour = monster.getFlatArmour();
+			return;
+		}
 	}
 
     public abstract void calculateMaxHit();

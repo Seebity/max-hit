@@ -118,6 +118,11 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				break;
 			}
 		}
+
+		getFlatArmour();
+
+		maxHit -= flatArmour;
+
 		calculateNextMaxHitRequirements();
 	}
 

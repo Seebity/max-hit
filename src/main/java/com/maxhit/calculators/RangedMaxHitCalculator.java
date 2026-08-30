@@ -116,8 +116,14 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		reset();
 		getBaseHit();
 		getSpecialBonus();
+
 		//TODO add support for special attack
+
 		maxHit = Math.floor(baseDamage * specialBonus);
+
+		getFlatArmour();
+		maxHit -= flatArmour;
+
 		calculateNextMaxHitRequirements();
 	}
 
