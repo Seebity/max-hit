@@ -243,13 +243,11 @@ public class MaxHitPlugin extends Plugin
 	{
 		if (equippedItems == null)
 		{
-			log.debug("Equipped items null");
 			return;
 		}
 		Item weapon = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
 		if (weapon == null)
 		{
-			log.debug("Weapon null");
 			return;
 		}
 		isWieldingSpecialAttackWeapon = client.getEnum(WEAPON_SPECIAL_REQS).getIntValue(weapon.getId()) > 0;
