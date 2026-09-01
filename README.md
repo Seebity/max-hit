@@ -22,7 +22,6 @@ Toxic Blowpipe<br>
 Slayer Helm/Black Mask<br>
 Golembane Effect<br>
 Soul Reaper Axe<br>
-Flat Armor effect<br>
 
 ## Help and discussion
 
