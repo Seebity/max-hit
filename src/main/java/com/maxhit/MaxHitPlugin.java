@@ -248,6 +248,7 @@ public class MaxHitPlugin extends Plugin
 		Item weapon = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
 		if (weapon == null)
 		{
+			isWieldingSpecialAttackWeapon = false;
 			return;
 		}
 		isWieldingSpecialAttackWeapon = client.getEnum(WEAPON_SPECIAL_REQS).getIntValue(weapon.getId()) > 0;
