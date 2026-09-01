@@ -103,18 +103,21 @@ public abstract class MaxHitCalculator
 	protected void getFlatArmour()
 	{
 		flatArmour = 0.0;
+
+		if (opponent == null)
+		{
+			return;
+		}
+
+		NPC npc = (NPC) opponent;
+		String npcName = npc.getName();
+
+		if (npcName == null)
+		{
+			return;
+		}
 		for (MonsterFlatArmour monster : MonsterFlatArmour.values())
 		{
-			if (opponent == null)
-			{
-				continue;
-			}
-			NPC npc = (NPC) opponent;
-			String npcName = npc.getName();
-			if (npcName == null)
-			{
-				continue;
-			}
 			if (monster.getId() != npc.getId())
 			{
 				continue;
