@@ -37,7 +37,7 @@ public class PlayerSetupsTest extends MockedTest
 	{
 		super.setUp();
 		// Consolidate common setup logic that runs before each test
-		maxHitCalculatorFactory = new MaxHitCalculatorFactory(client, itemManager);
+		maxHitCalculatorFactory = new MaxHitCalculatorFactory(maxHitPlugin, client, itemManager);
 		mockedItemContainer = mock(ItemContainer.class);
 		when(client.getItemContainer(anyInt())).thenReturn(mockedItemContainer);
 	}

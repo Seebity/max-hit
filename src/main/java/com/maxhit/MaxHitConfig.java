@@ -16,11 +16,19 @@ public interface MaxHitConfig extends Config {
 	default boolean maxHit() { return true; }
 
 	@ConfigItem(
+		keyName = "resetMaxHit",
+		name = "Reset max hit when out of combat",
+		description = "Reset your max hit when you're out of combat",
+		position = 2
+	)
+	default boolean resetMaxHit() { return true; }
+
+	@ConfigItem(
 			keyName = "showNextMaxHit",
 			name = "Calculate next max hit",
 			description = "Mouse over the max hit to show the options to reach the next max hit " +
 					"like strength/ranged levels, bonus or prayer boosts",
-			position = 2
+			position = 3
 	)
 	default boolean showNextMaxHit() { return true; }
 
@@ -28,7 +36,7 @@ public interface MaxHitConfig extends Config {
 			keyName = "showSpec",
 			name = "Show Special Attack Max hit",
 			description = "Show special attack max hit",
-			position = 3
+			position = 4
 	)
 	default boolean showSpec() { return true; }
 }

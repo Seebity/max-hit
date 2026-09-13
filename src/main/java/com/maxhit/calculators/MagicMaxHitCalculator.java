@@ -1,6 +1,6 @@
 package com.maxhit.calculators;
 
-import com.google.common.collect.ImmutableSet;
+import com.maxhit.MaxHitPlugin;
 import com.maxhit.MagicSpell;
 import com.maxhit.Spellbook;
 import com.maxhit.equipment.EquipmentFunctions;
@@ -10,6 +10,7 @@ import com.maxhit.equipment.VirtusPieces;
 import com.maxhit.monsters.MonsterWeaknesses;
 import static com.maxhit.regions.TombsRegions.TOA_ROOM_IDS;
 import com.maxhit.styles.AttackStyle;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
@@ -22,24 +23,31 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.game.ItemManager;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Set;
-import net.runelite.client.game.ItemVariationMapping;
 
 @Slf4j
 public class MagicMaxHitCalculator extends MaxHitCalculator
 {
-	private static final Set<Integer> GOD_SPELLS = ImmutableSet.of(
-		MagicSpell.FLAMES_OF_ZAMORAK.getVarbValue(),
-		MagicSpell.SARADOMIN_STRIKE.getVarbValue(),
-		MagicSpell.CLAWS_OF_GUTHIX.getVarbValue());
-	private static final Set<Integer> BOLT_SPELLS = ImmutableSet.of(
-		MagicSpell.WIND_BOLT.getVarbValue(),
-		MagicSpell.WATER_BOLT.getVarbValue(),
-		MagicSpell.EARTH_BOLT.getVarbValue(),
-		MagicSpell.FIRE_BOLT.getVarbValue());
+	private static final Set<MagicSpell> GOD_SPELLS = ImmutableSet.of(
+		MagicSpell.FLAMES_OF_ZAMORAK,
+		MagicSpell.SARADOMIN_STRIKE,
+		MagicSpell.CLAWS_OF_GUTHIX);
+
+	private static final Set<MagicSpell> BOLT_SPELLS = ImmutableSet.of(
+		MagicSpell.WIND_BOLT,
+		MagicSpell.WATER_BOLT,
+		MagicSpell.EARTH_BOLT,
+		MagicSpell.FIRE_BOLT);
 	
-	private static final Set<Integer> SMOKE_BATTLESTAVES = ImmutableSet.of(
+	private static final Set<Integer> STANDARD_SPELLBOOK_STAVES = ImmutableSet.of(
 		ItemID.SMOKE_BATTLESTAFF,
-		ItemID.MYSTIC_SMOKE_BATTLESTAFF
+		ItemID.MYSTIC_SMOKE_BATTLESTAFF,
+		ItemID.TWINFLAME_STAFF
+	);
+
+	private static final Set<String> TWINFLAME_SPELLS = ImmutableSet.of(
+		"Bolt",
+		"Blast",
+		"Wave"
 	);
 
 	private static final Set<Integer> TUMEKEN_SHADOWS = ImmutableSet.of(
@@ -55,7 +63,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private double shadowBonus;
 	private double salveBonus;
 	private double avariceBonus;
-	private double smokeBattlestaffBonus;
+	private double standardSpellbookStaffBonus;
 	private double virtusBonus;
 	private double prayerBonus;
 	private double elementalWeakness;
@@ -67,9 +75,9 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private double ahrimsDamnedBonus;
 	//Ignore castle wars bracelet for now
 
-	protected MagicMaxHitCalculator(Client client, ItemManager itemManager, AttackStyle attackStyle)
+	protected MagicMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
-		super(client, itemManager, Skill.MAGIC, attackStyle);
+		super(plugin, client, itemManager, Skill.MAGIC, attackStyle);
 		reset();
 	}
 
@@ -82,7 +90,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		shadowBonus = 1.0;
 		salveBonus = 0.0;
 		avariceBonus = 0.0;
-		smokeBattlestaffBonus = 0.0;
+		standardSpellbookStaffBonus = 0.0;
 		virtusBonus = 0.0;
 		prayerBonus = 0.0;
 		elementalWeakness = 0.0;
@@ -143,46 +151,56 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
-		int activeSpellVarbit = client.getVarbitValue(VarbitID.AUTOCAST_SPELL);
 
-		// Spellbook Spells
-		for (MagicSpell spell : MagicSpell.values())
+		if (this.plugin.getActiveSpell() != null)
 		{
-			if (activeSpellVarbit != spell.getVarbValue())
-			{
-				continue;
-			}
-			activeSpell = spell;
+			activeSpell = this.plugin.getActiveSpell();
+		}
+		else
+		{
+			int activeSpellVarbit = client.getVarbitValue(VarbitID.AUTOCAST_SPELL);
 
-			// Magic Dart
-			if (activeSpell == MagicSpell.MAGIC_DART)
+			// Spellbook Spells
+			for (MagicSpell spell : MagicSpell.values())
 			{
-				getMagicDartBaseMaxDamage();
-				return;
+				if (activeSpellVarbit != spell.getVarbValue())
+				{
+					continue;
+				}
+
+				activeSpell = spell;
+				break;
 			}
-			baseSpellDamage = activeSpell.getBaseMaxHit(client);
+		}
+
+		// Magic Dart
+		if (activeSpell == MagicSpell.MAGIC_DART)
+		{
+			getMagicDartBaseMaxDamage();
 			return;
 		}
+
+		baseSpellDamage = activeSpell.getBaseMaxHit(client);
 	}
 
 	private void getBaseDamageModifier()
 	{
 		getSpellBaseMaxDamage();
-		int activeSpellVarbit = client.getVarbitValue(VarbitID.AUTOCAST_SPELL);
+
 		baseDamageModifier = baseSpellDamage;
 
 		// Check for Chaos Gauntlets with bolt spells
-		if (BOLT_SPELLS.contains(activeSpellVarbit))
+		if (BOLT_SPELLS.contains(activeSpell))
 		{
 			if (chaosGauntletsEquipped())
 			{
-				baseDamageModifier += 3;
+				baseDamageModifier += 3.0;
 				return;
 			}
 		}
 
 		// Check if a god spell is active
-		if (!GOD_SPELLS.contains(activeSpellVarbit))
+		if (!GOD_SPELLS.contains(activeSpell))
 		{
 			return;
 		}
@@ -196,7 +214,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		{
 			return;
 		}
-		baseDamageModifier += 10;
+		baseDamageModifier += 10.0;
 	}
 
 	private void getShadowBonus()
@@ -263,11 +281,11 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			return;
 		}
 
-		for (int battlestaffId : SMOKE_BATTLESTAVES)
+		for (int battlestaffId : STANDARD_SPELLBOOK_STAVES)
 		{
 			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, battlestaffId))
 			{
-				smokeBattlestaffBonus = 0.1;
+				standardSpellbookStaffBonus = 0.1;
 				return;
 			}
 		}
@@ -314,7 +332,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		getElementalWeakness();
 		double tempBonuses = (strengthBonus - voidBonus) * shadowBonus;
 		tempBonuses = Math.min(1.0, tempBonuses);
-		double totalBonus = voidBonus + salveBonus + avariceBonus + smokeBattlestaffBonus + virtusBonus + prayerBonus;
+		double totalBonus = voidBonus + salveBonus + avariceBonus + standardSpellbookStaffBonus + virtusBonus + prayerBonus;
 		double elementalWeaknessAddition = Math.floor(baseDamageModifier * elementalWeakness);
 		primaryMagicDamage = Math.floor(baseDamageModifier * (1 + tempBonuses + totalBonus) + elementalWeaknessAddition);
 	}
@@ -349,6 +367,32 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		// Skip castle wars bonus
 		// Final Post Hit Roll
 		maxHit = Math.floor(firstFloorCalculation * (1 + ahrimsDamnedBonus));
+
+		applyTwinflameModifier();
+	}
+
+	private void applyTwinflameModifier()
+	{
+		// Twinflame Staff
+		if (!EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.TWINFLAME_STAFF))
+		{
+			return;
+		}
+
+		if (activeSpell.getSpellbook() != Spellbook.STANDARD)
+		{
+			return;
+		}
+
+		for (String spell : TWINFLAME_SPELLS)
+		{
+			if (activeSpell.getDisplayName().contains(spell))
+			{
+				double secondHitDamage = Math.floor(maxHit * 0.4);
+				maxHit = maxHit + secondHitDamage;
+				return;
+			}
+		}
 	}
 
 	@Override

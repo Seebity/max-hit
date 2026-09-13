@@ -57,7 +57,19 @@ public abstract class MockedTest extends MockedTestBase
 	protected Client client = mock(Client.class);
 
 	@Bind
+	protected ConfigManager configManager = mock(ConfigManager.class);
+
+	@Bind
+	protected OverlayManager overlayManager = mock(OverlayManager.class);
+
+	@Bind
+	protected MaxHitConfig maxHitConfig = Mockito.spy(MaxHitConfig.class);
+
+	@Bind
 	protected ItemManager itemManager = mock(ItemManager.class);
+
+	@Bind
+	protected MaxHitPlugin maxHitPlugin = Mockito.spy(MaxHitPlugin.class);
 
 
 	@Override
@@ -74,6 +86,6 @@ public abstract class MockedTest extends MockedTestBase
 		when(client.getTopLevelWorldView()).thenReturn(mockedWorldView);
 		when(client.getWorldView(anyInt())).thenReturn(mockedWorldView);
 		when(client.getRealSkillLevel(Skill.HITPOINTS)).thenReturn(99);
-
+		when(maxHitPlugin.getActiveSpell()).thenReturn(null);
 	}
 }

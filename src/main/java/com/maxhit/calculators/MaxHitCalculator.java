@@ -1,5 +1,6 @@
 package com.maxhit.calculators;
 
+import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.monsters.MonsterFlatArmour;
 import com.maxhit.monsters.MonsterWeaknesses;
@@ -19,6 +20,7 @@ import net.runelite.client.game.ItemManager;
 
 public abstract class MaxHitCalculator
 {
+	protected final MaxHitPlugin plugin;
     protected final Client client;
     protected final ItemManager itemManager;
 	protected ItemContainer equippedItems;
@@ -43,8 +45,9 @@ public abstract class MaxHitCalculator
 	protected NextMaxHitReqs nextMaxHitReqs;
 
 	@Inject
-    protected MaxHitCalculator (Client client, ItemManager itemManager, Skill skill, AttackStyle attackStyle)
+    protected MaxHitCalculator (MaxHitPlugin plugin, Client client, ItemManager itemManager, Skill skill, AttackStyle attackStyle)
     {
+		this.plugin = plugin;
 		this.client = client;
 		this.itemManager = itemManager;
         this.skill = skill;

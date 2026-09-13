@@ -1,5 +1,6 @@
 package com.maxhit.calculators;
 
+import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.PrayerType;
 import com.maxhit.styles.AttackStyle;
@@ -23,9 +24,9 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	private double gearBonus;
 	private double specialBonus;
 
-	protected RangedMaxHitCalculator(Client client, ItemManager itemManager, AttackStyle attackStyle)
+	protected RangedMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
-		super(client, itemManager, Skill.RANGED, attackStyle);
+		super(plugin, client, itemManager, Skill.RANGED, attackStyle);
 		reset();
 	}
 

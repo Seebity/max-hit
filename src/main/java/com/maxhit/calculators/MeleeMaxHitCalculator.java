@@ -1,6 +1,7 @@
 package com.maxhit.calculators;
 
 import com.google.common.collect.ImmutableSet;
+import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.sets.FullObsidianSet;
@@ -29,9 +30,9 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	private double baseDamage;
 	private double specialBonus;
 
-	protected MeleeMaxHitCalculator(Client client, ItemManager itemManager, AttackStyle attackStyle)
+	protected MeleeMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
-		super(client, itemManager, Skill.STRENGTH, attackStyle);
+		super(plugin, client, itemManager, Skill.STRENGTH, attackStyle);
 		dharokSetChecker = new DharokSet(client);
 		obsidianSetChecker = new ObsidianSet(client);
 		fullObsidianSetChecker = new FullObsidianSet(client);
