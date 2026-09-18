@@ -21,6 +21,7 @@ import net.runelite.api.Actor;
 import net.runelite.api.Hitsplat;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.GraphicChanged;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
@@ -256,74 +257,34 @@ public class MaxHitPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onInteractingChanged(InteractingChanged event)
+	public void onGraphicChanged(GraphicChanged event)
 	{
-		final Actor source = event.getSource();
+		final Actor eventActor = event.getActor();
 
-		if (source == null)
-			return;
-
-		if (source != client.getLocalPlayer())
-			return;
-
-		if (event.getTarget() == null)
-			return;
-
-		interactingTarget = event.getTarget();
-	}
-
-	@Subscribe
-	public void onProjectileMoved(ProjectileMoved event)
-	{
-		final Projectile eventProjectile = event.getProjectile();
-
-		if (eventProjectile == null)
-			return;
-
-		// Get the actor who the projectile is going to
-		Actor eventTarget = eventProjectile.getTargetActor();
-
-		if (eventTarget == null)
+		if (eventActor == null)
 			return;
 
 		// Check that event target is who we're interacting with
-		if (eventTarget != interactingTarget)
+		if (eventActor != client.getLocalPlayer())
 			return;
+
 
 		// Okay, we've found a match for our target
 		// Now Iterate over standard spellbook spells looking to see if the projectile is a spell
-		for (MagicSpell spell : MagicSpell.values())
+		for (MagicSpell spell : MagicSpell.getStandardSpells())
 		{
-			// Skip non-standard spells
-			if (spell.getSpellbook() != Spellbook.STANDARD)
-				continue;
-
 			// Looks for matching id
-			if (spell.getProjectileId() != eventProjectile.getId())
+			if (!eventActor.hasSpotAnim(spell.getProjectileId()))
 			{
 				continue;
 			}
-			// Match has been found, assuming we're attacking the target at this point
 
-			// Check if projectile has been set
-			if (projectile == null)
-			{
-				projectile = eventProjectile;
-				activeSpell = spell;
-				maxHitCalculator.opponent = interactingTarget;
-				maxHitCalculator.calculateMaxHit();
+			// Don't recalc if we're already using the same spell
+			if (activeSpell == spell)
 				return;
-			}
 
-			// Don't need to set projectile if we already have the same projectile
-			if (projectile.getId() == eventProjectile.getId())
-			{
-				return;
-			}
 
-			projectile = eventProjectile;
 			activeSpell = spell;
-			maxHitCalculator.opponent = interactingTarget;
 			maxHitCalculator.calculateMaxHit();
 		}
 	}

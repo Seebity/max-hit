@@ -1,14 +1,14 @@
 package com.maxhit;
 
-import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.SpotanimID;
 
 
-@RequiredArgsConstructor
 public enum MagicSpell
 {
     // Ancient Spells
@@ -30,8 +30,8 @@ public enum MagicSpell
 	SMOKE_RUSH(    31, "Smoke Rush",    50,13,Spellbook.ANCIENT,"SMOKE"),
 
     // Standard spells
-    FIRE_SURGE(51, SpotanimID.FIRESURGE_TRAVEL, "Fire Surge", 95,24, Spellbook.STANDARD, "FIRE"),
-    EARTH_SURGE(50, SpotanimID.EARTHSURGE_TRAVEL, "Earth Surge",90,23, Spellbook.STANDARD, "EARTH")
+    FIRE_SURGE(51, SpotanimID.FIRESURGE_CASTING, "Fire Surge", 95,24, Spellbook.STANDARD, "FIRE"),
+    EARTH_SURGE(50, SpotanimID.EARTHSURGE_CASTING, "Earth Surge",90,23, Spellbook.STANDARD, "EARTH")
 	{
 		@Override
 		public int getBaseMaxHit(Client client)
@@ -41,7 +41,7 @@ public enum MagicSpell
 			return EARTH_SURGE.baseMaxHit;
 		}
 	},
-    WATER_SURGE(49, SpotanimID.WATERSURGE_TRAVEL,"Water Surge", 85,22, Spellbook.STANDARD, "WATER")
+    WATER_SURGE(49, SpotanimID.WATERSURGE_CASTING,"Water Surge", 85,22, Spellbook.STANDARD, "WATER")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -52,7 +52,7 @@ public enum MagicSpell
 				return WATER_SURGE.baseMaxHit;
 			}
 		},
-    WIND_SURGE(48, SpotanimID.WINDSURGE_TRAVEL,"Wind Surge", 81,21, Spellbook.STANDARD, "AIR")
+    WIND_SURGE(48, SpotanimID.WINDSURGE_CASTING,"Wind Surge", 81,21, Spellbook.STANDARD, "AIR")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -64,8 +64,8 @@ public enum MagicSpell
 				return WIND_SURGE.baseMaxHit;
 			}
 		},
-    FIRE_WAVE(16, SpotanimID.FIRESURGE_TRAVEL,"Fire Wave", 75,20, Spellbook.STANDARD, "FIRE"),
-    EARTH_WAVE(15, SpotanimID.EARTHWAVE_TRAVEL,"Earth Wave", 70,19, Spellbook.STANDARD, "EARTH")
+    FIRE_WAVE(16, SpotanimID.FIRESURGE_CASTING,"Fire Wave", 75,20, Spellbook.STANDARD, "FIRE"),
+    EARTH_WAVE(15, SpotanimID.EARTHWAVE_CASTING,"Earth Wave", 70,19, Spellbook.STANDARD, "EARTH")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -75,7 +75,7 @@ public enum MagicSpell
 				return EARTH_WAVE.baseMaxHit;
 			}
 		},
-    WATER_WAVE(14, SpotanimID.WATERWAVE_TRAVEL,"Water Wave", 65,18, Spellbook.STANDARD, "WATER")
+    WATER_WAVE(14, SpotanimID.WATERWAVE_CASTING,"Water Wave", 65,18, Spellbook.STANDARD, "WATER")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -86,7 +86,7 @@ public enum MagicSpell
 				return WATER_WAVE.baseMaxHit;
 			}
 		},
-    WIND_WAVE(13, SpotanimID.WINDWAVE_TRAVEL,"Wind Wave", 62,17, Spellbook.STANDARD, "AIR")
+    WIND_WAVE(13, SpotanimID.WINDWAVE_CASTING,"Wind Wave", 62,17, Spellbook.STANDARD, "AIR")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -98,8 +98,8 @@ public enum MagicSpell
 				return WIND_WAVE.baseMaxHit;
 			}
 		},
-    FIRE_BLAST(12, SpotanimID.FIREBLAST_TRAVEL,"Fire Blast", 59,16, Spellbook.STANDARD, "FIRE"),
-    EARTH_BLAST(11, SpotanimID.EARTHBLAST_TRAVEL,"Earth Blast", 53,15, Spellbook.STANDARD, "EARTH")
+    FIRE_BLAST(12, SpotanimID.FIREBLAST_CASTING,"Fire Blast", 59,16, Spellbook.STANDARD, "FIRE"),
+    EARTH_BLAST(11, SpotanimID.EARTHBLAST_CASTING,"Earth Blast", 53,15, Spellbook.STANDARD, "EARTH")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -109,7 +109,7 @@ public enum MagicSpell
 				return EARTH_BLAST.baseMaxHit;
 			}
 		},
-    WATER_BLAST(10, SpotanimID.WATERBLAST_TRAVEL,"Water Blast", 47,14, Spellbook.STANDARD, "WATER")
+    WATER_BLAST(10, SpotanimID.WATERBLAST_CASTING,"Water Blast", 47,14, Spellbook.STANDARD, "WATER")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -120,7 +120,7 @@ public enum MagicSpell
 				return WATER_BLAST.baseMaxHit;
 			}
 		},
-    WIND_BLAST(9, SpotanimID.WINDBLAST_TRAVEL,"Wind Blast", 41,13, Spellbook.STANDARD, "AIR")
+    WIND_BLAST(9, SpotanimID.WINDBLAST_CASTING,"Wind Blast", 41,13, Spellbook.STANDARD, "AIR")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -132,8 +132,8 @@ public enum MagicSpell
 				return WIND_BLAST.baseMaxHit;
 			}
 		},
-    FIRE_BOLT(8, SpotanimID.FIREBOLT_TRAVEL,"Fire Bolt", 35,12, Spellbook.STANDARD, "FIRE"),
-    EARTH_BOLT(7, SpotanimID.EARTHBOLT_TRAVEL,"Earth Bolt", 29,11, Spellbook.STANDARD, "EARTH")
+    FIRE_BOLT(8, SpotanimID.FIREBOLT_CASTING,"Fire Bolt", 35,12, Spellbook.STANDARD, "FIRE"),
+    EARTH_BOLT(7, SpotanimID.EARTHBOLT_CASTING,"Earth Bolt", 29,11, Spellbook.STANDARD, "EARTH")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -143,7 +143,7 @@ public enum MagicSpell
 				return EARTH_BOLT.baseMaxHit;
 			}
 		},
-    WATER_BOLT(6, SpotanimID.WATERBOLT_TRAVEL,"Water Bolt", 23,10, Spellbook.STANDARD, "WATER")
+    WATER_BOLT(6, SpotanimID.WATERBOLT_CASTING,"Water Bolt", 23,10, Spellbook.STANDARD, "WATER")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -154,7 +154,7 @@ public enum MagicSpell
 				return WATER_BOLT.baseMaxHit;
 			}
 		},
-    WIND_BOLT(5, SpotanimID.WINDBOLT_TRAVEL,"Wind Bolt", 17,9, Spellbook.STANDARD, "AIR")
+    WIND_BOLT(5, SpotanimID.WINDBOLT_CASTING,"Wind Bolt", 17,9, Spellbook.STANDARD, "AIR")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -166,8 +166,8 @@ public enum MagicSpell
 				return WIND_BOLT.baseMaxHit;
 			}
 		},
-    FIRE_STRIKE(4, SpotanimID.FIRESTRIKE_TRAVEL,"Fire Strike", 13,  8, Spellbook.STANDARD, "FIRE"),
-    EARTH_STRIKE(3, SpotanimID.EARTHSTRIKE_TRAVEL,"Earth Strike", 9, 6, Spellbook.STANDARD, "EARTH")
+    FIRE_STRIKE(4, SpotanimID.FIRESTRIKE_CASTING,"Fire Strike", 13,  8, Spellbook.STANDARD, "FIRE"),
+    EARTH_STRIKE(3, SpotanimID.EARTHSTRIKE_CASTING,"Earth Strike", 9, 6, Spellbook.STANDARD, "EARTH")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -177,7 +177,7 @@ public enum MagicSpell
 				return 6;
 			}
 		},
-    WATER_STRIKE(2, SpotanimID.WATERSTRIKE_TRAVEL,"Water Strike", 5,4, Spellbook.STANDARD, "WATER")
+    WATER_STRIKE(2, SpotanimID.WATERSTRIKE_CASTING,"Water Strike", 5,4, Spellbook.STANDARD, "WATER")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -189,7 +189,7 @@ public enum MagicSpell
 			}
 		},
 
-    WIND_STRIKE(1, SpotanimID.WINDSTRIKE_TRAVEL,"Wind Strike", 1,2, Spellbook.STANDARD, "AIR")
+    WIND_STRIKE(1, SpotanimID.WINDSTRIKE_CASTING,"Wind Strike", 1,2, Spellbook.STANDARD, "AIR")
 		{
 			@Override
 			public int getBaseMaxHit(Client client)
@@ -242,27 +242,34 @@ public enum MagicSpell
 	MagicSpell(int varbValue, String displayName, int levelRequired, int baseMaxHit, Spellbook spellbook, String element)
 	{
 		this.varbValue = varbValue;
+		this.projectileId = -1;
 		this.displayName = displayName;
 		this.levelRequired = levelRequired;
 		this.baseMaxHit = baseMaxHit;
-		this.projectileId = -1;
 		this.spellbook = spellbook;
 		this.element = element;
 	}
 
-	MagicSpell(int varbValue, String displayName, int projectileId, int levelRequired, int baseMaxHit, Spellbook spellbook, String element)
+	MagicSpell(int varbValue, int projectileId, String displayName, int levelRequired, int baseMaxHit, Spellbook spellbook, String element)
 	{
 		this.varbValue = varbValue;
+		this.projectileId = projectileId;
 		this.displayName = displayName;
 		this.levelRequired = levelRequired;
-		this.projectileId = projectileId;
 		this.baseMaxHit = baseMaxHit;
 		this.spellbook = spellbook;
 		this.element = element;
 	}
+
 
 	public int getBaseMaxHit(Client client)
 	{
 		return baseMaxHit;
+	}
+
+	public static List<MagicSpell> getStandardSpells()
+	{
+		return Arrays.stream(MagicSpell.values())
+			.filter(spell -> spell.getSpellbook().equals(Spellbook.STANDARD)).collect(Collectors.toList());
 	}
 }
