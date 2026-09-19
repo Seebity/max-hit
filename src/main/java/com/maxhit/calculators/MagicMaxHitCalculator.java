@@ -67,7 +67,6 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private double virtusBonus;
 	private double prayerBonus;
 	private double elementalWeakness;
-	private double slayerBonus;
 	private double sceptreBonus;
 	private double accursedSceptreSpecialAttackBonus;
 	private double tomeBonus;
@@ -179,6 +178,13 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			getMagicDartBaseMaxDamage();
 			return;
 		}
+
+		if (activeSpell == null)
+		{
+			baseSpellDamage = 0.0;
+			return;
+		}
+
 
 		baseSpellDamage = activeSpell.getBaseMaxHit(client);
 	}
@@ -325,6 +331,13 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		getShadowBonus();
 		getVoidBonus();
 		getSalveBonus();
+
+		// Slayer helm and salve/avarice don't stack
+		if (salveBonus == 0.0 && avariceBonus == 0.0)
+		{
+			getSlayerBonus();
+		}
+
 		getAvariceBonus();
 		getSmokeBattlestaffBonus();
 		getVirtusBonus();
@@ -340,16 +353,16 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private void getPreHitRoll()
 	{
 
-		//TODO: Add slayer, sceptre, and tome bonus
+		//TODO: Add sceptre and tome bonus
 		double totalSlayerBonus = 1.0 + slayerBonus;
 		double totalSceptreBonus = 1.0 + sceptreBonus;
 		double totalAccursedBonus = 1.0 + accursedSceptreSpecialAttackBonus;
 		double totalTomeBonus = 1.0 + tomeBonus;
 
-		double firstFloorCalculation = Math.floor(primaryMagicDamage * totalSlayerBonus);
-		double secondFloorCalculation = Math.floor(firstFloorCalculation * totalSceptreBonus);
-		double thirdfFloorCalculation = Math.floor(secondFloorCalculation * totalAccursedBonus);
-		preHitRoll = Math.floor(thirdfFloorCalculation * totalTomeBonus);
+		double firstCalculation = Math.floor(primaryMagicDamage * totalSlayerBonus);
+		double secondCalculation = Math.floor(firstCalculation * totalSceptreBonus);
+		double thirdCalculation = Math.floor(secondCalculation * totalAccursedBonus);
+		preHitRoll = Math.floor(thirdCalculation * totalTomeBonus);
 	}
 
 	@Override

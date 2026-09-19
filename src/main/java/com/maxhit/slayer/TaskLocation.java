@@ -1,0 +1,73 @@
+package com.maxhit.slayer;
+
+import lombok.Getter;
+
+@Getter
+public enum TaskLocation
+{
+	CITY_DARKMEYER("Darkmeyer", 14388, 14644),
+	CITY_KELDAGRIM("Keldagrim" ,  11423, 11422, 11679, 11678),
+	CITY_SLEPE("Slepe",  14643, 14899, 14900, 14901),
+	CITY_TROLL_STRONGHOLD("Troll Stronghold" ,  11321, 11421),
+	CITY_ZANARIS("Zanaris" ,  9285, 9541, 9540, 9797),
+
+	REGION_ABYSSAL_AREA("Abyssal Area",  12108),
+	REGION_BATTLEFRONT("Battlefront",  5433, 5434),
+	REGION_DEATH_PLATEAU("Death Plateau",  11320),
+	REGION_FOSSIL_ISLAND("Fossil Island",  14650, 14651, 14652, 14906, 14907, 14908, 15162, 15163, 15164),
+	REGION_ISLE_OF_SOULS("Isle of Souls",  8236, 8237, 8238, 8491, 8492, 8494, 8747, 8750, 9003, 9004, 9006, 9260, 9261, 9262),
+	REGION_FREMENNIK_ISLES("Fremennik Isles",  9276, 9532),
+	REGION_GREAT_CONCH("The Great Conch", 12325, 12326, 12327, 12581, 12582, 12583, 12836, 12837, 12838, 12839, 13092, 13093, 12937, 12682, 12426), // Includes Gryphon Dungeon and Shellbane Cave
+	REGION_GWD("God Wars Dungeon",  11578),
+	REGION_KEBOS_SWAMP("Kebos Swamp",  4664, 4920, 5174, 5175, 5176, 5430, 5431),
+	REGION_LIZARDMAN_CANYON("Lizardman Canyon", 5945, 5946),
+	REGION_LIZARDMAN_SETTLEMENT("Lizardman Settlement", 5175, 5431),
+	REGION_MOLCH("Molch",  5177),
+	REGION_MOUNT_QUIDAMORTEM("Mount Quidamortem",  4662, 4663, 4918, 4919),
+	REGION_NEYPOTZLI("Neypotzli", 5525, 5527),
+	REGION_POISON_WASTE("Poison Waste",  8752, 9008),
+	REGION_SLAYER_TOWER("Slayer Tower",  13623, 13723),
+	REGION_WATERBIRTH_ISLAND("Waterbirth Island",  10042),
+	REGION_WYRMSCRAIG("Wyrmscraig", 10018, 10274, 10275, 11142, 11143),
+
+	DUNGEON_ANCIENT_CAVERN("Ancient Cavern",  6483, 6995),
+	DUNGEON_ASGARNIAN_ICE_CAVES("Asgarnian Ice Caves",  11925, 12181),
+	DUNGEON_BRIMHAVEN("Brimhaven Dungeon",  10901, 10900, 10899, 10645, 10644, 10643),
+	DUNGEON_BRINE_RAT_CAVERN("Brine Rat Cavern",  10910),
+	DUNGEON_CATACOMBS_OF_KOUREND("Catacombs of Kourend", 6557, 6556, 6813, 6812),
+	DUNGEON_CHASM_OF_FIRE("Chasm of Fire",  5789),
+	DUNGEON_CHARRED("Charred Dungeon", 10889, 11145),
+	DUNGEON_EVIL_CHICKENS_LAIR("Evil Chicken's Lair",  9796),
+	DUNGEON_FORTHOS("Forthos Dungeon",  7323),
+	DUNGEON_FREMENNIK_SLAYER("Fremennik Slayer Dungeon",  10907, 10908, 11164),
+	DUNGEON_GIANTS_DEN("Giants' Den", 5786),
+	DUNGEON_IORWERTH("Iorwerth Dungeon",  12737, 12738, 12993, 12994),
+	DUNGEON_JORMUNGANDS_PRISON("Jormungand's Prison", 9891, 9634, 9890),
+	DUNGEON_KALPHITE_CAVE("Kalphite Cave", 13460, 13716, 13461),
+	DUNGEON_KALPHITE_LAIR("Kalphite Lair", 12692, 12948, 12691, 12947),
+	DUNGEON_KARUULM("Karuulm Slayer Dungeon", 5280, 5279, 5023, 5535, 5022, 4766, 4510, 4511, 4767, 4768, 4512),
+	DUNGEON_KRAKEN_COVE("Kraken Cove", 9116),
+	DUNGEON_LIGHTHOUSE("Lighthouse",  10140),
+	DUNGEON_MEIYERDITCH_LABORATORIES("Meiyerditch Laboratories",  14232, 14233, 14487, 14488),
+	DUNGEON_MOURNER_TUNNELS("Mourner Tunnels",  7752, 8008),
+	DUNGEON_MYTHS_GUILD("Myths' Guild Dungeon",  7564, 7820, 7821),
+	DUNGEON_OGRE_ENCLAVE("Ogre Enclave",  10387),
+	DUNGEON_SMOKE("Smoke Dungeon", 12946, 13202),
+	DUNGEON_SMOKE_DEVIL("Smoke Devil Dungeon", 9363, 9619),
+	DUNGEON_STRONGHOLD_SECURITY("Stronghold of Security", 7505, 8017, 8530, 9297),
+	DUNGEON_TAVERLEY("Taverley Dungeon", 11416, 11417, 11671, 11672, 11673, 11928, 11929),
+	DUNGEON_WATERFALL("Waterfall Dungeon",  10394),
+	DUNGEON_WITCHAVEN_SHRINE("Witchhaven Shrine Dungeon",  10903),
+	DUNGEON_WYRMSCRAIG_CAVERN("Wyrmscraig Cavern", 11142, 11143),
+	;
+
+	private final String name;
+
+	private final int[] regionIds;
+
+	TaskLocation(String name, int... regionIds)
+	{
+		this.name = name;
+		this.regionIds = regionIds;
+	}
+}

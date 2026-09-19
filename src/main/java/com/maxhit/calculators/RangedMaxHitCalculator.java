@@ -61,8 +61,20 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	private void getGearBonus()
 	{
 		getSalveBonus();
-		gearBonus += salveBonus;
-		//TODO Add support for slayer, Craw's bow, and Twisted bow
+
+		// Slayer helm and salve don't stack
+		if (salveBonus == 0.0)
+		{
+			getSlayerBonus();
+			gearBonus += slayerBonus;
+		}
+		else
+		{
+			gearBonus += salveBonus;
+		}
+
+
+		//TODO Add support for Craw's bow and Twisted bow
 	}
 
 	private void getBaseHit()

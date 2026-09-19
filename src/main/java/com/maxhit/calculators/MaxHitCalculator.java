@@ -34,6 +34,7 @@ public abstract class MaxHitCalculator
     protected double prayerBonus;
     protected double styleBonus;
 	protected double salveBonus;
+	protected double slayerBonus;
     protected double voidBonus;
 	protected double flatArmour;
 
@@ -142,6 +143,8 @@ public abstract class MaxHitCalculator
 	{
 		salveBonus = bonusCalculator.getSalveBonus(equippedItems, opponent);
 	}
+
+	protected void getSlayerBonus() {slayerBonus = bonusCalculator.getSlayerBonus(this.plugin, equippedItems, opponent);}
 
 	protected abstract void calculateNextMaxHitRequirements();
 }

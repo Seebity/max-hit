@@ -15,7 +15,9 @@ import com.maxhit.sets.ObsidianSet;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemVariationMapping;
 
@@ -92,11 +94,21 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		{
 			specialBonus += 0.1;
 		}
-		getSalveBonus();
 
 		specialBonus += InquisitorSet.getMultiplier(client, equippedItems);
 
-		specialBonus += salveBonus;
+		getSalveBonus();
+
+		// Slayer helm and salve don't stack
+		if (salveBonus == 0.0)
+		{
+			getSlayerBonus();
+			specialBonus += slayerBonus;
+		}
+		else
+		{
+			specialBonus += salveBonus;
+		}
 	}
 
 	//TODO add support for Keris/Keris Partisan vs Kalphites
@@ -105,6 +117,10 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	public void calculateMaxHit()
 	{
 		reset();
+
+		int region = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation()).getRegionID();
+		log.debug("Region ID: {}", region);
+
 		getSpecialBonus();
 		getBaseDamage();
 		maxHit = Math.max(0.0, Math.floor(baseDamage * specialBonus));

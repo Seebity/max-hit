@@ -1,7 +1,9 @@
 package com.maxhit.calculators;
 
+import com.maxhit.MaxHitPlugin;
 import com.maxhit.PrayerType;
 import com.maxhit.Prayers;
+import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.SalveAmulet;
 import com.maxhit.monsters.UndeadMonsters;
 import com.maxhit.sets.EliteVoidSet;
@@ -9,10 +11,14 @@ import com.maxhit.sets.VoidSet;
 import java.util.Map;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class BonusCalculator
 {
 
@@ -98,5 +104,54 @@ public class BonusCalculator
 				return 0.0;
 		}
 		return 1.0;
+	}
+
+	public double getSlayerBonus(MaxHitPlugin plugin, ItemContainer equippedItems, Actor opponent)
+	{
+		// Check if opponent is in slayer task
+		NPC npc = (NPC) opponent;
+
+		if (npc == null)
+		{
+			return 0.0;
+		}
+
+		if (!plugin.isTarget(npc))
+		{
+			return 0.0;
+		}
+
+		// Check head slot
+
+		Item headSlot = equippedItems.getItem(EquipmentInventorySlot.HEAD.ordinal());
+
+		if (headSlot == null)
+		{
+			return 0.0;
+		}
+
+		String headSlotName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.HEAD).toLowerCase();
+
+		// Check for black mask
+		if (headSlotName.contains("black mask") ||  headSlotName.contains("slayer helmet"))
+		{
+			switch (skill)
+			{
+				case STRENGTH:
+					return 0.1667;
+				case RANGED:
+				case MAGIC:
+					if (headSlotName.contains("(i)"))
+					{
+						return 0.15;
+					}
+					else
+					{
+						return 0.0;
+					}
+			}
+		}
+
+		return 0.0;
 	}
 }

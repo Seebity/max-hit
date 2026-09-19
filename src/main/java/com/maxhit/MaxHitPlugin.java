@@ -1,12 +1,22 @@
 package com.maxhit;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.maxhit.calculators.SpecialAttackCalculator;
+import com.maxhit.slayer.Task;
+import com.maxhit.slayer.TaskLocation;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.stream.IntStream;
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.regex.Pattern;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.google.inject.Provides;
 import net.runelite.api.Client;
@@ -14,20 +24,20 @@ import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.Prayer;
+import net.runelite.api.NPCComposition;
 import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
 import net.runelite.api.Actor;
 import net.runelite.api.Hitsplat;
 import net.runelite.api.NPC;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.GraphicChanged;
-import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.HitsplatApplied;
-import net.runelite.api.events.ProjectileMoved;
+import net.runelite.api.gameval.DBTableID;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
@@ -43,7 +53,6 @@ import com.maxhit.calculators.MaxHitCalculatorFactory;
 import com.maxhit.styles.AttackStyle;
 import com.maxhit.styles.StyleFactory;
 import com.maxhit.styles.CombatStyle;
-
 
 
 @PluginDescriptor(
@@ -100,10 +109,42 @@ public class MaxHitPlugin extends Plugin
 	@Getter
 	private MagicSpell activeSpell;
 
+	@Getter
+	private final List<NPC> targets = new ArrayList<>();
+
+	@Getter
+	@Setter
+	private int amount;
+
+	@Getter
+	@Setter
+	private int initialAmount;
+
+	@Getter
+	@Setter
+	private String taskLocation;
+
+	@Getter
+	@Setter
+	private String taskName;
+
+	private Instant infoTimer;
+	private boolean loginFlag;
+	private final List<Pattern> targetNames = new ArrayList<>();
+	private int regionID = -1;
+
 	@Override
 	public void startUp() throws Exception
 	{
 		overlayManager.add(myOverlay);
+
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			loginFlag = true;
+			clientThread.invoke(this::updateTask);
+		}
+
+
 		clientThread.invokeLater(() ->
 		{
 			maxHitCalculatorFactory = new MaxHitCalculatorFactory(this, client, itemManager);
@@ -128,12 +169,170 @@ public class MaxHitPlugin extends Plugin
 	public void shutDown() throws Exception
 	{
 		overlayManager.remove(myOverlay);
+		targets.clear();
 		lastTime = null;
 		isWieldingSpecialAttackWeapon = false;
 		maxHitCalculatorFactory = null;
 		specialAttackCalculator = null;
 		maxHitCalculator = null;
 		activeSpell = null;
+	}
+
+	private void updateTask()
+	{
+		int amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
+		if (amount > 0)
+		{
+			int taskId = client.getVarpValue(VarPlayerID.SLAYER_TARGET);
+
+			int taskDBRow;
+			if (taskId == 98 /* Bosses, from [proc,helper_slayer_current_assignment] */)
+			{
+				var bossRows = client.getDBRowsByValue(
+					DBTableID.SlayerTaskSublist.ID,
+					DBTableID.SlayerTaskSublist.COL_TASK_SUBTABLE_ID,
+					0,
+					client.getVarbitValue(VarbitID.SLAYER_TARGET_BOSSID));
+
+				if (bossRows.isEmpty())
+				{
+					return;
+				}
+				taskDBRow = (Integer) client.getDBTableField(bossRows.get(0), DBTableID.SlayerTaskSublist.COL_TASK, 0)[0];
+			}
+			else
+			{
+				var taskRows = client.getDBRowsByValue(DBTableID.SlayerTask.ID, DBTableID.SlayerTask.COL_ID, 0, taskId);
+				if (taskRows.isEmpty())
+				{
+					return;
+				}
+				taskDBRow = taskRows.get(0);
+			}
+
+			var taskName = (String) client.getDBTableField(taskDBRow, DBTableID.SlayerTask.COL_NAME_UPPERCASE, 0)[0];
+
+			int areaId = client.getVarpValue(VarPlayerID.SLAYER_AREA);
+			String taskLocation = null;
+			if (areaId > 0)
+			{
+				var areaRows = client.getDBRowsByValue(DBTableID.SlayerArea.ID, DBTableID.SlayerArea.COL_AREA_ID, 0, areaId);
+				if (areaRows.isEmpty())
+				{
+					return;
+				}
+
+				taskLocation = (String) client.getDBTableField(areaRows.get(0), DBTableID.SlayerArea.COL_AREA_NAME_IN_HELPER, 0)[0];
+			}
+
+			int initialAmount = client.getVarpValue(VarPlayerID.SLAYER_COUNT_ORIGINAL);
+			if (client.getVarbitValue(VarbitID.SLAYER_MODIFIER_ID) == 2)
+			{
+				boolean isNegative = client.getVarbitValue(VarbitID.SLAYER_MODIFIER_NEGATIVE) == 1;
+				int modifierValue = client.getVarbitValue(VarbitID.SLAYER_MODIFIER_VALUE);
+				initialAmount += isNegative ? -modifierValue : modifierValue;
+			}
+
+			if (loginFlag)
+			{
+				setTask(taskName, amount, initialAmount, taskLocation, false);
+			}
+			else if (!Objects.equals(taskName, this.taskName) || !Objects.equals(taskLocation, this.taskLocation))
+			{
+				setTask(taskName, amount, initialAmount, taskLocation, true);
+			}
+		}
+		else
+		{
+			setTask("", 0, 0);
+		}
+	}
+
+	public boolean isTarget(NPC npc)
+	{
+		if (targetNames.isEmpty())
+		{
+			return false;
+		}
+
+		final NPCComposition composition = npc.getTransformedComposition();
+		if (composition == null)
+		{
+			return false;
+		}
+
+		final String name = composition.getName()
+			.replace('\u00A0', ' ')
+			.toLowerCase();
+
+		boolean matchingTarget = false;
+		for (Pattern target : targetNames)
+		{
+			final Matcher targetMatcher = target.matcher(name);
+			if (targetMatcher.find())
+			{
+				matchingTarget = true;
+			}
+		}
+
+		if (!matchingTarget)
+		{
+			return false;
+		}
+
+		for (TaskLocation location : TaskLocation.values())
+		{
+			if (!location.getName().equals(taskLocation))
+			{
+				continue;
+			}
+
+
+			int region = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation()).getRegionID();
+
+			if ( IntStream.of(location.getRegionIds()).anyMatch(x -> x == region))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void rebuildTargetNames(Task task)
+	{
+		targetNames.clear();
+
+		if (task != null)
+		{
+			Arrays.stream(task.getTargetNames())
+				.map(MaxHitPlugin::targetNamePattern)
+				.forEach(targetNames::add);
+
+			targetNames.add(targetNamePattern(taskName.replaceAll("s$", "")));
+		}
+	}
+
+	private static Pattern targetNamePattern(final String targetName)
+	{
+		return Pattern.compile("(?:\\s|^)" + targetName + "(?:\\s|$)", Pattern.CASE_INSENSITIVE);
+	}
+
+	@VisibleForTesting
+	void setTask(String name, int amt, int initAmt)
+	{
+		setTask(name, amt, initAmt, null, true);
+	}
+
+	private void setTask(String name, int amt, int initAmt, String location, boolean addCounter)
+	{
+		taskName = name;
+		amount = amt;
+		initialAmount = initAmt;
+		taskLocation = location;
+
+		Task task = Task.getTask(name);
+		rebuildTargetNames(task);
 	}
 
 	@Subscribe
@@ -185,14 +384,17 @@ public class MaxHitPlugin extends Plugin
 	{
 		// COM_MODE = Attack Style
 		// COMBAT_WEAPON_CATEGORY = Weapon Style
-		if (event.getVarpId() == VarPlayerID.COM_MODE
-			|| event.getVarbitId() == VarPlayerID.COM_STANCE
-			|| event.getVarbitId() == VarbitID.COMBAT_WEAPON_CATEGORY
-			|| event.getVarbitId() == VarbitID.AUTOCAST_DEFMODE)
+		int varpId = event.getVarpId();
+		int varbitId = event.getVarbitId();
+
+		if (varpId == VarPlayerID.COM_MODE
+			|| varpId == VarPlayerID.COM_STANCE
+			|| varbitId == VarbitID.COMBAT_WEAPON_CATEGORY
+			|| varbitId == VarbitID.AUTOCAST_DEFMODE)
 		{
 			replaceCalculatorAndMaxHit();
 		}
-		else if (event.getVarbitId() == VarbitID.PRAYER_ALLACTIVE)
+		else if (varbitId == VarbitID.PRAYER_ALLACTIVE)
 		{
 			// Only re-calculate for select prayers
 			for (PrayerType prayer : PrayerType.values())
@@ -205,9 +407,20 @@ public class MaxHitPlugin extends Plugin
 				return;
 			}
 		}
-		else if (event.getVarbitId() == VarbitID.AUTOCAST_SPELL)
+		else if (varbitId == VarbitID.AUTOCAST_SPELL)
 		{
 			maxHitCalculator.calculateMaxHit();
+		}
+		else if (varpId == VarPlayerID.SLAYER_COUNT
+				|| varpId == VarPlayerID.SLAYER_AREA
+				|| varpId == VarPlayerID.SLAYER_TARGET
+				|| varbitId == VarbitID.SLAYER_TARGET_BOSSID
+				|| varpId == VarPlayerID.SLAYER_COUNT_ORIGINAL
+				|| varbitId == VarbitID.SLAYER_MODIFIER_ID
+				|| varbitId == VarbitID.SLAYER_MODIFIER_VALUE
+				|| varbitId == VarbitID.SLAYER_MODIFIER_NEGATIVE)
+		{
+			clientThread.invokeLater(this::updateTask);
 		}
 	}
 
