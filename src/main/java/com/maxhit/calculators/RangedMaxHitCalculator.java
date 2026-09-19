@@ -2,11 +2,7 @@ package com.maxhit.calculators;
 
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
-import com.maxhit.PrayerType;
 import com.maxhit.styles.AttackStyle;
-import com.maxhit.styles.CombatStyle;
-import java.util.Collection;
-import java.util.Map;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;

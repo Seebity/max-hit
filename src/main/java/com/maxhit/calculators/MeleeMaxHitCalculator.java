@@ -15,9 +15,7 @@ import com.maxhit.sets.ObsidianSet;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
-import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemVariationMapping;
 
@@ -117,10 +115,6 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	public void calculateMaxHit()
 	{
 		reset();
-
-		int region = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation()).getRegionID();
-		log.debug("Region ID: {}", region);
-
 		getSpecialBonus();
 		getBaseDamage();
 		maxHit = Math.max(0.0, Math.floor(baseDamage * specialBonus));

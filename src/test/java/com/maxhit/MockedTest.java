@@ -28,22 +28,13 @@
 package com.maxhit;
 
 import com.google.inject.testing.fieldbinder.Bind;
-import com.maxhit.calculators.StrengthBonusCalculator;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.game.ItemClient;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.game.ItemStats;
-import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 

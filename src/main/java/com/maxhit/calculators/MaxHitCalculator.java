@@ -3,7 +3,6 @@ package com.maxhit.calculators;
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.monsters.MonsterFlatArmour;
-import com.maxhit.monsters.MonsterWeaknesses;
 import com.maxhit.sets.EquipmentSet;
 import com.maxhit.styles.AttackStyle;
 import javax.annotation.Nullable;

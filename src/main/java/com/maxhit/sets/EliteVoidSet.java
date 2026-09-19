@@ -1,9 +1,7 @@
 package com.maxhit.sets;
 
-import com.maxhit.styles.CombatStyle;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;

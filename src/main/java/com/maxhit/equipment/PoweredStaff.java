@@ -1,6 +1,5 @@
 package com.maxhit.equipment;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import lombok.AllArgsConstructor;
 import net.runelite.api.gameval.ItemID;

@@ -1,6 +1,5 @@
 package com.maxhit.MaxHitTest;
 
-import com.maxhit.MagicSpell;
 import com.maxhit.MockedTest;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.calculators.MaxHitCalculator;
