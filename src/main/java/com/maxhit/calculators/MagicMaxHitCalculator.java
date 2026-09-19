@@ -3,6 +3,7 @@ package com.maxhit.calculators;
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.MagicSpell;
 import com.maxhit.Spellbook;
+import com.maxhit.equipment.ElementalAmulet;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.GodCape;
 import com.maxhit.equipment.PoweredStaff;
@@ -57,6 +58,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 
 	MagicSpell activeSpell = null;
 	private double baseSpellDamage;
+	private double elementalAmuletBonus;
 	private double baseDamageModifier;
 	private double primaryMagicDamage;
 	private double preHitRoll;
@@ -114,6 +116,31 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private boolean chaosGauntletsEquipped()
 	{
 		return EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.GLOVES, ItemID.GAUNTLETS_OF_CHAOS);
+	}
+
+	private void getElementalAmuletBonus()
+	{
+		// Skip if not using standard spellbook
+		if (!MagicSpell.getStandardSpells().contains(activeSpell))
+		{
+			elementalAmuletBonus = 0.0;
+			return;
+		}
+
+		for (ElementalAmulet amulet : ElementalAmulet.values())
+		{
+			if (!EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.AMULET, amulet.getItemId()))
+			{
+				continue;
+			}
+			if (Arrays.asList(amulet.getElements()).contains(activeSpell.getElement()))
+			{
+				log.debug("Elemental bonus applied");
+				elementalAmuletBonus = 2.0;
+				return;
+			}
+		}
+		elementalAmuletBonus = 0.0;
 	}
 
 	private boolean matchingGodCapeEquipped()
@@ -192,8 +219,11 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private void getBaseDamageModifier()
 	{
 		getSpellBaseMaxDamage();
+		getElementalAmuletBonus();
 
 		baseDamageModifier = baseSpellDamage;
+
+		baseDamageModifier += elementalAmuletBonus;
 
 		// Check for Chaos Gauntlets with bolt spells
 		if (BOLT_SPELLS.contains(activeSpell))
