@@ -25,7 +25,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPCComposition;
-import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
 import net.runelite.api.Actor;
 import net.runelite.api.Hitsplat;
@@ -102,10 +101,6 @@ public class MaxHitPlugin extends Plugin
 	@Getter
 	public HashMap<String, InventoryWeapon> map;
 
-	private Actor interactingTarget;
-
-	private Projectile projectile;
-
 	@Getter
 	private MagicSpell activeSpell;
 
@@ -128,10 +123,8 @@ public class MaxHitPlugin extends Plugin
 	@Setter
 	private String taskName;
 
-	private Instant infoTimer;
 	private boolean loginFlag;
 	private final List<Pattern> targetNames = new ArrayList<>();
-	private int regionID = -1;
 
 	@Override
 	public void startUp() throws Exception
@@ -149,6 +142,7 @@ public class MaxHitPlugin extends Plugin
 		{
 			maxHitCalculatorFactory = new MaxHitCalculatorFactory(this, client, itemManager);
 			specialAttackCalculator = new SpecialAttackCalculator(client);
+
 			if (!client.getGameState().equals(GameState.LOGGED_IN))
 			{
 				return;
@@ -235,16 +229,16 @@ public class MaxHitPlugin extends Plugin
 
 			if (loginFlag)
 			{
-				setTask(taskName, amount, initialAmount, taskLocation, false);
+				setTask(taskName, amount, initialAmount, taskLocation);
 			}
 			else if (!Objects.equals(taskName, this.taskName) || !Objects.equals(taskLocation, this.taskLocation))
 			{
-				setTask(taskName, amount, initialAmount, taskLocation, true);
+				setTask(taskName, amount, initialAmount, taskLocation);
 			}
 		}
 		else
 		{
-			setTask("", 0, 0);
+			setNoTask();
 		}
 	}
 
@@ -319,12 +313,12 @@ public class MaxHitPlugin extends Plugin
 	}
 
 	@VisibleForTesting
-	void setTask(String name, int amt, int initAmt)
+	void setNoTask()
 	{
-		setTask(name, amt, initAmt, null, true);
+		setTask("", 0, 0, null);
 	}
 
-	private void setTask(String name, int amt, int initAmt, String location, boolean addCounter)
+	private void setTask(String name, int amt, int initAmt, String location)
 	{
 		taskName = name;
 		amount = amt;
@@ -344,18 +338,20 @@ public class MaxHitPlugin extends Plugin
 			return;
 		}
 
+		equippedItems = event.getItemContainer();
+
 		if (maxHitCalculator == null)
 		{
 			return;
 		}
-		equippedItems = event.getItemContainer();
+
 		maxHitCalculator.setEquippedItems(equippedItems);
 		maxHitCalculator.calculateMaxHit();
 		specialAttackCalculator.setEquippedItems(equippedItems);
 		checkIsWieldingSpecialAttackWeapon();
 	}
 
-	//Update on stat change
+	// Update on stat change
 	@Subscribe
 	public void onStatChanged(StatChanged event)
 	{
@@ -365,15 +361,16 @@ public class MaxHitPlugin extends Plugin
 		{
 			return;
 		}
-		Skill[] skills = {
-			Skill.STRENGTH, Skill.RANGED, Skill.MAGIC, Skill.HITPOINTS
-		};
+
+		Skill[] skills = { Skill.STRENGTH, Skill.RANGED, Skill.MAGIC, Skill.HITPOINTS };
+
 		for (Skill skill : skills)
 		{
-			if (event.getSkill() != maxHitCalculator.getSkill())
+			if (event.getSkill() != skill)
 			{
 				continue;
 			}
+
 			maxHitCalculator.calculateMaxHit();
 			return;
 		}
@@ -427,19 +424,36 @@ public class MaxHitPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick gameTick)
 	{
-		// Check if user has reset
-		if (!config.resetMaxHit()) return;
-
-		if (maxHitCalculator.opponent  != null
-			&& lastTime != null
-			&& client.getLocalPlayer().getInteracting() == null)
+		// Check if user has reset enabled
+		if (!config.resetMaxHit())
 		{
-			if (Duration.between(lastTime, Instant.now()).compareTo(WAIT) > 0)
-			{
-				activeSpell = null;
-				maxHitCalculator.opponent  = null;
-				maxHitCalculator.calculateMaxHit();
-			}
+			return;
+		}
+
+		// If user has an opponent
+		if (maxHitCalculator.opponent  == null)
+		{
+			return;
+		}
+
+		// And a previously saved time
+		if (lastTime == null)
+		{
+			return;
+		}
+
+		// And user is no longer interacting
+		if (client.getLocalPlayer().getInteracting() != null)
+		{
+			return;
+		}
+
+		// And the wait time has been exceeded
+		if (Duration.between(lastTime, Instant.now()).compareTo(WAIT) > 0)
+		{
+			activeSpell = null;
+			maxHitCalculator.opponent  = null;
+			maxHitCalculator.calculateMaxHit();
 		}
 	}
 

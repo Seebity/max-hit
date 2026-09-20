@@ -135,7 +135,6 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			}
 			if (Arrays.asList(amulet.getElements()).contains(activeSpell.getElement()))
 			{
-				log.debug("Elemental bonus applied");
 				elementalAmuletBonus = 2.0;
 				return;
 			}

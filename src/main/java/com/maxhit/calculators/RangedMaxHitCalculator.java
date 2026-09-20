@@ -30,14 +30,20 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	protected void reset()
 	{
 		super.reset();
-		Item weapon = this.equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
-		if (weapon != null)
+
+		if (equippedItems != null)
 		{
-			if (weapon.getId() == ItemID.ECLIPSE_ATLATL)
+			Item weapon = this.equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
+			if (weapon != null)
 			{
-				this.skill = Skill.STRENGTH;
+				if (weapon.getId() == ItemID.ECLIPSE_ATLATL)
+				{
+					this.skill = Skill.STRENGTH;
+				}
 			}
 		}
+
+
 		baseDamage = 0.0;
 		gearBonus = 1.0;
 		specialBonus = 1.0;
@@ -85,6 +91,11 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 
 	private void getSpecialBonus()
 	{
+		if (equippedItems == null)
+		{
+			return;
+		}
+
 		Item weaponItem = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
 		if (weaponItem == null)
 		{
