@@ -51,6 +51,12 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MELEE, AttackStyle.ACCURATE, null, MeleeMaxHitCalculator.class,
 		129.0f, 3.0, 32.0, 0.0),
+	SOUL_REAPER(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SOULREAPER_AXE_ORN, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, null, MeleeMaxHitCalculator.class,
+		195.0f, 5.0, 56.0, 0.0),
 	MAX_OBSIDIAN(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.OBSIDIAN_HELMET, 1),

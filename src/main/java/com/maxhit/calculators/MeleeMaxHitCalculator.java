@@ -16,6 +16,7 @@ import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemVariationMapping;
 
@@ -29,6 +30,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	private final FullObsidianSet fullObsidianSetChecker;
 	private double baseDamage;
 	private double specialBonus;
+	private double soulReaperAxeBonus;
 
 	protected MeleeMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
@@ -45,6 +47,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		super.reset();
 		baseDamage = 0.0;
 		specialBonus = 1.0;
+		soulReaperAxeBonus = 0.0;
 	}
 
 	@Override
@@ -52,6 +55,29 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	{
 		if (attackStyle == AttackStyle.AGGRESSIVE) {styleBonus = 3.0;}
 		if (attackStyle == AttackStyle.CONTROLLED) {styleBonus = 1.0;}
+	}
+
+	private void getSoulReaperAxeBonus()
+	{
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SOULREAPER) ||
+			EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SOULREAPER_AXE_ORN))
+		{
+			int stacks = client.getVarpValue(VarPlayerID.SOULREAPER_STACKS);
+
+			soulReaperAxeBonus = stacks * 0.06;
+		}
+	}
+
+	@Override
+	protected int getSkillLevel()
+	{
+		int strengthLevel = client.getBoostedSkillLevel(this.skill);
+
+		getSoulReaperAxeBonus();
+
+		double totalLevel = Math.floor(strengthLevel * (1 + soulReaperAxeBonus));
+
+		return (int) totalLevel;
 	}
 
 	private void getBaseDamage()

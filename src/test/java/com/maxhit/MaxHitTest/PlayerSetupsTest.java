@@ -13,6 +13,7 @@ import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,6 +40,7 @@ public class PlayerSetupsTest extends MockedTest
 		maxHitCalculatorFactory = new MaxHitCalculatorFactory(maxHitPlugin, client, itemManager);
 		mockedItemContainer = mock(ItemContainer.class);
 		when(client.getItemContainer(anyInt())).thenReturn(mockedItemContainer);
+		when(client.getVarpValue(VarPlayerID.SOULREAPER_STACKS)).thenReturn(5);
 	}
 
 	private void testPlayerSetups(PlayerSetup[] setups, boolean standard)
