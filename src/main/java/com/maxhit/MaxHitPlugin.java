@@ -404,7 +404,8 @@ public class MaxHitPlugin extends Plugin
 				return;
 			}
 		}
-		else if (varbitId == VarbitID.AUTOCAST_SPELL)
+		else if (varbitId == VarbitID.AUTOCAST_SPELL ||
+				 varpId == VarPlayerID.SOULREAPER_STACKS)
 		{
 			maxHitCalculator.calculateMaxHit();
 		}
