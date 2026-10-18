@@ -17,14 +17,17 @@ link below if they don't match
 
 Currently, this plugin does not support the following weapons/bonuses:
 
+Blowpipes<br>
 Colossal Blade<br>
-Dragonbane Weapons<br>
-Golembane Effect<br>
-Keris<br>
+Demonbane<br>
+Holy Water<br>
+Keris and Kalphites<br>
+Lizards/Salamanders<br>
+Nightmare Staff Special Attack(s)<br>
 Revenant Weapons<br>
-Soul Reaper Axe<br>
-Toxic Blowpipe<br>
+Tomes<br>
 Twisted Bow<br>
+Vampyre Bonus Weapons<br>
 Zaryte Crossbow Passive Effect<br>
 
 ## Help and discussion
