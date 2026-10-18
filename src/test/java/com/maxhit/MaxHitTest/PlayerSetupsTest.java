@@ -8,11 +8,31 @@ import com.maxhit.calculators.SpecialAttackCalculator;
 import com.maxhit.calculators.StrengthBonusCalculator;
 import com.maxhit.equipment.SpecialAttackWeapon;
 import com.maxhit.styles.AttackStyle;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Shape;
+import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Actor;
+import net.runelite.api.ActorSpotAnim;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
+import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.IterableHashTable;
+import net.runelite.api.Model;
+import net.runelite.api.NPC;
+import net.runelite.api.NPCComposition;
+import net.runelite.api.Node;
+import net.runelite.api.NpcOverrides;
+import net.runelite.api.Point;
 import net.runelite.api.Skill;
+import net.runelite.api.SpritePixels;
+import net.runelite.api.WorldView;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldArea;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +51,7 @@ public class PlayerSetupsTest extends MockedTest
 {
 	private MaxHitCalculatorFactory maxHitCalculatorFactory;
 	private ItemContainer mockedItemContainer;
+	private NPC mockedNpc;
 
 	@BeforeEach
 	protected void setUp()
@@ -39,8 +60,12 @@ public class PlayerSetupsTest extends MockedTest
 		// Consolidate common setup logic that runs before each test
 		maxHitCalculatorFactory = new MaxHitCalculatorFactory(maxHitPlugin, client, itemManager);
 		mockedItemContainer = mock(ItemContainer.class);
+		ItemComposition mockedItemComposition = mock(ItemComposition.class);
+		mockedNpc = mock(NPC.class);
 		when(client.getItemContainer(anyInt())).thenReturn(mockedItemContainer);
 		when(client.getVarpValue(VarPlayerID.SOULREAPER_STACKS)).thenReturn(5);
+		when(client.getItemDefinition(anyInt())).thenReturn(mockedItemComposition);
+		when(mockedItemComposition.getName()).thenReturn("Test");
 	}
 
 	private void testPlayerSetups(PlayerSetup[] setups, boolean standard)
@@ -54,6 +79,10 @@ public class PlayerSetupsTest extends MockedTest
 				return setup.getEquippedItems()[slotIndex];  // Return the item from the corresponding array index
 			});
 			maxHitCalculator = maxHitCalculatorFactory.create(setup.getCombatStyle(), setup.getAttackStyle());
+
+			when(mockedNpc.getId()).thenReturn(setup.getNpcId());
+			when(mockedNpc.getName()).thenReturn("TEST");
+			maxHitCalculator.opponent = mockedNpc;
 
 			try(MockedStatic<StrengthBonusCalculator> strengthBonusCalculatorMockedStatic = mockStatic(StrengthBonusCalculator.class))
 			{
