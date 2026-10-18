@@ -2,6 +2,8 @@ package com.maxhit.calculators;
 
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
+import com.maxhit.equipment.EquipmentFunctions;
+import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.styles.AttackStyle;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
@@ -75,6 +77,9 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			gearBonus += salveBonus;
 		}
 
+		getDragonbaneBonus();
+		gearBonus += dragonbaneBonus;
+
 
 		//TODO Add support for Craw's bow and Twisted bow
 	}
@@ -87,6 +92,27 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		double strengthCalculation = (effectiveStrength * (strengthBonus + 64)) / 640.0;
 		double firstFloorCalculation = Math.floor(0.5 + strengthCalculation);
 		baseDamage = Math.floor(firstFloorCalculation * gearBonus);
+	}
+
+	public void getDragonbaneBonus()
+	{
+		// Check if opponent is draconic
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
+		if (!DraconicMonsters.ID_LIST.contains(npcId))
+		{
+			return;
+		}
+
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_XBOW))
+		{
+			dragonbaneBonus = 0.25;
+		}
+
+		return;
 	}
 
 	private void getSpecialBonus()

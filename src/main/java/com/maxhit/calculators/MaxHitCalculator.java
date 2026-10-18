@@ -34,6 +34,7 @@ public abstract class MaxHitCalculator
     protected double styleBonus;
 	protected double salveBonus;
 	protected double slayerBonus;
+	protected double dragonbaneBonus;
     protected double voidBonus;
 	protected double flatArmour;
 
@@ -73,6 +74,7 @@ public abstract class MaxHitCalculator
 		voidBonus = 1.0;
 		prayerBonus = 1.0;
 		flatArmour = 0.0;
+		dragonbaneBonus = 0.0;
 	}
 
 	protected abstract void getStyleBonus();
@@ -103,13 +105,11 @@ public abstract class MaxHitCalculator
 		strengthBonus = StrengthBonusCalculator.getStrengthBonus(equippedItems, itemManager, skill);
 	}
 
-	protected void getFlatArmour()
+	public int getNpcId()
 	{
-		flatArmour = 0.0;
-
 		if (opponent == null)
 		{
-			return;
+			return -1;
 		}
 
 		NPC npc = (NPC) opponent;
@@ -117,11 +117,24 @@ public abstract class MaxHitCalculator
 
 		if (npcName == null)
 		{
-			return;
+			return -1;
 		}
+
+		return npc.getId();
+	}
+
+	protected void getFlatArmour()
+	{
+		flatArmour = 0.0;
+
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
 		for (MonsterFlatArmour monster : MonsterFlatArmour.values())
 		{
-			if (monster.getId() != npc.getId())
+			if (monster.getId() != npcId)
 			{
 				continue;
 			}
@@ -132,6 +145,8 @@ public abstract class MaxHitCalculator
 	}
 
     public abstract void calculateMaxHit();
+
+	public abstract void getDragonbaneBonus();
 
 	protected int getSkillLevel()
 	{

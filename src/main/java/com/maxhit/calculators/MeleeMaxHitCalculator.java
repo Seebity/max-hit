@@ -4,6 +4,11 @@ import com.google.common.collect.ImmutableSet;
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.equipment.EquipmentFunctions;
+import com.maxhit.equipment.GolembaneWeapon;
+import com.maxhit.equipment.SalveAmulet;
+import com.maxhit.monsters.DraconicMonsters;
+import com.maxhit.monsters.GolemMonsters;
+import com.maxhit.monsters.UndeadMonsters;
 import com.maxhit.sets.FullObsidianSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
@@ -12,8 +17,11 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import com.maxhit.sets.DharokSet;
 import com.maxhit.sets.ObsidianSet;
+import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
@@ -133,7 +141,60 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		{
 			specialBonus += salveBonus;
 		}
+
+		specialBonus += getGolemBonus();
+		getDragonbaneBonus();
+		specialBonus += dragonbaneBonus;
+
 	}
+
+	public double getGolemBonus()
+	{
+		// Check if opponent is a golem
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return 0.0;
+
+		if (!GolemMonsters.ID_LIST.contains(npcId))
+		{
+			return 0.0;
+		}
+
+		for (GolembaneWeapon weapon : GolembaneWeapon.values())
+		{
+			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, weapon.getItemId()))
+			{
+				return weapon.getDamageMultiplier();
+			}
+		}
+		return 0.0;
+	}
+
+	public void getDragonbaneBonus()
+	{
+		// Check if opponent is draconic
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
+		if (!DraconicMonsters.ID_LIST.contains(npcId))
+		{
+			return;
+		}
+
+		// Wand is funny to me, but it does count
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_LANCE) ||
+			EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_WAND))
+		{
+			dragonbaneBonus = 0.2;
+		}
+
+		return;
+	}
+
+
 
 	//TODO add support for Keris/Keris Partisan vs Kalphites
 

@@ -8,6 +8,7 @@ import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.GodCape;
 import com.maxhit.equipment.PoweredStaff;
 import com.maxhit.equipment.VirtusPieces;
+import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.MonsterWeaknesses;
 import static com.maxhit.regions.TombsRegions.TOA_ROOM_IDS;
 import com.maxhit.styles.AttackStyle;
@@ -63,14 +64,13 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	private double primaryMagicDamage;
 	private double preHitRoll;
 	private double shadowBonus;
-	private double salveBonus;
 	private double avariceBonus;
 	private double standardSpellbookStaffBonus;
 	private double virtusBonus;
-	private double prayerBonus;
 	private double elementalWeakness;
 	private double sceptreBonus;
 	private double accursedSceptreSpecialAttackBonus;
+
 	private double tomeBonus;
 	private double markOfDarknessBonus;
 	private double ahrimsDamnedBonus;
@@ -140,6 +140,27 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 		elementalAmuletBonus = 0.0;
+	}
+
+	public void getDragonbaneBonus()
+	{
+		// Check if opponent is draconic
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
+		if (!DraconicMonsters.ID_LIST.contains(npcId))
+		{
+			return;
+		}
+
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_WAND))
+		{
+			dragonbaneBonus = 0.4;
+		}
+
+		return;
 	}
 
 	private boolean matchingGodCapeEquipped()
@@ -375,23 +396,26 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		double tempBonuses = (strengthBonus - voidBonus) * shadowBonus;
 		tempBonuses = Math.min(1.0, tempBonuses);
 		double totalBonus = voidBonus + salveBonus + avariceBonus + standardSpellbookStaffBonus + virtusBonus + prayerBonus;
-		double elementalWeaknessAddition = Math.floor(baseDamageModifier * elementalWeakness);
-		primaryMagicDamage = Math.floor(baseDamageModifier * (1 + tempBonuses + totalBonus) + elementalWeaknessAddition);
+		primaryMagicDamage = Math.floor(baseDamageModifier * (1 + tempBonuses + totalBonus));
 	}
 
 	private void getPreHitRoll()
 	{
-
+		getDragonbaneBonus();
 		//TODO: Add sceptre and tome bonus
-		double totalSlayerBonus = 1.0 + slayerBonus;
-		double totalSceptreBonus = 1.0 + sceptreBonus;
-		double totalAccursedBonus = 1.0 + accursedSceptreSpecialAttackBonus;
-		double totalTomeBonus = 1.0 + tomeBonus;
+		double totalSlayerBonus     = 1.0 + slayerBonus;
+		double totalDragonbaneBonus = 1.0 + dragonbaneBonus;
+		double totalSceptreBonus    = 1.0 + sceptreBonus;
+		double totalAccursedBonus   = 1.0 + accursedSceptreSpecialAttackBonus;
+		double totalTomeBonus       = 1.0 + tomeBonus;
 
-		double firstCalculation = Math.floor(primaryMagicDamage * totalSlayerBonus);
-		double secondCalculation = Math.floor(firstCalculation * totalSceptreBonus);
-		double thirdCalculation = Math.floor(secondCalculation * totalAccursedBonus);
-		preHitRoll = Math.floor(thirdCalculation * totalTomeBonus);
+		double slayerCalculation     = Math.floor(primaryMagicDamage    * totalSlayerBonus);
+		double dragonbaneCalculation = Math.floor(slayerCalculation     * totalDragonbaneBonus);
+		double sceptreCalculation    = Math.floor(dragonbaneCalculation * totalSceptreBonus);
+		double accursedCalculation   = Math.floor(sceptreCalculation    * totalAccursedBonus);
+
+		double elementalWeaknessAddition = Math.floor(baseDamageModifier * elementalWeakness);
+		preHitRoll = Math.floor(accursedCalculation * totalTomeBonus) + elementalWeaknessAddition;
 	}
 
 	@Override
