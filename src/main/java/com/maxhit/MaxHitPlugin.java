@@ -393,6 +393,12 @@ public class MaxHitPlugin extends Plugin
 		}
 		else if (varbitId == VarbitID.PRAYER_ALLACTIVE)
 		{
+			// Check if prayer turned off
+			if (client.getVarbitValue(VarbitID.PRAYER_ALLACTIVE) == 0)
+			{
+				maxHitCalculator.calculateMaxHit();
+				return;
+			}
 			// Only re-calculate for select prayers
 			for (PrayerType prayer : PrayerType.values())
 			{

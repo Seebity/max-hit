@@ -2,6 +2,7 @@ package com.maxhit.calculators;
 
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
+import com.maxhit.PrayerType;
 import com.maxhit.monsters.MonsterFlatArmour;
 import com.maxhit.sets.EquipmentSet;
 import com.maxhit.styles.AttackStyle;
@@ -25,6 +26,7 @@ public abstract class MaxHitCalculator
 	protected ItemContainer equippedItems;
 	@Getter
     protected Skill skill;
+	protected double effectiveLevel;
 	@Setter
 	protected AttackStyle attackStyle;
 	protected BonusCalculator bonusCalculator;
@@ -35,6 +37,7 @@ public abstract class MaxHitCalculator
 	protected double salveBonus;
 	protected double slayerBonus;
 	protected double dragonbaneBonus;
+	protected double demonbaneBonus;
     protected double voidBonus;
 	protected double flatArmour;
 
@@ -75,6 +78,8 @@ public abstract class MaxHitCalculator
 		prayerBonus = 1.0;
 		flatArmour = 0.0;
 		dragonbaneBonus = 0.0;
+		demonbaneBonus = 0.0;
+		getEffectiveLevel();
 	}
 
 	protected abstract void getStyleBonus();
@@ -86,18 +91,49 @@ public abstract class MaxHitCalculator
 			voidBonus -= 1.0;
 	}
 
+	protected void getEffectiveStrength()
+	{
+		getStyleBonus();
+		getVoidBonus();
+
+		// getValue() gets boosted value
+		effectiveStrength = Math.floor((effectiveLevel + styleBonus + 8) * voidBonus);
+	}
+
 	protected void getPrayerBonus()
 	{
 		prayerBonus = bonusCalculator.getPrayerBonus();
 	}
 
-	protected void getEffectiveStrength()
+	protected void getEffectiveLevel()
 	{
-		getStyleBonus();
+		effectiveLevel = client.getBoostedSkillLevel(this.skill);
 		getPrayerBonus();
-		getVoidBonus();
-		// getValue() gets boosted value
-		effectiveStrength = Math.floor(Math.floor((getSkillLevel() * prayerBonus) + styleBonus + 8) * voidBonus);
+
+		// First Melee and Ranged Prayers always increment by at least one
+		if (skill == Skill.STRENGTH)
+		{
+			if (PrayerType.BURST_OF_STRENGTH.isActive(client) && effectiveLevel <= 20)
+			{
+				effectiveLevel += 1;
+				return;
+			}
+		}
+		else if (skill == Skill.RANGED)
+		{
+			if (PrayerType.SHARP_EYE.isActive(client) && effectiveLevel <= 20)
+			{
+				effectiveLevel += 1;
+				return;
+			}
+		}
+		else if (skill == Skill.MAGIC)
+		{
+			// Can stop here for magic
+			return;
+		}
+
+		effectiveLevel = (int) Math.floor(effectiveLevel * prayerBonus);
 	}
 
     protected void getStrengthBonus()
@@ -148,10 +184,7 @@ public abstract class MaxHitCalculator
 
 	public abstract void getDragonbaneBonus();
 
-	protected int getSkillLevel()
-	{
-		return client.getBoostedSkillLevel(this.skill);
-	}
+	public abstract void getDemonbaneBonus();
 
 	protected void getSalveBonus()
 	{
