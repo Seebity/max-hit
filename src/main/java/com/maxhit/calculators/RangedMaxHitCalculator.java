@@ -111,7 +111,10 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		{
 			dragonbaneBonus = 0.25;
 		}
+	}
 
+	public void getDemonbaneBonus()
+	{
 		return;
 	}
 
@@ -185,9 +188,9 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;
 		final double requiredEffectiveStrength = ((nextBaseDamage - 0.5) * 640) / (strengthBonus + 64);
 		final double requiredLevel = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0))  / prayerBonus;
-		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / getSkillLevel();
+		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / effectiveLevel;
 
-		final double levelDiff = Math.ceil(requiredLevel - getSkillLevel());
+		final double levelDiff = Math.ceil(requiredLevel - effectiveLevel);
 		final double strengthBonusDiff = Math.ceil(requiredStrengthBonus - strengthBonus);
 		final double prayerDiff = Math.ceil((requiredPrayer - prayerBonus) * 100.0);
 

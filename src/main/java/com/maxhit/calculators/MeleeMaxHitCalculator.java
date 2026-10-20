@@ -5,10 +5,8 @@ import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.GolembaneWeapon;
-import com.maxhit.equipment.SalveAmulet;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.GolemMonsters;
-import com.maxhit.monsters.UndeadMonsters;
 import com.maxhit.sets.FullObsidianSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
@@ -17,11 +15,8 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import com.maxhit.sets.DharokSet;
 import com.maxhit.sets.ObsidianSet;
-import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.ItemContainer;
-import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
@@ -75,17 +70,14 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			soulReaperAxeBonus = stacks * 0.06;
 		}
 	}
-
 	@Override
-	protected int getSkillLevel()
+	protected void getEffectiveLevel()
 	{
-		int strengthLevel = client.getBoostedSkillLevel(this.skill);
+		super.getEffectiveLevel();
 
+		// Stacks additively
 		getSoulReaperAxeBonus();
-
-		double totalLevel = Math.floor(strengthLevel * (1 + soulReaperAxeBonus));
-
-		return (int) totalLevel;
+		effectiveLevel += Math.floor(effectiveLevel * soulReaperAxeBonus);
 	}
 
 	private void getBaseDamage()
@@ -146,6 +138,11 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		getDragonbaneBonus();
 		specialBonus += dragonbaneBonus;
 
+	}
+
+	public void getDemonbaneBonus()
+	{
+		return;
 	}
 
 	public double getGolemBonus()
@@ -244,9 +241,9 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;
 		final double requiredEffectiveStrength = ((nextBaseDamage - 0.5) * 640) / (strengthBonus + 64);
 		final double requiredLevel = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0))  / prayerBonus;
-		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / getSkillLevel();
+		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / effectiveLevel;
 
-		final double levelDiff = Math.ceil(requiredLevel - getSkillLevel());
+		final double levelDiff = Math.ceil(requiredLevel - effectiveLevel);
 		final double strengthBonusDiff = Math.ceil(requiredStrengthBonus - strengthBonus);
 		final double prayerDiff = Math.ceil((requiredPrayer - prayerBonus) * 100.0);
 

@@ -84,6 +84,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 
 	protected void reset()
 	{
+		super.reset();
 		voidBonus = 0.0;
 		baseSpellDamage = 0.0;
 		baseDamageModifier = 0.0;
@@ -111,6 +112,11 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	@Override
 	protected void getStyleBonus()
 	{
+	}
+
+	public void getDemonbaneBonus()
+	{
+		return;
 	}
 
 	private boolean chaosGauntletsEquipped()
@@ -191,7 +197,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			{
 				if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
 				{
-					baseSpellDamage = staff.getBaseMaxHit(getSkillLevel());
+					baseSpellDamage = staff.getBaseMaxHit(effectiveLevel);
 					return;
 				}
 			}
