@@ -8,7 +8,7 @@ import net.runelite.client.game.ItemVariationMapping;
 @FunctionalInterface
 interface Calculation
 {
-	double compute(int skillLevel);
+	double compute(double skillLevel);
 }
 
 @AllArgsConstructor
@@ -48,9 +48,9 @@ public enum PoweredStaff
 
 	private final int itemId;
 	private final Calculation baseMaxHitCalculation;
-	public double getBaseMaxHit(int magicLevel)
+	public double getBaseMaxHit(double effectiveLevel)
 	{
-		return Math.max(0.0, baseMaxHitCalculation.compute(magicLevel));
+		return Math.max(0.0, baseMaxHitCalculation.compute(effectiveLevel));
 	}
 
 	public Collection<Integer> getVarients()
