@@ -232,6 +232,7 @@ public class UndeadMonsters {
 		1540, //Skeleton heavy
 		12107, //Skeleton Hellhound (Calvar'ion)
 		6613, //Skeleton Hellhound (Vet'ion)
+		1537, //Skeleton hero
 		84, //Skeleton Mage
 		4319, //Skeleton Mage
 		1541, //Skeleton thug
