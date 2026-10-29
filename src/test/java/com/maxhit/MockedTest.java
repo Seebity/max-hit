@@ -78,5 +78,6 @@ public abstract class MockedTest extends MockedTestBase
 		when(client.getWorldView(anyInt())).thenReturn(mockedWorldView);
 		when(client.getRealSkillLevel(Skill.HITPOINTS)).thenReturn(99);
 		when(maxHitPlugin.getActiveSpell()).thenReturn(null);
+		when(maxHitPlugin.isMarkOfDarknessActive()).thenReturn(true);
 	}
 }

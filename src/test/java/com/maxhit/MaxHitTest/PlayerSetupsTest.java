@@ -8,31 +8,13 @@ import com.maxhit.calculators.SpecialAttackCalculator;
 import com.maxhit.calculators.StrengthBonusCalculator;
 import com.maxhit.equipment.SpecialAttackWeapon;
 import com.maxhit.styles.AttackStyle;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Shape;
-import java.awt.image.BufferedImage;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Actor;
-import net.runelite.api.ActorSpotAnim;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.IterableHashTable;
-import net.runelite.api.Model;
 import net.runelite.api.NPC;
-import net.runelite.api.NPCComposition;
-import net.runelite.api.Node;
-import net.runelite.api.NpcOverrides;
-import net.runelite.api.Point;
 import net.runelite.api.Skill;
-import net.runelite.api.SpritePixels;
-import net.runelite.api.WorldView;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldArea;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,6 +64,10 @@ public class PlayerSetupsTest extends MockedTest
 
 			when(mockedNpc.getId()).thenReturn(setup.getNpcId());
 			when(mockedNpc.getName()).thenReturn("TEST");
+			if (setup.getMagicSpell() != null)
+			{
+				when(client.getVarbitValue(VarbitID.SPELLBOOK)).thenReturn(setup.getMagicSpell().getSpellbook().ordinal());
+			}
 			maxHitCalculator.opponent = mockedNpc;
 
 			try(MockedStatic<StrengthBonusCalculator> strengthBonusCalculatorMockedStatic = mockStatic(StrengthBonusCalculator.class))
@@ -94,7 +80,12 @@ public class PlayerSetupsTest extends MockedTest
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getDinhsBonus(setup.getAttackStyle(), mockedItemContainer, itemManager)).thenCallRealMethod();
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
 				assertEquals(setup.getMaxHitCalculatorClass(), maxHitCalculator.getClass());
+				long start = System.nanoTime();
 				maxHitCalculator.calculateMaxHit();
+				long end = System.nanoTime();
+				long duration = (end - start) / 1000000;
+				assertTrue(duration < 100.0,
+							() -> String.format("%s took %d ms (100 ms limit)", setup.name(), duration));
 				if (standard)
 					assertEquals(setup.getStandardMaxHit(), maxHitCalculator.getMaxHit(),
 						() -> String.format("%s standard max hit should be %.0f", setup.name(), setup.getStandardMaxHit()));
@@ -125,12 +116,18 @@ public class PlayerSetupsTest extends MockedTest
 					{
 						continue;
 					}
-					assertTrue(reqs.getNextRequiredLevel() > 0,
-								() -> String.format("%s - Next required levels should be positive for ", setup.name()));
-					assertTrue(reqs.getNextRequiredStrength() > 0,
-								() -> String.format("%s - Next required strength bonus should be positive for ", setup.name()));
-					assertTrue(reqs.getNextRequiredPrayer() > 0,
-								() -> String.format("%s - Next required prayer bonus should be positive for ", setup.name()));
+					assertTrue(reqs.getNextRequiredLevel() > 0.0,
+								() -> String.format("%s - Next required levels should be positive", setup.name()));
+					assertTrue(reqs.getNextRequiredStrength() > 0.0,
+								() -> String.format("%s - Next required strength bonus should be positive", setup.name()));
+					assertTrue(reqs.getNextRequiredPrayer() > 0.0,
+								() -> String.format("%s - Next required prayer bonus should be positive", setup.name()));
+					assertTrue(reqs.getNextRequiredLevel() < 25.0,
+						() -> String.format("%s - Next required levels should be less than 20 (%f)", setup.name(), reqs.getNextRequiredLevel()));
+					assertTrue(reqs.getNextRequiredStrength() < 25.0,
+						() -> String.format("%s - Next required strength bonus should be less than 20 (%f)", setup.name(), reqs.getNextRequiredStrength()));
+					assertTrue(reqs.getNextRequiredPrayer() < 0.25,
+						() -> String.format("%s - Next required prayer bonus should be less than 20%% (%f)", setup.name(), reqs.getNextRequiredPrayer()));
 				}
 			}
 

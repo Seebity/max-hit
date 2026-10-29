@@ -52,8 +52,8 @@ public enum PlayerSetup
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OSMUMTENS_FANG, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE,  MeleeMaxHitCalculator.class,
-		181.0f, 3.0, 35.0, 61.0),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		181.0f, 5.0, 36.0, 42.0),
 	DINHS(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DINHS_BULWARK_ORNAMENT, 1)
@@ -72,7 +72,19 @@ public enum PlayerSetup
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		141.0f, 5.0, 50.0, 0.0, 8060),
+		141.0f, 5.0, 52.0, 0.0, 8060),
+	SILVERLIGHT(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.AGRITH_SILVERLIGHT_DYED, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		90.0f, 4.0, 41.0, 0.0, 3131),
+	EMBERLIGHT(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EMBERLIGHT, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		91.0f, 5.0, 45.0, 0.0, 3131),
 	SOUL_REAPER(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SOULREAPER_AXE_ORN, 1)
@@ -88,7 +100,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
-		97.0f, 3.0, 36.0, 0.0),
+		103.0f, 3.0, 37.0, 0.0),
 	MAX_DHAROK(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_HEAD, 1),
@@ -112,7 +124,16 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		121.0f, 3.0, 36.0, 0.0),
+		124.0f, 4.0, 36.0, 0.0),
+	CRYSTAL_AND_CRYSTAL(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET, 1),
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.NZONE_CRYSTAL_BOW_500, 1),
+			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.CRYSTAL_CHESTPLATE, 1),
+			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
+		124.0f, 4.0, 36.0, 0.0),
 	BOWFA_AND_CRYSTAL_COLORED(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET_AMLODD, 1),
@@ -128,7 +149,25 @@ public enum PlayerSetup
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
 		189.0f, 5.0, 43.0, 53.0),
-	DRAGONHUNTER_WAND(
+	SCORCHING_BOW(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCORCHING_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		127.0f, 5.0, 42.0, 0.0, 3131),
+	PURGING_STAFF(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.PURGING_STAFF, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.DARK_DEMONBANE, MagicMaxHitCalculator.class,
+		0.37f, 61.0, 61.0, 3131),
+	DRAGONHUNTER_WAND_GREEN_DRAGON(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_WAND, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.WATER_SURGE, MagicMaxHitCalculator.class,
+		0.37f, 53.0, 56.0, 260), // DPS calculator will report 49 here but 53 is right (I think..)
+	DRAGONHUNTER_WAND_VORKATH(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_WAND, 1),
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
@@ -143,7 +182,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.VIRTUS_LEGS, 1)
 		)),
 	CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.ICE_BARRAGE, MagicMaxHitCalculator.class,
-	0.33f, 39.0, 39.0, 0.0),
+	0.24f, 39.0, 39.0, 0.0),
 	MAX_MAGIC_DART(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SLAYER_STAFF, 1)
