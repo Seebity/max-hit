@@ -19,7 +19,7 @@ import net.runelite.client.game.ItemVariationMapping;
 public class RangedMaxHitCalculator extends MaxHitCalculator
 {
 	private double baseDamage;
-	private double gearBonus;
+	private double crystalBonus;
 	private double specialBonus;
 
 	protected RangedMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
@@ -32,6 +32,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	protected void reset()
 	{
 		super.reset();
+		crystalBonus = 1.0;
 
 		if (equippedItems != null)
 		{
@@ -45,14 +46,12 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
-
 		baseDamage = 0.0;
-		gearBonus = 1.0;
 		specialBonus = 1.0;
 	}
 
 	@Override
-	protected void getStyleBonus()
+	protected void updateStyleBonus()
 	{
 		// Have to use different method since ATTACK style is just equal to RANGED
 		if (client.getVarpValue(VarPlayerID.COM_MODE) == AttackStyle.ACCURATE.ordinal())
@@ -61,37 +60,10 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		}
 	}
 
-
-	private void getGearBonus()
+	private void getBaseDamage()
 	{
-		getSalveBonus();
-
-		// Slayer helm and salve don't stack
-		if (salveBonus == 0.0)
-		{
-			getSlayerBonus();
-			gearBonus += slayerBonus;
-		}
-		else
-		{
-			gearBonus += salveBonus;
-		}
-
-		getDragonbaneBonus();
-		gearBonus += dragonbaneBonus;
-
-
-		//TODO Add support for Craw's bow and Twisted bow
-	}
-
-	private void getBaseHit()
-	{
-		getEffectiveStrength();
-		getStrengthBonus();
-		getGearBonus();
 		double strengthCalculation = (effectiveStrength * (strengthBonus + 64)) / 640.0;
-		double firstFloorCalculation = Math.floor(0.5 + strengthCalculation);
-		baseDamage = Math.floor(firstFloorCalculation * gearBonus);
+		baseDamage = Math.floor(0.5 + strengthCalculation);
 	}
 
 	public void getDragonbaneBonus()
@@ -109,70 +81,119 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 
 		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_XBOW))
 		{
-			dragonbaneBonus = 0.25;
+			dragonbaneBonus = 1.25;
 		}
 	}
 
-	public void getDemonbaneBonus()
+	private double applyBonuses(double baseDamage)
 	{
-		return;
-	}
-
-	private void getSpecialBonus()
-	{
+		double damage = baseDamage;
 		if (equippedItems == null)
 		{
-			return;
+			return damage;
 		}
 
 		Item weaponItem = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
+
 		if (weaponItem == null)
 		{
-			return;
+			return damage;
 		}
 
-		if (!ItemVariationMapping.getVariations(ItemID.BOW_OF_FAERDHINEN_INACTIVE).contains(weaponItem.getId()))
+		// Bowfa and Crystal Bow
+		if (ItemVariationMapping.getVariations(ItemID.BOW_OF_FAERDHINEN_INACTIVE).contains(weaponItem.getId()) ||
+			ItemVariationMapping.getVariations(ItemID.ROVING_CRYSTAL_BOW_NEW).contains(weaponItem.getId()))
 		{
-			return;
+			Item headSlotItem = equippedItems.getItem(EquipmentInventorySlot.HEAD.getSlotIdx());
+			if (headSlotItem != null &&
+				ItemVariationMapping.getVariations(
+					ItemVariationMapping.map(ItemID.CRYSTAL_HELMET)).contains(headSlotItem.getId()))
+			{
+				crystalBonus += 0.025;
+			}
+
+			Item bodySlotItem = equippedItems.getItem(EquipmentInventorySlot.BODY.getSlotIdx());
+			if (bodySlotItem != null &&
+				ItemVariationMapping.getVariations(
+					ItemVariationMapping.map(ItemID.CRYSTAL_CHESTPLATE)).contains(bodySlotItem.getId()))
+			{
+				crystalBonus += 0.075;
+			}
+
+			Item legsSlotItem = equippedItems.getItem(EquipmentInventorySlot.LEGS.getSlotIdx());
+			if (legsSlotItem != null &&
+				ItemVariationMapping.getVariations(
+					ItemVariationMapping.map(ItemID.CRYSTAL_PLATELEGS)).contains(legsSlotItem.getId()))
+			{
+				crystalBonus += 0.05;
+			}
 		}
 
-		Item headSlotItem = equippedItems.getItem(EquipmentInventorySlot.HEAD.getSlotIdx());
-		if (headSlotItem != null &&
-			ItemVariationMapping.getVariations(
-				ItemVariationMapping.map(ItemID.CRYSTAL_HELMET)).contains(headSlotItem.getId()))
+		// Crystal bonus is applied before Amulet of Avarice/Salve/Slayer Helm(i)
+		damage = factor(damage, crystalBonus);
+
+		// Avarice, Salve, and Slayer helm don't stack
+		getAvariceBonus();
+		getSalveBonus();
+		getSlayerBonus();
+		getDragonbaneBonus();
+		getDemonbaneBonus();
+		if (avariceBonus > 1.0)
 		{
-			specialBonus += 0.025;
+			damage = factor(damage, avariceBonus);
+		}
+		else if (salveBonus > 1.0)
+		{
+			damage = factor(damage, salveBonus);
+		}
+		else if (slayerBonus > 1.0)
+		{
+			// Craw's bow, Dragonbane, and Demonbane are additive
+			double numerator = 23;
+			if (dragonbaneBonus > 1.0)
+			{
+				numerator += 5;
+			}
+			if (demonbaneBonus > 0.0)
+			{
+				numerator += 6;
+			}
+
+			damage = factor(damage, numerator / 20.0);
 		}
 
-		Item bodySlotItem = equippedItems.getItem(EquipmentInventorySlot.BODY.getSlotIdx());
-		if (bodySlotItem != null &&
-			ItemVariationMapping.getVariations(
-				ItemVariationMapping.map(ItemID.CRYSTAL_CHESTPLATE)).contains(bodySlotItem.getId()))
+		// If not wearing slayer helm and not on task
+		if (slayerBonus == 1.0)
 		{
-			specialBonus += 0.075;
+			damage = factor(damage, dragonbaneBonus);
+
+			if (demonbaneBonus > 0.0)
+			{
+				damage = addFactor(damage, demonbaneBonus);
+			}
 		}
 
-		Item legsSlotItem = equippedItems.getItem(EquipmentInventorySlot.LEGS.getSlotIdx());
-		if (legsSlotItem != null &&
-			ItemVariationMapping.getVariations(
-				ItemVariationMapping.map(ItemID.CRYSTAL_PLATELEGS)).contains(legsSlotItem.getId()))
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.RAT_BONE_BOW))
 		{
-			specialBonus += 0.05;
+			damage = damage + 10.0;
 		}
+
+		//TODO Add support for Craw's bow and Twisted bow
+		return damage;
 	}
 
 	@Override
 	public void calculateMaxHit()
 	{
 		reset();
-		getBaseHit();
-		getSpecialBonus();
+		updateEffectiveStrength();
+		updateStrengthBonus();
+		getBaseDamage();
+		maxHit = baseDamage;
+		maxHit = applyBonuses(baseDamage);
 
 		//TODO add support for special attack
-
-		maxHit = Math.floor(baseDamage * specialBonus);
-
-		getFlatArmour();
+		updateFlatArmour();
 		maxHit -= flatArmour;
 
 		calculateNextMaxHitRequirements();
@@ -182,17 +203,48 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	protected void calculateNextMaxHitRequirements()
 	{
 		final double nextMaxHit = maxHit + 1.0;
-		double nextBaseDamage = Math.ceil(nextMaxHit / specialBonus);
+		double tempMaxHit;
+		double levelDiff = 1.0;
+		// Get Skill level difference
+		do
+		{
+			updateEffectiveLevel();
+			effectiveLevel += levelDiff;
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			levelDiff++;
+		} while (tempMaxHit < nextMaxHit);
 
-		// Calculate needed strength bonus
-		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;
-		final double requiredEffectiveStrength = ((nextBaseDamage - 0.5) * 640) / (strengthBonus + 64);
-		final double requiredLevel = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0))  / prayerBonus;
-		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / effectiveLevel;
+		// Get Strength bonus difference
+		double strengthBonusDiff = 1.0;
+		do
+		{
+			updateEffectiveLevel();
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			strengthBonus += strengthBonusDiff;
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			strengthBonusDiff++;
+		} while (tempMaxHit < nextMaxHit);
 
-		final double levelDiff = Math.ceil(requiredLevel - effectiveLevel);
-		final double strengthBonusDiff = Math.ceil(requiredStrengthBonus - strengthBonus);
-		final double prayerDiff = Math.ceil((requiredPrayer - prayerBonus) * 100.0);
+		// Get prayer bonus difference
+		double prayerDiff = 0.1;
+		do
+		{
+			prayerBonus += prayerDiff;
+			updateEffectiveLevel();
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			prayerDiff += 0.1;
+		} while (tempMaxHit < nextMaxHit);
 
 		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff);
 	}

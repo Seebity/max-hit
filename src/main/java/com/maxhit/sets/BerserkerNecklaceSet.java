@@ -11,10 +11,19 @@ public class BerserkerNecklaceSet extends EquipmentSet
 	@Override
 	protected Map<EquipmentInventorySlot, Collection<Integer>> getEquipment()
 	{
-		return Map.of(EquipmentInventorySlot.AMULET, Set.of(
-			ItemID.JEWL_BESERKER_NECKLACE,
-			ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT
-		));
+		return Map.of(
+			EquipmentInventorySlot.AMULET, Set.of(
+				ItemID.JEWL_BESERKER_NECKLACE,
+				ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT),
+			EquipmentInventorySlot.WEAPON, Set.of(
+				ItemID.TZHAAR_SPLITSWORD,
+				ItemID.BR_OBSIDIAN_SWORD,
+				ItemID.TZHAAR_KNIFE,
+				ItemID.TZHAAR_MACE,
+				ItemID.TZHAAR_MAUL,
+				ItemID.TZHAAR_MAUL_T
+			)
+		);
 	}
 
 	@Override

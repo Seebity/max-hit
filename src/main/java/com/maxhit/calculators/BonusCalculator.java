@@ -43,12 +43,12 @@ public class BonusCalculator
 
 		if (npc == null)
 		{
-			return 0.0;
+			return 1.0;
 		}
 
 		if (!UndeadMonsters.ID_LIST.contains(npc.getId()))
 		{
-			return 0.0;
+			return 1.0;
 		}
 
 		for (SalveAmulet amuletType : SalveAmulet.values())
@@ -58,7 +58,7 @@ public class BonusCalculator
 				return amuletType.getBonus(skill);
 			}
 		}
-		return 0.0;
+		return 1.0;
 	}
 
 	public double getVoidBonus()
@@ -113,12 +113,12 @@ public class BonusCalculator
 
 		if (npc == null)
 		{
-			return 0.0;
+			return 1.0;
 		}
 
 		if (!plugin.isTarget(npc))
 		{
-			return 0.0;
+			return 1.0;
 		}
 
 		// Check head slot
@@ -127,7 +127,7 @@ public class BonusCalculator
 
 		if (headSlot == null)
 		{
-			return 0.0;
+			return 1.0;
 		}
 
 		String headSlotName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.HEAD).toLowerCase();
@@ -138,20 +138,20 @@ public class BonusCalculator
 			switch (skill)
 			{
 				case STRENGTH:
-					return 0.1667;
+					return 1.1667;
 				case RANGED:
 				case MAGIC:
 					if (headSlotName.contains("(i)"))
 					{
-						return 0.15;
+						return 1.15;
 					}
 					else
 					{
-						return 0.0;
+						return 1.0;
 					}
 			}
 		}
 
-		return 0.0;
+		return 1.0;
 	}
 }

@@ -9,12 +9,6 @@ import net.runelite.api.gameval.ItemID;
 
 public class ObsidianSet extends EquipmentSet
 {
-
-	public ObsidianSet(Client client)
-	{
-		this.client = client;
-	}
-
 	@Override
 	public Map<EquipmentInventorySlot, Collection<Integer>> getEquipment()
 	{
@@ -28,8 +22,7 @@ public class ObsidianSet extends EquipmentSet
 				ItemID.TZHAAR_KNIFE,
 				ItemID.TZHAAR_MACE,
 				ItemID.TZHAAR_MAUL,
-				ItemID.TZHAAR_MAUL_T
-			)
+				ItemID.TZHAAR_MAUL_T)
 			);
 	}
 

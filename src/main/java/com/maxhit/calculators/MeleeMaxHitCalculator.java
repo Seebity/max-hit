@@ -7,7 +7,7 @@ import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.GolembaneWeapon;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.GolemMonsters;
-import com.maxhit.sets.FullObsidianSet;
+import com.maxhit.sets.BerserkerNecklaceSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
 import java.util.Collection;
@@ -30,37 +30,61 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	private final Set<Integer> DINHS = ImmutableSet.of(ItemID.DINHS_BULWARK_ORNAMENT, ItemID.DINHS_BULWARK);
 	private final DharokSet dharokSetChecker;
 	private final ObsidianSet obsidianSetChecker;
-	private final FullObsidianSet fullObsidianSetChecker;
+	private final BerserkerNecklaceSet berserkerNecklaceSet;
 	private double baseDamage;
-	private double specialBonus;
+	private double golemBonus;
+	private double obsidianBonus;
+	private double inquisitorBonus;
+	private double dharokBonus;
+	private double berserkerBonus;
 	private double soulReaperAxeBonus;
 
 	protected MeleeMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
 		super(plugin, client, itemManager, Skill.STRENGTH, attackStyle);
 		dharokSetChecker = new DharokSet(client);
-		obsidianSetChecker = new ObsidianSet(client);
-		fullObsidianSetChecker = new FullObsidianSet(client);
+		obsidianSetChecker = new ObsidianSet();
+		berserkerNecklaceSet = new BerserkerNecklaceSet();
 		reset();
 	}
 
 	@Override
 	protected void reset()
 	{
+		soulReaperAxeBonus = 0.0;
+		updateSoulReaperAxeBonus();
 		super.reset();
 		baseDamage = 0.0;
-		specialBonus = 1.0;
-		soulReaperAxeBonus = 0.0;
+		obsidianBonus = 0.0;
+		inquisitorBonus =  0.0;
+		golemBonus = 1.0;
+		dharokBonus = 1.0;
+		berserkerBonus = 0.0;
+	}
+
+	private void getBonuses()
+	{
+		getAvariceBonus();
+		getSalveBonus();
+		getSlayerBonus();
+		getObsidianBonus();
+		getDemonbaneBonus();
+		getDragonbaneBonus();
+		getInquisitorBonus();
+		getGolemBonus();
+		getDharokBonus();
+		getBerserkerBonus();
+		updateFlatArmour();
 	}
 
 	@Override
-	protected void getStyleBonus()
+	protected void updateStyleBonus()
 	{
 		if (attackStyle == AttackStyle.AGGRESSIVE) {styleBonus = 3.0;}
 		if (attackStyle == AttackStyle.CONTROLLED) {styleBonus = 1.0;}
 	}
 
-	private void getSoulReaperAxeBonus()
+	private void updateSoulReaperAxeBonus()
 	{
 		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SOULREAPER) ||
 			EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SOULREAPER_AXE_ORN))
@@ -70,20 +94,19 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			soulReaperAxeBonus = stacks * 0.06;
 		}
 	}
-	@Override
-	protected void getEffectiveLevel()
-	{
-		super.getEffectiveLevel();
 
+	@Override
+	protected void updateEffectiveLevel()
+	{
+		super.updateEffectiveLevel();
 		// Stacks additively
-		getSoulReaperAxeBonus();
 		effectiveLevel += Math.floor(effectiveLevel * soulReaperAxeBonus);
 	}
 
-	private void getBaseDamage()
+	@Override
+	protected void updateStrengthBonus()
 	{
-		getEffectiveStrength();
-		getStrengthBonus();
+		super.updateStrengthBonus();
 		for (int itemId : DINHS)
 		{
 			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
@@ -92,80 +115,157 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				break;
 			}
 		}
+	}
+
+	private void getBaseDamage()
+	{
 		double bonusMultiplier = (strengthBonus + 64.0) / 640.0;
 		baseDamage = Math.floor(0.5 + (effectiveStrength * bonusMultiplier));
 	}
 
-	private void getSpecialBonus()
+	private double applyBonuses(double baseDamage)
 	{
-		//Melee sets
-		// Excludes special attacks
-		if (dharokSetChecker.isWearingSet())
-		{
-			specialBonus = dharokSetChecker.getMultiplier();
-		}
-
-		if (obsidianSetChecker.isWearingSet())
-		{
-			specialBonus += obsidianSetChecker.getMultiplier();
-		}
-		if (fullObsidianSetChecker.isWearingSet())
-		{
-			specialBonus += fullObsidianSetChecker.getMultiplier();
-		}
-		//TODO update logic to detect just amulet
-		if (obsidianSetChecker.isWearingSet())
-		{
-			specialBonus += 0.1;
-		}
-
-		specialBonus += InquisitorSet.getMultiplier(client, equippedItems);
-
-		getSalveBonus();
-
+		double damage = baseDamage;
 		// Slayer helm and salve don't stack
-		if (salveBonus == 0.0)
+		if (avariceBonus > 1.0)
 		{
-			getSlayerBonus();
-			specialBonus += slayerBonus;
+			damage = factor(damage, avariceBonus);
 		}
-		else
+		else if (salveBonus > 1.0)
 		{
-			specialBonus += salveBonus;
+			damage = factor(damage, salveBonus);
+		}
+		else if (slayerBonus > 1.0)
+		{
+			damage = factor(damage, slayerBonus);
 		}
 
-		specialBonus += getGolemBonus();
-		getDragonbaneBonus();
-		specialBonus += dragonbaneBonus;
+		damage = addFactor(damage, demonbaneBonus);
 
+		damage = addFactor(damage, obsidianBonus);
+
+		damage = factor(damage, dragonbaneBonus);
+
+		// TODO add support for Keris/Keris Partisan vs Kalphites
+		damage = factor(damage, golemBonus);
+
+		// TODO add support for Rev Weapon
+		// TODO add support for Leaf bladed weapons
+		// TODO add support for Colossal Blade
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.RAT_BONE_MACE))
+		{
+			damage = damage + 10.0;
+		}
+
+		damage = factor(damage, inquisitorBonus);
+
+		// The Fang calculation is a bit different. Confirmed in-game
+		for(int itemId : FANGS)
+		{
+			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
+			{
+				double fangShrink = Math.floor(damage * 3.0 / 20.0);
+				damage -= fangShrink;
+				break;
+			}
+		}
+
+		damage = factor(damage, dharokBonus);
+
+		damage = addFactor(damage, berserkerBonus);
+
+		return damage;
 	}
 
-	public void getDemonbaneBonus()
+	@Override
+	public void calculateMaxHit()
 	{
-		return;
+		reset();
+		getBonuses();
+		updateEffectiveStrength();
+		updateStrengthBonus();
+		getBaseDamage();
+		maxHit = applyBonuses(baseDamage);
+		maxHit -= flatArmour;
+		calculateNextMaxHitRequirements();
 	}
 
-	public double getGolemBonus()
+	@Override
+	protected void calculateNextMaxHitRequirements()
+	{
+		final double nextMaxHit = maxHit + 1.0;
+		double tempMaxHit = 0.0;
+		double levelDiff = 1.0;
+		// Get Skill level difference
+		do
+		{
+			updateEffectiveLevel();
+			effectiveLevel += levelDiff;
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			levelDiff++;
+		} while (tempMaxHit < nextMaxHit);
+
+		// Get Strength bonus difference
+		tempMaxHit = 0.0;
+		double strengthBonusDiff = 1.0;
+		do
+		{
+			updateEffectiveLevel();
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			strengthBonus += strengthBonusDiff;
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			strengthBonusDiff++;
+		} while (tempMaxHit < nextMaxHit);
+
+		// Get prayer bonus difference
+		tempMaxHit = 0.0;
+		double prayerDiff = 0.1;
+		do
+		{
+			updatePrayerBonus();
+			prayerBonus += prayerDiff;
+			updateEffectiveLevel();
+			updateEffectiveStrength();
+			updateStrengthBonus();
+			getBaseDamage();
+			tempMaxHit = applyBonuses(baseDamage);
+			tempMaxHit -= flatArmour;
+			prayerDiff += 0.1;
+		} while (tempMaxHit < nextMaxHit);
+
+		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff);
+	}
+
+	public void getGolemBonus()
 	{
 		// Check if opponent is a golem
 		int npcId = getNpcId();
 
 		if (npcId == -1)
-			return 0.0;
+		{
+			return;
+		}
 
 		if (!GolemMonsters.ID_LIST.contains(npcId))
 		{
-			return 0.0;
+			return;
 		}
 
 		for (GolembaneWeapon weapon : GolembaneWeapon.values())
 		{
 			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, weapon.getItemId()))
 			{
-				return weapon.getDamageMultiplier();
+				golemBonus = weapon.getDamageMultiplier();
+				return;
 			}
 		}
-		return 0.0;
 	}
 
 	public void getDragonbaneBonus()
@@ -185,68 +285,37 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_LANCE) ||
 			EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.DRAGONHUNTER_WAND))
 		{
-			dragonbaneBonus = 0.2;
+			dragonbaneBonus = 1.2;
 		}
 
-		return;
 	}
 
-
-
-	//TODO add support for Keris/Keris Partisan vs Kalphites
-
-	@Override
-	public void calculateMaxHit()
+	private void getInquisitorBonus()
 	{
-		reset();
-		getSpecialBonus();
-		getBaseDamage();
-		maxHit = Math.max(0.0, Math.floor(baseDamage * specialBonus));
-
-		// The Fang calculation is a bit different. Confirmed in-game
-		for(int itemId : FANGS)
-		{
-			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
-			{
-				double fangShrink = Math.floor(maxHit * 3.0 / 20.0);
-				maxHit -= fangShrink;
-				break;
-			}
-		}
-
-		getFlatArmour();
-
-		maxHit -= flatArmour;
-
-		calculateNextMaxHitRequirements();
+		inquisitorBonus = InquisitorSet.getMultiplier(client, equippedItems);
 	}
 
-	@Override
-	protected void calculateNextMaxHitRequirements()
+	private void getObsidianBonus()
 	{
-		final double nextMaxHit = maxHit + 1.0;
-		double nextBaseDamage = Math.ceil(nextMaxHit / specialBonus);
-
-		// The Fang calculation is a bit different. Confirmed in-game
-		for(int itemId : FANGS)
+		if (obsidianSetChecker.isWearingSet())
 		{
-			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, itemId))
-			{
-				nextBaseDamage = Math.ceil(nextBaseDamage / 0.85);
-				break;
-			}
+			obsidianBonus = obsidianSetChecker.getMultiplier();
 		}
+	}
 
-		// Calculate needed strength bonus
-		final double requiredStrengthBonus = ((nextBaseDamage - 0.5) * 640 / effectiveStrength) - 64;
-		final double requiredEffectiveStrength = ((nextBaseDamage - 0.5) * 640) / (strengthBonus + 64);
-		final double requiredLevel = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0))  / prayerBonus;
-		final double requiredPrayer = (Math.ceil((Math.ceil(requiredEffectiveStrength) / voidBonus) - styleBonus - 8.0)) / effectiveLevel;
+	private void getDharokBonus()
+	{
+		if (dharokSetChecker.isWearingSet())
+		{
+			dharokBonus = dharokSetChecker.getMultiplier();
+		}
+	}
 
-		final double levelDiff = Math.ceil(requiredLevel - effectiveLevel);
-		final double strengthBonusDiff = Math.ceil(requiredStrengthBonus - strengthBonus);
-		final double prayerDiff = Math.ceil((requiredPrayer - prayerBonus) * 100.0);
-
-		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff);
+	private void getBerserkerBonus()
+	{
+		if (berserkerNecklaceSet.isWearingSet())
+		{
+			berserkerBonus = berserkerNecklaceSet.getMultiplier();
+		}
 	}
 }

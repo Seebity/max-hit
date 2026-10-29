@@ -13,8 +13,9 @@ public class InquisitorSet
 
 	public static double getMultiplier(Client client, ItemContainer equippedItems)
 	{
-		double bonus = 0.0;
+		double bonus = 1.0;
 		AttackType attackType = StyleFactory.getAttackType(client);
+
 		if (attackType != AttackType.CRUSH)
 			return bonus;
 

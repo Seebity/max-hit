@@ -3,6 +3,9 @@ package com.maxhit.calculators;
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.PrayerType;
+import com.maxhit.equipment.DemonbaneWeapon;
+import com.maxhit.equipment.EquipmentFunctions;
+import com.maxhit.monsters.DemonicMonsters;
 import com.maxhit.monsters.MonsterFlatArmour;
 import com.maxhit.sets.EquipmentSet;
 import com.maxhit.styles.AttackStyle;
@@ -12,10 +15,12 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
 
 public abstract class MaxHitCalculator
@@ -34,11 +39,12 @@ public abstract class MaxHitCalculator
     protected double strengthBonus;
     protected double prayerBonus;
     protected double styleBonus;
+    protected double voidBonus;
+	protected double avariceBonus;
 	protected double salveBonus;
 	protected double slayerBonus;
 	protected double dragonbaneBonus;
 	protected double demonbaneBonus;
-    protected double voidBonus;
 	protected double flatArmour;
 
 	@Nullable
@@ -61,7 +67,6 @@ public abstract class MaxHitCalculator
 		bonusCalculator = new BonusCalculator(client, skill);
         maxHit = 0.0;
         voidBonus = 1.0;
-		salveBonus = 0.0;
 		flatArmour = 0.0;
     }
 
@@ -74,42 +79,43 @@ public abstract class MaxHitCalculator
 	protected void reset()
 	{
 		styleBonus = 0.0;
-		voidBonus = 1.0;
 		prayerBonus = 1.0;
+		voidBonus = 1.0;
+		avariceBonus = 1.0;
+		salveBonus = 1.0;
+		slayerBonus = 1.0;
+		dragonbaneBonus = 1.0;
 		demonbaneBonus = 1.0;
 		flatArmour = 0.0;
-		dragonbaneBonus = 0.0;
-		demonbaneBonus = 0.0;
-		getEffectiveLevel();
+		updateEffectiveLevel();
+		updatePrayerBonus();
+		updateStyleBonus();
+		updateVoidBonus();
 	}
 
-	protected abstract void getStyleBonus();
+	protected abstract void updateStyleBonus();
 
-	protected void getVoidBonus()
+	protected void updateVoidBonus()
 	{
 		voidBonus = bonusCalculator.getVoidBonus();
 		if (skill == Skill.MAGIC)
 			voidBonus -= 1.0;
 	}
 
-	protected void getEffectiveStrength()
+	protected void updateEffectiveStrength()
 	{
-		getStyleBonus();
-		getVoidBonus();
-
 		// getValue() gets boosted value
 		effectiveStrength = Math.floor((effectiveLevel + styleBonus + 8) * voidBonus);
 	}
 
-	protected void getPrayerBonus()
+	protected void updatePrayerBonus()
 	{
 		prayerBonus = bonusCalculator.getPrayerBonus();
 	}
 
-	protected void getEffectiveLevel()
+	protected void updateEffectiveLevel()
 	{
 		effectiveLevel = client.getBoostedSkillLevel(this.skill);
-		getPrayerBonus();
 
 		// First Melee and Ranged Prayers always increment by at least one
 		if (skill == Skill.STRENGTH)
@@ -134,10 +140,10 @@ public abstract class MaxHitCalculator
 			return;
 		}
 
-		effectiveLevel = (int) Math.floor(effectiveLevel * prayerBonus);
+		effectiveLevel = Math.floor(effectiveLevel * prayerBonus);
 	}
 
-    protected void getStrengthBonus()
+    protected void updateStrengthBonus()
 	{
 		strengthBonus = StrengthBonusCalculator.getStrengthBonus(equippedItems, itemManager, skill);
 	}
@@ -160,7 +166,7 @@ public abstract class MaxHitCalculator
 		return npc.getId();
 	}
 
-	protected void getFlatArmour()
+	protected void updateFlatArmour()
 	{
 		flatArmour = 0.0;
 
@@ -185,7 +191,34 @@ public abstract class MaxHitCalculator
 
 	public abstract void getDragonbaneBonus();
 
-	public abstract void getDemonbaneBonus();
+	public void getAvariceBonus()
+	{
+		if (!EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.AMULET).contains(("Avarice")))
+		{
+			return;
+		}
+		NPC npc = (NPC) opponent;
+		if (npc == null)
+		{
+			return;
+		}
+		String npcName = npc.getName();
+		if (npcName == null)
+		{
+			return;
+		}
+		if (!npc.getName().contains("Revenant"))
+		{
+			return;
+		}
+		if (client.getVarbitValue(VarPlayerID.REVENANT_REWARD_TIME_REMAINING) > 0)
+		{
+			avariceBonus = 1.35;
+			return;
+		}
+		avariceBonus = 1.2;
+	}
+
 	public void getDemonbaneBonus()
 	{
 		// Check if opponent is a demon
@@ -217,6 +250,34 @@ public abstract class MaxHitCalculator
 		}
 
 		demonbaneBonus = 0.0;
+	}
+
+	/**
+	 * Multiplies base by factor
+	 * @param base base value
+	 * @param factor multiplier factor
+	 * @throws AssertionError if factor is less than 1.0
+	 * @return Math.max(0.0, Math.floor(base * factor))
+	 */
+	public double factor(double base, double factor)
+	{
+		assert factor >= 1.0;
+		return Math.max(0.0, Math.floor(base * factor));
+	}
+
+	/**
+	 * Multiplies base by factor (factor must be <= 1.0)
+	 * Then adds previous factor to base
+	 * @param base base value
+	 * @param factor multiplier factor
+	 * @throws AssertionError if factor is greater than 1.0
+	 * @return base + Math.floor(base * addedFactor)
+	 */
+	public double addFactor(double base, double factor)
+	{
+		assert factor <= 1.0;
+		double addedFactor = Math.max(0.0, Math.floor(base * factor));
+		return base + addedFactor;
 	}
 
 	protected void getSalveBonus()

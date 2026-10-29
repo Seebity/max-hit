@@ -5,7 +5,10 @@ import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.Actor;
+import net.runelite.api.Client;
 import net.runelite.api.NPC;
+
+
 
 @AllArgsConstructor
 @Getter
@@ -75,7 +78,14 @@ public enum MonsterWeaknesses {
 	ARAXYTE_LEVEL_96(11175, "FIRE", 0.5),
 	ARAXYTE_LEVEL_96_1(13666, "FIRE", 0.5),
 	ARCANE_SCARAB(11726, "FIRE", 0.5),
-	ARCHIVE_GUARDIAN(16659, "FIRE", 0.8),
+	ARCHIVE_GUARDIAN(16659, "FIRE", 0.0)
+		{
+			@Override
+			public double getWeakness(Client client)
+			{
+				return super.getWeakness(client);
+			}
+		},
 	ARMADYLEAN_GUARD(6587, "AIR", 0.3),
 	ARMOURED_KRAKEN(15210, "EARTH", 0.5),
 	ARMOURED_ZOMBIE_DEFENDER_OF_VARROCK_MELEE_INVASION_(12730, "FIRE", 0.5),
@@ -433,7 +443,6 @@ public enum MonsterWeaknesses {
 	EARTHEN_NAGUA_NORMAL(14420, "AIR", 0.15),
 	EARTHEN_NAGUA_REINFORCED(14421, "AIR", 0.15),
 	EARTHEN_NAGUA_WEAKENED(14420, "AIR", 0.15),
-	ECLIPSE_MOON_CLONE(13012, "AIR", 0.15),
 	ECLIPSE_MOON_REGULAR(13012, "AIR", 0.15),
 	ELDER_CUSTODIAN_STALKER(14704, "FIRE", 0.3),
 	ELDRIC_THE_ICE_KING(14147, "FIRE", 0.5),
@@ -1862,5 +1871,10 @@ public enum MonsterWeaknesses {
 			return false;
 		}
 		return Objects.equals(activeSpell.getElement(), element);
+	}
+
+	public double getWeakness(Client client)
+	{
+		return severity;
 	}
 }
