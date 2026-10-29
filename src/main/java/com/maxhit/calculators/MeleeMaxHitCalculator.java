@@ -236,7 +236,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		do
 		{
 			updatePrayerBonus();
-			prayerDiff += 0.1;
+			prayerDiff += 0.01;
 			prayerBonus += prayerDiff;
 			updateEffectiveLevel();
 			updateEffectiveStrength();

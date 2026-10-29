@@ -204,7 +204,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 	{
 		final double nextMaxHit = maxHit + 1.0;
 		double tempMaxHit;
-		double levelDiff = 1.0;
+		double levelDiff = 0.0;
 
 		// Add guard
 		if (effectiveLevel < 1.0)
@@ -214,6 +214,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		// Get Skill level difference
 		do
 		{
+			levelDiff++;
 			updateEffectiveLevel();
 			effectiveLevel += levelDiff;
 			updateEffectiveStrength();
@@ -221,13 +222,13 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			levelDiff++;
 		} while (tempMaxHit < nextMaxHit);
 
 		// Get Strength bonus difference
-		double strengthBonusDiff = 1.0;
+		double strengthBonusDiff = 0.0;
 		do
 		{
+			strengthBonusDiff++;
 			updateEffectiveLevel();
 			updateEffectiveStrength();
 			updateStrengthBonus();
@@ -235,13 +236,13 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			strengthBonusDiff++;
 		} while (tempMaxHit < nextMaxHit);
 
 		// Get prayer bonus difference
-		double prayerDiff = 0.1;
+		double prayerDiff = 0.0;
 		do
 		{
+			prayerDiff += 0.01;
 			updatePrayerBonus();
 			prayerBonus += prayerDiff;
 			updateEffectiveLevel();
@@ -250,7 +251,6 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			prayerDiff += 0.1;
 		} while (tempMaxHit < nextMaxHit);
 
 		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff * 100.0);

@@ -87,8 +87,8 @@ public abstract class MaxHitCalculator
 		dragonbaneBonus = 1.0;
 		demonbaneBonus = 1.0;
 		flatArmour = 0.0;
-		updateEffectiveLevel();
 		updatePrayerBonus();
+		updateEffectiveLevel();
 		updateStyleBonus();
 		updateVoidBonus();
 	}
