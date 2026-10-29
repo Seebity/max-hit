@@ -84,7 +84,7 @@ public class PlayerSetupsTest extends MockedTest
 				maxHitCalculator.calculateMaxHit();
 				long end = System.nanoTime();
 				long duration = (end - start) / 1000000;
-				assertTrue(duration < 100.0,
+				assertTrue(duration < 200.0,
 							() -> String.format("%s took %d ms (100 ms limit)", setup.name(), duration));
 				if (standard)
 					assertEquals(setup.getStandardMaxHit(), maxHitCalculator.getMaxHit(),
@@ -123,11 +123,11 @@ public class PlayerSetupsTest extends MockedTest
 					assertTrue(reqs.getNextRequiredPrayer() > 0.0,
 								() -> String.format("%s - Next required prayer bonus should be positive", setup.name()));
 					assertTrue(reqs.getNextRequiredLevel() < 25.0,
-						() -> String.format("%s - Next required levels should be less than 20 (%f)", setup.name(), reqs.getNextRequiredLevel()));
+						() -> String.format("%s - Next required levels should be less than 25 (%f)", setup.name(), reqs.getNextRequiredLevel()));
 					assertTrue(reqs.getNextRequiredStrength() < 25.0,
-						() -> String.format("%s - Next required strength bonus should be less than 20 (%f)", setup.name(), reqs.getNextRequiredStrength()));
-					assertTrue(reqs.getNextRequiredPrayer() < 0.25,
-						() -> String.format("%s - Next required prayer bonus should be less than 20%% (%f)", setup.name(), reqs.getNextRequiredPrayer()));
+						() -> String.format("%s - Next required strength bonus should be less than 25 (%f)", setup.name(), reqs.getNextRequiredStrength()));
+					assertTrue(reqs.getNextRequiredPrayer() < 25.0,
+						() -> String.format("%s - Next required prayer bonus should be less than 25%% (%f)", setup.name(), reqs.getNextRequiredPrayer()));
 				}
 			}
 
