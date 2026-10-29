@@ -195,10 +195,17 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	{
 		final double nextMaxHit = maxHit + 1.0;
 		double tempMaxHit = 0.0;
-		double levelDiff = 1.0;
+		double levelDiff = 0.0;
+
+		// Add guard
+		if (effectiveLevel < 1.0)
+		{
+			return;
+		}
 		// Get Skill level difference
 		do
 		{
+			levelDiff++;
 			updateEffectiveLevel();
 			effectiveLevel += levelDiff;
 			updateEffectiveStrength();
@@ -206,14 +213,14 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			levelDiff++;
 		} while (tempMaxHit < nextMaxHit);
 
 		// Get Strength bonus difference
 		tempMaxHit = 0.0;
-		double strengthBonusDiff = 1.0;
+		double strengthBonusDiff = 0.0;
 		do
 		{
+			strengthBonusDiff++;
 			updateEffectiveLevel();
 			updateEffectiveStrength();
 			updateStrengthBonus();
@@ -221,15 +228,15 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			strengthBonusDiff++;
 		} while (tempMaxHit < nextMaxHit);
 
 		// Get prayer bonus difference
 		tempMaxHit = 0.0;
-		double prayerDiff = 0.1;
+		double prayerDiff = 0.0;
 		do
 		{
 			updatePrayerBonus();
+			prayerDiff += 0.1;
 			prayerBonus += prayerDiff;
 			updateEffectiveLevel();
 			updateEffectiveStrength();
@@ -237,10 +244,9 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-			prayerDiff += 0.1;
 		} while (tempMaxHit < nextMaxHit);
 
-		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff);
+		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff * 100.0);
 	}
 
 	public void getGolemBonus()
