@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.google.inject.Provides;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.GameState;
@@ -30,6 +31,7 @@ import net.runelite.api.Actor;
 import net.runelite.api.Hitsplat;
 import net.runelite.api.NPC;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.GraphicChanged;
 import net.runelite.api.events.ItemContainerChanged;
@@ -67,6 +69,8 @@ public class MaxHitPlugin extends Plugin
 
 	private static final int WEAPON_SPECIAL_REQS = 906;
 	private static final Duration WAIT = Duration.ofSeconds(5);
+	private static final String MARK_OF_DARKNESS_MESSAGE = "You have placed a Mark of Darkness upon yourself.</col>";
+	private static final String MARK_OF_DARKNESS_EXPIRED_MESSAGE = "Your Mark of Darkness has faded away.";
 
 
 	@Inject
@@ -103,6 +107,9 @@ public class MaxHitPlugin extends Plugin
 
 	@Getter
 	private MagicSpell activeSpell;
+
+	@Getter
+	private boolean markOfDarknessActive;
 
 	@Getter
 	private final List<NPC> targets = new ArrayList<>();
@@ -522,6 +529,25 @@ public class MaxHitPlugin extends Plugin
 			maxHitCalculator.calculateMaxHit();
 		}
 	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		if (event.getType() != ChatMessageType.GAMEMESSAGE)
+		{
+			return;
+		}
+
+		if (event.getMessage().endsWith(MARK_OF_DARKNESS_MESSAGE))
+		{
+			markOfDarknessActive = true;
+		}
+		else if (event.getMessage().contains(MARK_OF_DARKNESS_EXPIRED_MESSAGE))
+		{
+			markOfDarknessActive = false;
+		}
+	}
+
 
 	private void replaceCalculatorAndMaxHit()
 	{

@@ -424,6 +424,42 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		preHitRoll = Math.floor(accursedCalculation * totalTomeBonus) + elementalWeaknessAddition;
 	}
 
+	private void getMarkOfDarknessBonus()
+	{
+		// Check if using a spell
+		if (activeSpell == null)
+		{
+			markOfDarknessBonus = 0.0;
+			return;
+		}
+
+		// Mark of darkness not active
+		if (!plugin.isMarkOfDarknessActive())
+		{
+			markOfDarknessBonus = 0.0;
+			return;
+		}
+
+		// Ensures using Demonbane spell
+		if (!activeSpell.getDisplayName().contains("Demonbane"))
+		{
+			markOfDarknessBonus = 0.0;
+			return;
+		}
+
+		getDemonbaneBonus();
+
+		// Check for Purging Staff
+		if (demonbaneBonus > 0.0)
+		{
+			markOfDarknessBonus = 0.5;
+		}
+		else
+		{
+			markOfDarknessBonus = 0.25;
+		}
+	}
+
 	@Override
 	public void calculateMaxHit()
 	{
@@ -435,6 +471,7 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		// Pre Hit Roll == Hit Roll
 		// Don't need to use the hit roll step on the wiki since we're just calculating max hit
 		getPreHitRoll();
+		getMarkOfDarknessBonus();
 		double firstFloorCalculation = Math.floor(preHitRoll * (1 + markOfDarknessBonus));
 		// Skip castle wars bonus
 		// Final Post Hit Roll

@@ -76,6 +76,7 @@ public abstract class MaxHitCalculator
 		styleBonus = 0.0;
 		voidBonus = 1.0;
 		prayerBonus = 1.0;
+		demonbaneBonus = 1.0;
 		flatArmour = 0.0;
 		dragonbaneBonus = 0.0;
 		demonbaneBonus = 0.0;
@@ -185,6 +186,38 @@ public abstract class MaxHitCalculator
 	public abstract void getDragonbaneBonus();
 
 	public abstract void getDemonbaneBonus();
+	public void getDemonbaneBonus()
+	{
+		// Check if opponent is a demon
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+		{
+			demonbaneBonus = 0.0;
+			return;
+		}
+
+		if (!DemonicMonsters.ID_LIST.contains(npcId))
+		{
+			demonbaneBonus = 0.0;
+			return;
+		}
+
+		for (DemonbaneWeapon weapon : DemonbaneWeapon.values())
+		{
+			// Make sure skill matches
+			if (weapon.getSkill() != this.skill)
+				continue;
+
+			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, weapon.getItemId()))
+			{
+				demonbaneBonus = weapon.getDamageMultiplier();
+				return;
+			}
+		}
+
+		demonbaneBonus = 0.0;
+	}
 
 	protected void getSalveBonus()
 	{
