@@ -439,7 +439,6 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		// Pre Hit Roll == Hit Roll
 		// Don't need to use the hit roll step on the wiki since we're just calculating max hit
 		getPreHitRoll();
-		getDragonbaneBonus();
 		getMarkOfDarknessBonus();
 		double firstFloorCalculation = Math.floor(preHitRoll * (1 + markOfDarknessBonus));
 		// Skip castle wars bonus
