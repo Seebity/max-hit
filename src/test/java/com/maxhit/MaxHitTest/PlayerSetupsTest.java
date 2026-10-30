@@ -116,12 +116,25 @@ public class PlayerSetupsTest extends MockedTest
 					{
 						continue;
 					}
-					assertTrue(reqs.getNextRequiredLevel() > 0.0,
-								() -> String.format("%s - Next required levels should be positive", setup.name()));
-					assertTrue(reqs.getNextRequiredStrength() > 0.0,
-								() -> String.format("%s - Next required strength bonus should be positive", setup.name()));
-					assertTrue(reqs.getNextRequiredPrayer() > 0.0,
-								() -> String.format("%s - Next required prayer bonus should be positive", setup.name()));
+					if (setup.name().contains("GOBLIN"))
+					{
+						assertEquals(0.0, reqs.getNextRequiredLevel(),
+							() -> String.format("%s - Next required levels should be zero", setup.name()));
+						assertEquals(0.0, reqs.getNextRequiredStrength(),
+							() -> String.format("%s - Next required strength bonus should be zero", setup.name()));
+						assertEquals(0.0, reqs.getNextRequiredPrayer(),
+							() -> String.format("%s - Next required prayer bonus should be zero", setup.name()));
+					}
+					else
+					{
+						assertTrue(reqs.getNextRequiredLevel() > 0.0,
+							() -> String.format("%s - Next required levels should be positive", setup.name()));
+						assertTrue(reqs.getNextRequiredStrength() > 0.0,
+							() -> String.format("%s - Next required strength bonus should be positive", setup.name()));
+						assertTrue(reqs.getNextRequiredPrayer() > 0.0,
+							() -> String.format("%s - Next required prayer bonus should be positive", setup.name()));
+					}
+
 					assertTrue(reqs.getNextRequiredLevel() < 25.0,
 						() -> String.format("%s - Next required levels should be less than 25 (%f)", setup.name(), reqs.getNextRequiredLevel()));
 					assertTrue(reqs.getNextRequiredStrength() < 25.0,

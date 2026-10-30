@@ -21,6 +21,18 @@ public enum PlayerSetup
 		createEquipment(Map.of()),
 		CombatStyle.MELEE, AttackStyle.ACCURATE,  MeleeMaxHitCalculator.class,
 		0.0f, 1.0, 11.0, 0.0),
+	GOBLIN_HAMMER(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GOBLINRAID_WARHAMMER, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		-100.0f, 0.0, 0.0, 0.0),
+	GOBLIN_BOW(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GOBLINRAID_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		-100.0f, 0.0, 0.0, 0.0),
 	MELEE_VOID(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.GAME_PEST_MELEE_HELM, 1),
