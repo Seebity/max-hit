@@ -20,7 +20,6 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 {
 	private double baseDamage;
 	private double crystalBonus;
-	private double specialBonus;
 
 	protected RangedMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
@@ -47,7 +46,6 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		}
 
 		baseDamage = 0.0;
-		specialBonus = 1.0;
 	}
 
 	@Override
@@ -189,7 +187,6 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		updateEffectiveStrength();
 		updateStrengthBonus();
 		getBaseDamage();
-		maxHit = baseDamage;
 		maxHit = applyBonuses(baseDamage);
 
 		//TODO add support for special attack
@@ -212,46 +209,61 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			return;
 		}
 		// Get Skill level difference
-		do
+		for(int i = 1; i < 26; i++)
 		{
-			levelDiff++;
 			updateEffectiveLevel();
-			effectiveLevel += levelDiff;
+			effectiveLevel += i;
 			updateEffectiveStrength();
 			updateStrengthBonus();
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-		} while (tempMaxHit < nextMaxHit);
+
+			if (tempMaxHit >= nextMaxHit)
+			{
+				levelDiff = i;
+				break;
+			}
+		};
 
 		// Get Strength bonus difference
 		double strengthBonusDiff = 0.0;
-		do
+		for(int i = 1; i < 26; i++)
 		{
-			strengthBonusDiff++;
 			updateEffectiveLevel();
 			updateEffectiveStrength();
 			updateStrengthBonus();
-			strengthBonus += strengthBonusDiff;
+			strengthBonus += i;
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-		} while (tempMaxHit < nextMaxHit);
+
+			if (tempMaxHit >= nextMaxHit)
+			{
+				strengthBonusDiff = i;
+				break;
+			}
+		};
 
 		// Get prayer bonus difference
 		double prayerDiff = 0.0;
-		do
+		for(double i = 0.01; i < 0.25; i+=0.01)
 		{
-			prayerDiff += 0.01;
 			updatePrayerBonus();
-			prayerBonus += prayerDiff;
+			prayerBonus += i;
 			updateEffectiveLevel();
 			updateEffectiveStrength();
 			updateStrengthBonus();
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
-		} while (tempMaxHit < nextMaxHit);
+
+			if (tempMaxHit >= nextMaxHit)
+			{
+				prayerDiff = i;
+				break;
+			}
+		};
 
 		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff * 100.0);
 	}
