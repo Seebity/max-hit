@@ -398,10 +398,18 @@ public class MaxHitPlugin extends Plugin
 		{
 			replaceCalculatorAndMaxHit();
 		}
-		else if (varbitId == VarbitID.PRAYER_ALLACTIVE)
+		else if (varbitId == VarbitID.PRAYER_ALLACTIVE
+			     || varbitId == VarbitID.PRAYER_EAGLEEYE
+				 || varbitId == VarbitID.PRAYER_DEADEYE
+			     || varbitId == VarbitID.PRAYER_MYSTICMIGHT
+				 || varbitId == VarbitID.PRAYER_MYSTICVIGOUR)
 		{
 			// Check if prayer turned off
-			if (client.getVarbitValue(VarbitID.PRAYER_ALLACTIVE) == 0)
+			if (client.getVarbitValue(VarbitID.PRAYER_ALLACTIVE) == 0
+				|| client.getVarbitValue(VarbitID.PRAYER_EAGLEEYE) == 0
+				|| client.getVarbitValue(VarbitID.PRAYER_DEADEYE) == 0
+				|| client.getVarbitValue(VarbitID.PRAYER_MYSTICMIGHT) == 0
+				|| client.getVarbitValue(VarbitID.PRAYER_MYSTICVIGOUR) == 0)
 			{
 				maxHitCalculator.calculateMaxHit();
 				return;
