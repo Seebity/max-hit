@@ -101,9 +101,19 @@ public class MaxHitOverlay extends Overlay
 			sb.append("<br> UNSUPPORTED");
 			return sb.toString();
 		}
-		String levelReqString = String.format("<br> %.0f %s Levels", nextMaxHitReqs.getNextRequiredLevel(), nextMaxHitReqs.getSkill());
-		String bonusReqString = String.format("<br> %.0f %s bonus", nextMaxHitReqs.getNextRequiredStrength(), nextMaxHitReqs.getSkill());
-		String prayerBonusReqString = String.format("<br> %.0f%% PRAYER bonus", nextMaxHitReqs.getNextRequiredPrayer());
+
+		String levelValue = nextMaxHitReqs.getNextRequiredLevel() == 0.0 ?
+			"N/A"
+			: String.format("%.0f", nextMaxHitReqs.getNextRequiredLevel());
+		String strengthBonusValue = nextMaxHitReqs.getNextRequiredStrength() == 0.0
+			? "N/A"
+			: String.format("%.0f", nextMaxHitReqs.getNextRequiredStrength());
+		String prayerValue = nextMaxHitReqs.getNextRequiredPrayer() == 0.0 ?
+			"N/A"
+			: String.format("%.0f%%", nextMaxHitReqs.getNextRequiredPrayer());
+		String levelReqString = String.format("<br> %s %s Levels", levelValue, nextMaxHitReqs.getSkill());
+		String bonusReqString = String.format("<br> %s %s bonus", strengthBonusValue, nextMaxHitReqs.getSkill());
+		String prayerBonusReqString = String.format("<br> %s PRAYER bonus", prayerValue);
 
 
 		sb.append(levelReqString);
