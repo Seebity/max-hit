@@ -58,9 +58,9 @@ public class StrengthBonusCalculator
 		return Math.max(0.0, ((totalBonus - 800.0) / 12.0) - 38.0);
 	}
 
-	public static float getStrengthBonus(ItemContainer equippedItems, ItemManager itemManager, Skill skill)
+	public static double getStrengthBonus(ItemContainer equippedItems, ItemManager itemManager, Skill skill)
 	{
-		float strengthBonus = 0.0f;
+		double strengthBonus = 0.0;
 		if (equippedItems == null)
 		{
 			return strengthBonus;
@@ -68,30 +68,31 @@ public class StrengthBonusCalculator
 		//get str bonus of worn equipment
 		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
 		{
-			// Have to convert enum to int i.e. use ordinal
-			Item item = equippedItems.getItem(slot.getSlotIdx());
-			if (item == null)
-			{
-				continue;
-			}
-			int itemId = item.getId();
-			final ItemStats itemStats = itemManager.getItemStats(itemId);
-			if (itemStats == null)
-			{
-				continue;
-			}
-			final ItemEquipmentStats itemEquipmentStats = itemStats.getEquipment();
-			strengthBonus += getItemStrength(skill, itemEquipmentStats);
+			strengthBonus += getItemStrength(skill, equippedItems, itemManager, slot);
 		}
 		return strengthBonus;
 	}
 
-	private static float getItemStrength(Skill skill, ItemEquipmentStats itemEquipmentStats)
+	public static double getItemStrength(Skill skill, ItemContainer equippedItems, ItemManager itemManager, EquipmentInventorySlot slot)
 	{
+		// Have to convert enum to int i.e. use ordinal
+		Item item = equippedItems.getItem(slot.getSlotIdx());
+		if (item == null)
+		{
+			return 0.0;
+		}
+		int itemId = item.getId();
+		final ItemStats itemStats = itemManager.getItemStats(itemId);
+		if (itemStats == null)
+		{
+			return 0.0;
+		}
+		final ItemEquipmentStats itemEquipmentStats = itemStats.getEquipment();
+
 		if (skill == Skill.STRENGTH)
 			return (float) itemEquipmentStats.getStr();
 		if (skill == Skill.RANGED)
 			return (float) itemEquipmentStats.getRstr();
-		return itemEquipmentStats.getMdmg() / 100.0f;
+		return itemEquipmentStats.getMdmg() / 100.0;
 	}
 }
