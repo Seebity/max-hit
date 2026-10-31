@@ -19,9 +19,7 @@ Currently, this plugin does not support the following weapons/bonuses:
 
 Blowpipes<br>
 Colossal Blade<br>
-Demonbane<br>
 Holy Water<br>
-Keris and Kalphites<br>
 Lizards/Salamanders<br>
 Nightmare Staff Special Attack(s)<br>
 Revenant Weapons<br>
