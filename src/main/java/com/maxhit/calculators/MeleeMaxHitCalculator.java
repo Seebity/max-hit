@@ -5,8 +5,10 @@ import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.equipment.GolembaneWeapon;
+import com.maxhit.equipment.KerisWeapon;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.GolemMonsters;
+import com.maxhit.monsters.KalphiteMonsters;
 import com.maxhit.sets.BerserkerNecklaceSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
@@ -32,6 +34,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	private final ObsidianSet obsidianSetChecker;
 	private final BerserkerNecklaceSet berserkerNecklaceSet;
 	private double baseDamage;
+	private double kerisBonus;
 	private double golemBonus;
 	private double obsidianBonus;
 	private double inquisitorBonus;
@@ -55,9 +58,10 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		updateSoulReaperAxeBonus();
 		super.reset();
 		baseDamage = 0.0;
+		kerisBonus = 1.0;
+		golemBonus = 1.0;
 		obsidianBonus = 0.0;
 		inquisitorBonus =  0.0;
-		golemBonus = 1.0;
 		dharokBonus = 1.0;
 		berserkerBonus = 0.0;
 	}
@@ -70,6 +74,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		getObsidianBonus();
 		getDemonbaneBonus();
 		getDragonbaneBonus();
+		getKerisBonus();
 		getInquisitorBonus();
 		getGolemBonus();
 		getDharokBonus();
@@ -146,7 +151,8 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 
 		damage = factor(damage, dragonbaneBonus);
 
-		// TODO add support for Keris/Keris Partisan vs Kalphites
+		damage = factor(damage, kerisBonus);
+
 		damage = factor(damage, golemBonus);
 
 		// TODO add support for Rev Weapon
@@ -168,6 +174,12 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				damage -= fangShrink;
 				break;
 			}
+		}
+
+		// Apply Keris chance to 3x
+		if (kerisBonus > 1.0)
+		{
+			damage = factor(damage, 3.0);
 		}
 
 		damage = factor(damage, dharokBonus);
@@ -334,6 +346,29 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		if (berserkerNecklaceSet.isWearingSet())
 		{
 			berserkerBonus = berserkerNecklaceSet.getMultiplier();
+		}
+	}
+
+	private void getKerisBonus()
+	{
+		// Check if opponent is a kalphite
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
+		if (!KalphiteMonsters.ID_LIST.contains(npcId))
+		{
+			return;
+		}
+
+		for (KerisWeapon weapon : KerisWeapon.values())
+		{
+			if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, weapon.getItemId()))
+			{
+				kerisBonus = weapon.getDamageMultiplier();
+				return;
+			}
 		}
 	}
 }
