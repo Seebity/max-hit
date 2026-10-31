@@ -1,11 +1,15 @@
 package com.maxhit.equipment;
 
+import com.maxhit.calculators.StrengthBonusCalculator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.Client;
 import net.runelite.api.gameval.VarPlayerID;
+import net.runelite.client.game.ItemManager;
 
 @RequiredArgsConstructor
 public enum SpecialAttackWeapon
@@ -13,7 +17,7 @@ public enum SpecialAttackWeapon
 	ABYSSAL_BLUDGEON(ItemID.ABYSSAL_BLUDGEON, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				int maxPrayerPoints = client.getRealSkillLevel(Skill.PRAYER);
 				int actualPrayerPoints = client.getBoostedSkillLevel(Skill.PRAYER);
@@ -38,7 +42,7 @@ public enum SpecialAttackWeapon
 	DRAGON_DAGGER(ItemID.DRAGON_DAGGER, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				return 2.0 * Math.floor(maxHitBase * 1.15);
 			}
@@ -46,7 +50,7 @@ public enum SpecialAttackWeapon
 	DRAGON_DAGGER_P(ItemID.DRAGON_DAGGER_P, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				return 2.0 * Math.floor(maxHitBase * 1.15);
 			}
@@ -54,7 +58,7 @@ public enum SpecialAttackWeapon
 	DRAGON_DAGGER_P_PLUS(ItemID.DRAGON_DAGGER_P_, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				return 2.0 * Math.floor(maxHitBase * 1.15);
 			}
@@ -62,7 +66,7 @@ public enum SpecialAttackWeapon
 	DRAGON_DAGGER_P_PLUS_PLUS(ItemID.DRAGON_DAGGER_P__, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxHitBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				return 2.0 * Math.floor(maxHitBase * 1.15);
 			}
@@ -71,7 +75,7 @@ public enum SpecialAttackWeapon
 	DRAGON_HASTA(ItemID.BRUT_DRAGON_SPEAR, -1.0)
 		{
 			@Override
-			public double getSpecialAttackDamage(Client client, double maxBase)
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				return (1.0 + (0.5 * client.getVarbitValue(VarPlayerID.SA_ENERGY) / 1000.0));
 			}
@@ -82,6 +86,17 @@ public enum SpecialAttackWeapon
 	DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 1.5),
 	DUAL_MACUAHUITL(ItemID.DUAL_MACUAHUITL, 1.25),
 	EYE_OF_AYAK(ItemID.EYE_OF_AYAK, 1.3),
+	MSB(ItemID.MAGIC_SHORTBOW, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				double rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
+				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
+				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) *  (ammoStrength + 64) / 640));
+				return 2.0 * maxHit;
+			}
+		},
 	HEAVY_BALLISTA(ItemID.HEAVY_BALLISTA, 1.25),
 	LIGHT_BALLISTA(ItemID.LIGHT_BALLISTA, 1.25),
 	OSMUMTENS_FANG(ItemID.OSMUMTENS_FANG, 1.1765),
@@ -98,7 +113,10 @@ public enum SpecialAttackWeapon
 	@Getter
 	private final double damageMultiplier;
 
-	public double getSpecialAttackDamage(Client client, double maxHitBase)
+	public double getSpecialAttackDamage(Client client,
+										 ItemManager itemManager,
+										 ItemContainer equippedItems,
+										 double maxHitBase)
 	{
 		return Math.floor(maxHitBase * damageMultiplier);
 	}

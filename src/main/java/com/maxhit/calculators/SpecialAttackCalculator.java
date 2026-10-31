@@ -9,21 +9,26 @@ import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
+import net.runelite.client.game.ItemManager;
 
 public class SpecialAttackCalculator
 {
 	private final Client client;
+
+	private final ItemManager itemManager;
 	@Setter
 	private ItemContainer equippedItems;
 
-	public SpecialAttackCalculator(Client client)
+	public SpecialAttackCalculator(Client client, ItemManager itemManager)
 	{
 		this.client = client;
+		this.itemManager = itemManager;
 	}
 
 	public double getSpecialMaxHit(double maxHitBase)
 	{
 		Item weapon = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
+
 		if (weapon == null)
 		{
 			return maxHitBase;
@@ -33,7 +38,7 @@ public class SpecialAttackCalculator
 		{
 			if (specialAttackWeapon.getItemId() == weapon.getId())
 			{
-				return specialAttackWeapon.getSpecialAttackDamage(client, maxHitBase);
+				return specialAttackWeapon.getSpecialAttackDamage(client, itemManager, equippedItems, maxHitBase);
 			}
 		}
 

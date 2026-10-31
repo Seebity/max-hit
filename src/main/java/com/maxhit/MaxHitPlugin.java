@@ -148,7 +148,7 @@ public class MaxHitPlugin extends Plugin
 		clientThread.invokeLater(() ->
 		{
 			maxHitCalculatorFactory = new MaxHitCalculatorFactory(this, client, itemManager);
-			specialAttackCalculator = new SpecialAttackCalculator(client);
+			specialAttackCalculator = new SpecialAttackCalculator(client, itemManager);
 
 			if (!client.getGameState().equals(GameState.LOGGED_IN))
 			{
