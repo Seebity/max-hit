@@ -79,6 +79,8 @@ public class PlayerSetupsTest extends MockedTest
 				}
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getDinhsBonus(setup.getAttackStyle(), mockedItemContainer, itemManager)).thenCallRealMethod();
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
+				// Return rune arrows
+				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getItemStrength(Skill.RANGED, mockedItemContainer, itemManager, EquipmentInventorySlot.AMMO)).thenReturn(49.0);
 				assertEquals(setup.getMaxHitCalculatorClass(), maxHitCalculator.getClass());
 				long start = System.nanoTime();
 				maxHitCalculator.calculateMaxHit();
@@ -100,7 +102,7 @@ public class PlayerSetupsTest extends MockedTest
 					if (weapon == null)
 						continue;
 
-					SpecialAttackCalculator calc = new SpecialAttackCalculator(client);
+					SpecialAttackCalculator calc = new SpecialAttackCalculator(client, itemManager);
 					calc.setEquippedItems(mockedItemContainer);
 					for (SpecialAttackWeapon specialAttackWeapon : SpecialAttackWeapon.values())
 					{
