@@ -4,11 +4,13 @@ import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.monsters.DraconicMonsters;
+import com.maxhit.monsters.MagicAttribute;
 import com.maxhit.styles.AttackStyle;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
@@ -160,6 +162,9 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			damage = factor(damage, numerator / 20.0);
 		}
 
+		// Add Twisted Bow bonus
+		damage = getTwistedBowDamage(damage);
+
 		// If not wearing slayer helm and not on task
 		if (slayerBonus == 1.0)
 		{
@@ -176,7 +181,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			damage = damage + 10.0;
 		}
 
-		//TODO Add support for Craw's bow and Twisted bow
+		//TODO Add support for Craw's bow
 		return damage;
 	}
 
@@ -266,5 +271,55 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		};
 
 		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff * 100.0);
+	}
+
+	private double getTwistedBowDamage(double damage)
+	{
+		// Check if wearing twisted bow
+		if (!EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.TWISTED_BOW))
+		{
+			return damage;
+		}
+
+		double magicAttribute = 0;
+		double cap = 250.0;
+
+		// Check for NPC
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+		{
+			magicAttribute = 0;
+		}
+		else
+		{
+			// Get NPCs Magic Level or Accuracy
+			for(MagicAttribute attribute : MagicAttribute.values())
+			{
+				if (!attribute.getIds().contains(npcId))
+					continue;
+				magicAttribute = attribute.getAttribute();
+
+				// If inside CoX
+				if (attribute.isXerician())
+				{
+					cap = 350.0;
+					// Scale for challenge mode
+					if (client.getVarbitValue(VarbitID.RAIDS_CHALLENGE_MODE) == 1)
+						magicAttribute = magicAttribute * 1.5;
+				}
+				break;
+			}
+		}
+
+		magicAttribute = Math.min(cap, magicAttribute);
+
+		double eq1 = Math.floor((3.0 * magicAttribute - 14.0) / 100.0);
+		double eq2 = Math.floor(3.0 * magicAttribute / 10.0);
+		double eq3 = Math.floor(Math.pow((eq2 - 140.0), 2.0) / 100.0);
+
+		// Bonus is always clamped at 250%
+		double bonus = Math.min(250.0, (250.0 + eq1 - eq3));
+		return factor(damage, bonus / 100.0);
 	}
 }

@@ -185,6 +185,25 @@ public enum PlayerSetup
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
 		49.0, 2.0, 19.0, 38.0),
+	TBOW(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		107.0, 6.0, 62.0, 0.0, 16680),
+	TBOW_COX(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		107.0, 7.0, 71.0, 0.0, 7551),
+	TBOW_SALVE_EI(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1),
+			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		99.0, 6.0, 70.0, 0.0, 6611),
 	PURGING_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.PURGING_STAFF, 1)

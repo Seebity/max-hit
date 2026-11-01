@@ -31,6 +31,7 @@ import com.google.inject.testing.fieldbinder.Bind;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -76,7 +77,9 @@ public abstract class MockedTest extends MockedTestBase
 		WorldView mockedWorldView = mock(WorldView.class);
 		when(client.getTopLevelWorldView()).thenReturn(mockedWorldView);
 		when(client.getWorldView(anyInt())).thenReturn(mockedWorldView);
+		when(client.getVarbitValue(VarbitID.RAIDS_CHALLENGE_MODE)).thenReturn(1);
 		when(client.getRealSkillLevel(Skill.HITPOINTS)).thenReturn(99);
+		when(maxHitPlugin.isTarget(any())).thenReturn(true);
 		when(maxHitPlugin.getActiveSpell()).thenReturn(null);
 		when(maxHitPlugin.isMarkOfDarknessActive()).thenReturn(true);
 	}
