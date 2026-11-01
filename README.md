@@ -24,7 +24,6 @@ Lizards/Salamanders<br>
 Nightmare Staff Special Attack(s)<br>
 Revenant Weapons<br>
 Tomes<br>
-Twisted Bow<br>
 Vampyre Bonus Weapons<br>
 Zaryte Crossbow Passive Effect<br>
 
