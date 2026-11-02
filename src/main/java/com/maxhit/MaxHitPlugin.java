@@ -281,6 +281,11 @@ public class MaxHitPlugin extends Plugin
 			return false;
 		}
 
+		if (taskLocation == null)
+		{
+			return true;
+		}
+
 		for (TaskLocation location : TaskLocation.values())
 		{
 			if (!location.getName().equals(taskLocation))
