@@ -185,7 +185,13 @@ public enum PlayerSetup
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
 		49.0, 2.0, 19.0, 38.0),
-	TBOW(
+	TBOW_NO_NPC(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		107.0, 1.0, 15.0, 0.0),
+	TBOW_VOID_AUGMENT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
 		)),

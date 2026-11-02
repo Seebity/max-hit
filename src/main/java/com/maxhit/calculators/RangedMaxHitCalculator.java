@@ -320,6 +320,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 
 		// Bonus is always clamped at 250%
 		double bonus = Math.min(250.0, (250.0 + eq1 - eq3));
-		return factor(damage, bonus / 100.0);
+
+		return Math.max(0.0, Math.floor(damage * (bonus / 100.0)));
 	}
 }
