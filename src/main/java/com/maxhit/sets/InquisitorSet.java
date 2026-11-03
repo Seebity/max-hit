@@ -19,17 +19,17 @@ public class InquisitorSet
 		if (attackType != AttackType.CRUSH)
 			return bonus;
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.INQUISITORS_HELM))
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.HEAD, ItemID.INQUISITORS_HELM))
 		{
 			bonus += 0.005;
 		}
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.INQUISITORS_BODY))
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.BODY, ItemID.INQUISITORS_BODY))
 		{
 			bonus += 0.01;
 		}
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.INQUISITORS_SKIRT))
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.LEGS, ItemID.INQUISITORS_SKIRT))
 		{
 			bonus += 0.01;
 		}
