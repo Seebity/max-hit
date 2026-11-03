@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
@@ -172,7 +173,21 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 	{
 		int magicLevel = client.getBoostedSkillLevel(Skill.MAGIC);
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SLAYER_STAFF_ENCHANTED))
+		// Check if opponent is in slayer task
+		NPC npc = (NPC) opponent;
+
+		boolean attackingTask = false;
+
+		if (npc == null)
+		{
+			attackingTask = false;
+		}
+		else if (plugin.isTarget(npc))
+		{
+			attackingTask = true;
+		}
+
+		if (attackingTask && EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SLAYER_STAFF_ENCHANTED))
 		{
 			baseSpellDamage = Math.floor(magicLevel / 6.0) + 13.0;
 		}
@@ -219,16 +234,16 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
+		if (activeSpell == null)
+		{
+			baseSpellDamage = 0.0;
+			return;
+		}
+
 		// Magic Dart
 		if (activeSpell == MagicSpell.MAGIC_DART)
 		{
 			getMagicDartBaseMaxDamage();
-			return;
-		}
-
-		if (activeSpell == null)
-		{
-			baseSpellDamage = 0.0;
 			return;
 		}
 
