@@ -460,6 +460,13 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		// Final Post Hit Roll
 		maxHit = Math.floor(firstFloorCalculation * (1 + ahrimsDamnedBonus));
 
+		// Apply Sanguinesti passive
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SANGUINESTI_STAFF)
+			|| EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.SANGUINESTI_STAFF_OR))
+		{
+			maxHit += 8.0;
+		}
+
 		applyTwinflameModifier();
 	}
 
