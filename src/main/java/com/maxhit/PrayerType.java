@@ -16,7 +16,24 @@ public enum PrayerType
     SUPERHUMAN_STRENGTH(Prayer.SUPERHUMAN_STRENGTH),
     ULTIMATE_STRENGTH(Prayer.ULTIMATE_STRENGTH),
     CHIVALRY(Prayer.CHIVALRY),
-    PIETY(Prayer.PIETY),
+    PIETY(Prayer.PIETY)
+		{
+			@Override
+			public boolean isEnabled(Client client)
+			{
+				return !ZEAL.isEnabled(client);
+			}
+		},
+	ZEAL(Prayer.ZEAL)
+		{
+			@Override
+			public boolean isEnabled(Client client)
+			{
+				boolean inLms = client.getVarbitValue(VarbitID.BR_INGAME) != 0;
+				boolean zeal = client.getVarbitValue(VarbitID.PRAYER_ZEAL_UNLOCKED) != 0;
+				return zeal || inLms;
+			}
+		},
 
     //Ranged
     SHARP_EYE(Prayer.SHARP_EYE),

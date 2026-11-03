@@ -6,6 +6,7 @@ public class Prayers
 {
 
 	public static final Map<PrayerType, Double> STRENGTH_PRAYERS = Map.of(
+		PrayerType.ZEAL, 1.28,
 		PrayerType.PIETY, 1.23,
 		PrayerType.CHIVALRY, 1.18,
 		PrayerType.ULTIMATE_STRENGTH, 1.15,
