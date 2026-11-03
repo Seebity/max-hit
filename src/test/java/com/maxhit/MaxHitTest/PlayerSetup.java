@@ -19,8 +19,8 @@ public enum PlayerSetup
 {
 	BASE(
 		createEquipment(Map.of()),
-		CombatStyle.MELEE, AttackStyle.ACCURATE,  MeleeMaxHitCalculator.class,
-		0.0, 1.0, 11.0, 0.0),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		0.0, 1.0, 13.0, 0.0),
 	GOBLIN_HAMMER(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GOBLINRAID_WARHAMMER, 1)
@@ -40,8 +40,8 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.PEST_VOID_KNIGHT_ROBES, 1),
 			EquipmentInventorySlot.GLOVES.getSlotIdx(), new Item(ItemID.PEST_VOID_KNIGHT_GLOVES, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE,  MeleeMaxHitCalculator.class,
-		0.0, 1.0, 12.0, 0.0),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		0.0, 1.0, 14.0, 0.0),
 	INQUISITORS(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.INQUISITORS_HELM, 1),
@@ -50,7 +50,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.INQUISITORS_SKIRT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		160.0, 4.0, 39.0, 0.0),
+		168.0, 4.0, 48.0, 0.0),
 	BARRONITE_INQUISITORS(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.INQUISITORS_HELM, 1),
@@ -59,62 +59,55 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.INQUISITORS_SKIRT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		104.0, 5.0, 35.0, 0.0, 412),
+		112.0, 5.0, 43.0, 0.0, 412),
 	FANG(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OSMUMTENS_FANG, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		181.0, 5.0, 36.0, 42.0),
+		181.0, 5.0, 42.0, 49.0),
 	KERIS_PARTISAN(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.KERIS_PARTISAN_BREACH, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		123.0, 15.0, 126.0, 0.0, 11725),
+		123.0, 15.0, 150.0, 0.0, 11725),
 	KERIS_PARTISAN_AMASCUT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.KERIS_PARTISAN_AMASCUT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		145.0, 12.0, 123.0, 0.0, 11725),
+		123.0, 12.0, 129.0, 0.0, 11725),
 	DINHS(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DINHS_BULWARK_ORNAMENT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.ACCURATE,  MeleeMaxHitCalculator.class,
-		129.0, 3.0, 32.0, 0.0),
+		142.0, 3.0, 41.0, 0.0),
 	DRAGONHUNTER_LANCE(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_LANCE, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.CONTROLLED,  MeleeMaxHitCalculator.class,
-		148.0, 3.0, 43.0, 0.0, 260),
-	DRAGONHUNTER_XBOW(
-		createEquipment(Map.of(
-			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_XBOW, 1),
-			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
-		)),
-		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		141.0, 5.0, 52.0, 0.0, 8060),
+		148.0, 3.0, 50.0, 0.0, 260),
 	SILVERLIGHT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.AGRITH_SILVERLIGHT_DYED, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		90.0, 4.0, 41.0, 0.0, 3131),
+		90.0, 4.0, 49.0, 0.0, 3131),
 	EMBERLIGHT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EMBERLIGHT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
-		91.0, 5.0, 45.0, 0.0, 3131),
+		91.0, 5.0, 52.0, 0.0, 3131),
 	SOUL_REAPER(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SOULREAPER_AXE_ORN, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
-		195.0, 5.0, 56.0, 0.0),
+		195.0, 5.0, 66.0, 0.0),
 	MAX_OBSIDIAN(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.OBSIDIAN_HELMET, 1),
@@ -124,7 +117,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.JEWL_BESERKER_NECKLACE_ORNAMENT, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
-		103.0, 3.0, 37.0, 0.0),
+		111.0, 3.0, 45.0, 0.0),
 	MAX_DHAROK(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_HEAD, 1),
@@ -132,14 +125,14 @@ public enum PlayerSetup
 			EquipmentInventorySlot.BODY.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_BODY, 1),
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.BARROWS_DHAROK_LEGS, 1)
 		)),
-		CombatStyle.MELEE, AttackStyle.ACCURATE, MeleeMaxHitCalculator.class,
-		157.0, 3.0, 72.0, 0.0),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		157.0, 4.0, 88.0, 0.0),
 	ATLATL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.ECLIPSE_ATLATL, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		99.0, 3.0, 28.0, 0.0),
+		110.0, 3.0, 35.0, 0.0), // Use max melee on DPS calc for str
 	BOWFA_AND_CRYSTAL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET, 1),
@@ -148,7 +141,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		124.0, 4.0, 36.0, 0.0),
+		124.0, 4.0, 43.0, 0.0),
 	CRYSTAL_AND_CRYSTAL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET, 1),
@@ -157,7 +150,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		124.0, 4.0, 36.0, 0.0),
+		96.0, 3.0, 36.0, 0.0),
 	BOWFA_AND_CRYSTAL_COLORED(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.CRYSTAL_HELMET_AMLODD, 1),
@@ -166,50 +159,63 @@ public enum PlayerSetup
 			EquipmentInventorySlot.LEGS.getSlotIdx(), new Item(ItemID.CRYSTAL_PLATELEGS_AMLODD, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		121.0, 3.0, 36.0, 0.0),
+		124.0, 4.0, 43.0, 0.0),
+	DRAGONHUNTER_XBOW(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_XBOW, 1),
+			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		141.0, 5.0, 61.0, 0.0, 8060),
 	MAX_RANGE_BALLISTA(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.HEAVY_BALLISTA, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE, RangedMaxHitCalculator.class,
-		189.0, 5.0, 43.0, 53.0),
+		192.0, 5.0, 52.0, 65.0),
 	SCORCHING_BOW(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCORCHING_BOW, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		127.0, 5.0, 42.0, 0.0, 3131),
+		127.0, 5.0, 49.0, 0.0, 3131),
 	MSB(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.MAGIC_SHORTBOW, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		49.0, 2.0, 19.0, 38.0),
+		76.0, 3.0, 28.0, 46.0),
 	TBOW_NO_NPC(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		107.0, 1.0, 15.0, 0.0),
+		107.0, 1.0, 18.0, 0.0),
+	TBOW_ARCHIVE_GUARDIAN(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
+		)),
+		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
+		107.0, 6.0, 73.0, 0.0, 16659),
 	TBOW_VOID_AUGMENT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		107.0, 6.0, 62.0, 0.0, 16680),
+		107.0, 6.0, 73.0, 0.0, 16680),
 	TBOW_COX(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		107.0, 7.0, 71.0, 0.0, 7551),
+		107.0, 7.0, 84.0, 0.0, 7551),
 	TBOW_SALVE_EI(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TWISTED_BOW, 1),
 			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
 		)),
 		CombatStyle.RANGED, AttackStyle.ACCURATE,  RangedMaxHitCalculator.class,
-		99.0, 6.0, 70.0, 0.0, 6611),
+		99.0, 6.0, 83.0, 0.0, 6611),
 	PURGING_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.PURGING_STAFF, 1)
@@ -243,37 +249,43 @@ public enum PlayerSetup
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SLAYER_STAFF, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.MAGIC_DART,MagicMaxHitCalculator.class,
-		0.27, 12.0, 24.0, 0.0),
+		0.27, 12.0, 26.0, 0.0),
+	MAX_MAGIC_DART_STAFF_E(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SLAYER_STAFF_ENCHANTED, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.MAGIC_DART,MagicMaxHitCalculator.class,
+		0.27, 16.0, 40.0, 0.0),
 	WARPED_SCEPTRE(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.WARPED_SCEPTRE, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.27, 2.0, 30.0, 0.0),
+		0.27, 2.0, 35.0, 0.0),
 	BONE_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.RAT_BONE_STAFF, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.27, 6.0, 48.0, 0.0),
+		0.27, 6.0, 55.0, 0.0),
 	SANGUINE_STAFF(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SANGUINESTI_STAFF_OR, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.27, 6.0, 40.0, 0.0),
+		0.27, 9.0, 57.0, 0.0),
 	EYE_OF_AYAK(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EYE_OF_AYAK, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.27, 1.0, 34.0, 44.0),
+		0.27, 1.0, 41.0, 53.0),
 	SHADOW(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TUMEKENS_SHADOW, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.81, 2.0, 68.0, 0.0);
+		0.27, 1.0, 72.0, 0.0); // DPS Calc will show 0.81 for str
 
 
 	private static Item[] createEquipment(Map<Integer, Item> itemMap) {

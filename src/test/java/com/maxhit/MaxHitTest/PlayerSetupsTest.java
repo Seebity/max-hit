@@ -109,7 +109,7 @@ public class PlayerSetupsTest extends MockedTest
 						if (specialAttackWeapon.getItemId() == weapon.getId())
 						{
 							assertEquals(setup.getMaxedSpecialHit(), calc.getSpecialMaxHit(maxHitCalculator.getMaxHit()),
-								() -> String.format("%s special max hit should be %.0f", setup.name(), setup.getMaxedMaxHit()));
+								() -> String.format("%s special max hit should be %.0f", setup.name(), setup.getMaxedSpecialHit()));
 						}
 					}
 
@@ -161,7 +161,7 @@ public class PlayerSetupsTest extends MockedTest
 	@Test
 	void testMaxHitMax()
 	{
-		when(client.getBoostedSkillLevel(any())).thenReturn(99);
+		when(client.getBoostedSkillLevel(any())).thenReturn(118);
 		when(client.getBoostedSkillLevel(Skill.HITPOINTS)).thenReturn(1);
 		testPlayerSetups(PlayerSetup.values(), false);
 	}
