@@ -62,7 +62,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 
 	private void getBaseDamage()
 	{
-		double strengthCalculation = (effectiveStrength * (strengthBonus + 64)) / 640.0;
+		double strengthCalculation = (effectiveStrength * (strengthBonus + 64.0)) / 640.0;
 		baseDamage = Math.floor(0.5 + strengthCalculation);
 	}
 
@@ -163,7 +163,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		}
 
 		// Add Twisted Bow bonus
-		damage = getTwistedBowDamage(damage);
+		damage = applyTwistedBowBonus(damage);
 
 		// If not wearing slayer helm and not on task
 		if (slayerBonus == 1.0)
@@ -194,7 +194,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		getBaseDamage();
 		maxHit = applyBonuses(baseDamage);
 
-		//TODO add support for special attack
+		// TODO add support for special attack
 		updateFlatArmour();
 		maxHit -= flatArmour;
 
@@ -273,7 +273,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		nextMaxHitReqs = new NextMaxHitReqs(skill, levelDiff, strengthBonusDiff, prayerDiff * 100.0);
 	}
 
-	private double getTwistedBowDamage(double damage)
+	private double applyTwistedBowBonus(double damage)
 	{
 		// Check if wearing twisted bow
 		if (!EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.TWISTED_BOW))
