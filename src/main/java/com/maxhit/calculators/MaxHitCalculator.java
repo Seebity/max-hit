@@ -145,7 +145,7 @@ public abstract class MaxHitCalculator
 
     protected void updateStrengthBonus()
 	{
-		strengthBonus = StrengthBonusCalculator.getStrengthBonus(equippedItems, itemManager, skill);
+		strengthBonus = StrengthBonusCalculator.getStrengthBonus(client, equippedItems, itemManager, skill);
 	}
 
 	public int getNpcId()

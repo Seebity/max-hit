@@ -1,10 +1,13 @@
 package com.maxhit.calculators;
 
 import com.maxhit.styles.AttackStyle;
+import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.ParamID;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemEquipmentStats;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemStats;
@@ -58,18 +61,33 @@ public class StrengthBonusCalculator
 		return Math.max(0.0, ((totalBonus - 800.0) / 12.0) - 38.0);
 	}
 
-	public static double getStrengthBonus(ItemContainer equippedItems, ItemManager itemManager, Skill skill)
+	public static double getStrengthBonus(Client client, ItemContainer equippedItems, ItemManager itemManager, Skill skill)
 	{
 		double strengthBonus = 0.0;
+
 		if (equippedItems == null)
 		{
 			return strengthBonus;
 		}
-		//get str bonus of worn equipment
+
+		// Check for quiver
+		final Item cape = equippedItems.getItem(EquipmentInventorySlot.CAPE.getSlotIdx());
+		boolean skipAmmo = cape != null && itemManager.getItemComposition(cape.getId()).getIntValue(ParamID.QUIVER_AMMO_AVAILABLE) == 1;
+
+		// Sum all equipment strength
 		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
 		{
+			if (skipAmmo && slot == EquipmentInventorySlot.AMMO)
+				continue;
 			strengthBonus += getItemStrength(skill, equippedItems, itemManager, slot);
 		}
+
+		// If skipped over ammo, Quiver equipped so get strength of ammo
+		if (skipAmmo)
+		{
+			strengthBonus += getQuiverAmmoStrength(client, itemManager);
+		}
+
 		return strengthBonus;
 	}
 
@@ -94,5 +112,20 @@ public class StrengthBonusCalculator
 		if (skill == Skill.RANGED)
 			return (float) itemEquipmentStats.getRstr();
 		return itemEquipmentStats.getMdmg() / 100.0;
+	}
+
+	public static double getQuiverAmmoStrength(Client client, ItemManager itemManager)
+	{
+		// Have to convert enum to int i.e. use ordinal
+		final int quiverAmmoId = client.getVarpValue(VarPlayerID.DIZANAS_QUIVER_TEMP_AMMO);
+
+		final ItemStats itemStats = itemManager.getItemStats(quiverAmmoId);
+		if (itemStats == null)
+		{
+			return 0.0;
+		}
+		final ItemEquipmentStats itemEquipmentStats = itemStats.getEquipment();
+
+		return itemEquipmentStats.getRstr();
 	}
 }

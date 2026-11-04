@@ -78,7 +78,7 @@ public class PlayerSetupsTest extends MockedTest
 					when(client.getVarbitValue(VarbitID.AUTOCAST_SPELL)).thenReturn(setup.getMagicSpell().getVarbValue());
 				}
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getDinhsBonus(setup.getAttackStyle(), mockedItemContainer, itemManager)).thenCallRealMethod();
-				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getStrengthBonus(mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
+				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getStrengthBonus(client, mockedItemContainer, itemManager, skill)).thenReturn(setup.getStrengthBonus());
 				// Return rune arrows
 				strengthBonusCalculatorMockedStatic.when(() -> StrengthBonusCalculator.getItemStrength(Skill.RANGED, mockedItemContainer, itemManager, EquipmentInventorySlot.AMMO)).thenReturn(49.0);
 				assertEquals(setup.getMaxHitCalculatorClass(), maxHitCalculator.getClass());
