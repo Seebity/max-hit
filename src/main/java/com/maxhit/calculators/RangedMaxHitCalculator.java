@@ -178,7 +178,8 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.RAT_BONE_BOW))
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.RAT_BONE_BOW) &&
+			BowAmmoRegistry.isAmmoCompatible(weaponItem.getId(), EquipmentFunctions.GetEquippedItemId(equippedItems, EquipmentInventorySlot.AMMO)))
 		{
 			damage = damage + 10.0;
 		}
