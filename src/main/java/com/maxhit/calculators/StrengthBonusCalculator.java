@@ -164,7 +164,7 @@ public class StrengthBonusCalculator
 		double strengthBonus = 0.0;
 
 		// If the player has a primary ammo slot that's compatible, use it
-		if (BowAmmoRegistry.isAmmoCompatible(bowId, quiverAmmoId))
+		if (BowAmmoRegistry.isAmmoCompatible(bowId, ammoId))
 		{
 			strengthBonus = getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
 		}
@@ -172,13 +172,22 @@ public class StrengthBonusCalculator
 		{
 			// Otherwise, if the quiver ammo is compatible, use it
 			final ItemStats itemStats = itemManager.getItemStats(quiverAmmoId);
+			
 			if (itemStats == null)
 			{
 				return 0.0;
 			}
 			final ItemEquipmentStats itemEquipmentStats = itemStats.getEquipment();
 
-			strengthBonus = itemEquipmentStats.getRstr();
+			if (itemEquipmentStats == null)
+			{
+				return 0.0;
+			}
+			else
+			{
+				strengthBonus = itemEquipmentStats.getRstr();
+			}
+
 		}
 
 		return strengthBonus;
