@@ -2,6 +2,7 @@ package com.maxhit.calculators;
 
 import com.maxhit.MaxHitPlugin;
 import com.maxhit.NextMaxHitReqs;
+import com.maxhit.equipment.BowAmmoRegistry;
 import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.MagicAttribute;
@@ -40,7 +41,8 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			Item weapon = this.equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
 			if (weapon != null)
 			{
-				if (weapon.getId() == ItemID.ECLIPSE_ATLATL)
+				if (weapon.getId() == ItemID.ECLIPSE_ATLATL ||
+					weapon.getId() == ItemID.HG_HUNTER_SPEAR)
 				{
 					this.skill = Skill.STRENGTH;
 				}
