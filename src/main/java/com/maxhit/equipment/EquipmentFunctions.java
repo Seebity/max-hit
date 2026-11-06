@@ -9,6 +9,17 @@ import net.runelite.api.EquipmentInventorySlot;
 
 public class EquipmentFunctions
 {
+	public static int GetEquippedItemId(ItemContainer equippedItems, EquipmentInventorySlot slot)
+	{
+		// Have to convert enum to int i.e. use ordinal
+		Item item = equippedItems.getItem(slot.getSlotIdx());
+
+		if (item == null)
+		{
+			return -1;
+		}
+		return item.getId();
+	}
 
 	public static boolean HasEquipped(ItemContainer equippedItems, EquipmentInventorySlot slot, int itemID)
 	{
