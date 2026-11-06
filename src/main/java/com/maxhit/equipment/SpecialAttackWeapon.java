@@ -92,6 +92,8 @@ public enum SpecialAttackWeapon
 			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
 			{
 				double rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
+				if (maxHitBase == 0.0)
+					return 0.0;
 				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
 				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) *  (ammoStrength + 64) / 640));
 				return 2.0 * maxHit;
