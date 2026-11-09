@@ -1,6 +1,7 @@
 package com.maxhit.equipment;
 import com.google.common.collect.ImmutableSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.gameval.ItemID;
@@ -10,6 +11,7 @@ public class BowAmmoRegistry
 {
 	// High-performance direct lookups
 	private static final Map<Integer, Set<Integer>> BOW_AMMO_MAP = new HashMap<>();
+	private static final Set<Integer> SEEKING_AMMO = new HashSet<Integer>();
 	private static final Set<Integer> SELF_CONTAINED_BOWS = ImmutableSet.<Integer>builder()
 		.add(ItemID.WILD_CAVE_BOW_UNCHARGED)       // Craw's Bow
 		.add(ItemID.WILD_CAVE_BOW_CHARGED)         // Craw's Bow
@@ -64,27 +66,50 @@ public class BowAmmoRegistry
 
 	static
 	{
+		//region Seeking Arrows
+		SEEKING_AMMO.add(ItemID.SEEKING_BRONZE_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_IRON_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_STEEL_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_MITHRIL_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_ADAMANT_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_RUNE_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_SLAYER_BROAD_ARROWS);
+		SEEKING_AMMO.add(ItemID.SEEKING_AMETHYST_ARROW);
+		SEEKING_AMMO.add(ItemID.SEEKING_DRAGON_ARROW);
+		//endregion
+
 		//region Regular bow ammo
 		Set<Integer> ironArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.BRONZE_ARROW)))
+			.add(ItemID.SEEKING_BRONZE_ARROW)
+			.add(ItemID.SEEKING_IRON_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.IRON_ARROW))).build();
 		Set<Integer> steelArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(ironArrowsOrLower)
+			.add(ItemID.SEEKING_STEEL_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.STEEL_ARROW))).build();
 		Set<Integer> mithrilArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(steelArrowsOrLower)
+			.add(ItemID.SEEKING_MITHRIL_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.MITHRIL_ARROW))).build();
 		Set<Integer> adamantArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(mithrilArrowsOrLower)
+			.add(ItemID.SEEKING_ADAMANT_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.ADAMANT_ARROW))).build();
 		Set<Integer> runeArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(adamantArrowsOrLower)
+			.add(ItemID.SEEKING_RUNE_ARROW)
+			.add(ItemID.ICE_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.RUNE_ARROW))).build();
 		Set<Integer> amethystArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(runeArrowsOrLower)
+			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.SLAYER_BROAD_ARROWS)))
+			.add(ItemID.SEEKING_SLAYER_BROAD_ARROWS)
+			.add(ItemID.SEEKING_AMETHYST_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.AMETHYST_ARROW))).build();
 		Set<Integer> dragonArrowsOrLower = ImmutableSet.<Integer>builder()
 			.addAll(amethystArrowsOrLower)
+			.add(ItemID.SEEKING_DRAGON_ARROW)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.DRAGON_ARROW))).build();
 		//endregion
 
@@ -104,6 +129,7 @@ public class BowAmmoRegistry
 
 		//region Regular Bolts
 		Set<Integer> bronzeBoltsOrLower = ImmutableSet.<Integer>builder()
+			.add(ItemID.BARBED_BOLT)
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.OPAL_BOLT)))
 			.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.BOLT))).build();
 		Set<Integer> bluriteBoltsOrLower = ImmutableSet.<Integer>builder()
@@ -290,8 +316,8 @@ public class BowAmmoRegistry
 		return allowedAmmo != null && allowedAmmo.contains(ammoId);
 	}
 
-	public static boolean isABow(int weaponId)
+	public static boolean isUsingSeeker(int weaponId, int ammoId)
 	{
-		return SELF_CONTAINED_BOWS.contains(weaponId) || BOW_AMMO_MAP.containsKey(weaponId);
+		return isAmmoCompatible(weaponId, ammoId) && SEEKING_AMMO.contains(ammoId);
 	}
 }
