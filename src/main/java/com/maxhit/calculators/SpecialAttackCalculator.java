@@ -10,6 +10,7 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.ItemVariationMapping;
 
 public class SpecialAttackCalculator
 {
@@ -36,7 +37,7 @@ public class SpecialAttackCalculator
 
 		for (SpecialAttackWeapon specialAttackWeapon : SpecialAttackWeapon.values())
 		{
-			if (specialAttackWeapon.getItemId() == weapon.getId())
+			if (ItemVariationMapping.getVariations(ItemVariationMapping.map(specialAttackWeapon.getItemId())).contains(weapon.getId()))
 			{
 				return specialAttackWeapon.getSpecialAttackDamage(client, itemManager, equippedItems, maxHitBase);
 			}

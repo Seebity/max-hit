@@ -27,43 +27,25 @@ public enum SpecialAttackWeapon
 			}
 		},
 	ABYSSAL_DAGGER(ItemID.ABYSSAL_DAGGER, 0.85),
-	ABYSSAL_DAGGER_P(ItemID.ABYSSAL_DAGGER_P, 0.85),
-	ABYSSAL_DAGGER_P_PLUS(ItemID.ABYSSAL_DAGGER_P_, 0.85),
-	ABYSSAL_DAGGER_P_PLUS_PLUS(ItemID.ABYSSAL_DAGGER_P__, 0.85),
 	AGS(ItemID.AGS, 1.375),
 	ARKAN_BLADE(ItemID.ARKAN_BLADE, 1.5),
-	BLAZING_BLOWPIPE(ItemID.TOXIC_BLOWPIPE_ORNAMENT, 1.5),
 	BGS(ItemID.BGS, 1.21),
 	BLESSED_SARADOMIN_SWORD(ItemID.BLESSED_SARADOMIN_SWORD, 1.25),
 	BRAIN_ANCHOR(ItemID.BRAIN_ANCHOR, 1.1),
+	CRIMSON_KISTEN(ItemID.CRIMSON_KISTEN, 1.7),
 	CRYSTAL_HALBERD(ItemID.CRYSTAL_HALBERD, 1.1),
 	DARKBOW(ItemID.DARKBOW, 1.3),
+	DAWNBRINGER(ItemID.VERZIK_SPECIAL_WEAPON, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				return 150.0;
+			}
+		},
 	DRAGON_CLAWS(ItemID.DRAGON_CLAWS, 1.98),
+	DRAGON_CROSSBOW(ItemID.XBOWS_CROSSBOW_DRAGON, 1.2),
 	DRAGON_DAGGER(ItemID.DRAGON_DAGGER, -1.0)
-		{
-			@Override
-			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
-			{
-				return 2.0 * Math.floor(maxHitBase * 1.15);
-			}
-		},
-	DRAGON_DAGGER_P(ItemID.DRAGON_DAGGER_P, -1.0)
-		{
-			@Override
-			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
-			{
-				return 2.0 * Math.floor(maxHitBase * 1.15);
-			}
-		},
-	DRAGON_DAGGER_P_PLUS(ItemID.DRAGON_DAGGER_P_, -1.0)
-		{
-			@Override
-			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
-			{
-				return 2.0 * Math.floor(maxHitBase * 1.15);
-			}
-		},
-	DRAGON_DAGGER_P_PLUS_PLUS(ItemID.DRAGON_DAGGER_P__, -1.0)
 		{
 			@Override
 			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
@@ -86,6 +68,14 @@ public enum SpecialAttackWeapon
 	DRAGON_WARHAMMER(ItemID.DRAGON_WARHAMMER, 1.5),
 	DUAL_MACUAHUITL(ItemID.DUAL_MACUAHUITL, 1.25),
 	EYE_OF_AYAK(ItemID.EYE_OF_AYAK, 1.3),
+	GRANITE_HAMMER(ItemID.GRANITE_HAMMER, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				return maxHitBase + 5.0;
+			}
+		},
 	MSB(ItemID.MAGIC_SHORTBOW, -1.0)
 		{
 			@Override
@@ -93,21 +83,56 @@ public enum SpecialAttackWeapon
 			{
 				double rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
 				if (maxHitBase == 0.0)
+				{
 					return 0.0;
+				}
 				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
-				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) *  (ammoStrength + 64) / 640));
+				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) * (ammoStrength + 64) / 640));
+				return 2.0 * maxHit;
+			}
+		},
+	MSB_COMP(ItemID.TRAIL_COMPOSITE_BOW_MAGIC, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				double rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
+				if (maxHitBase == 0.0)
+				{
+					return 0.0;
+				}
+				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
+				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) * (ammoStrength + 64) / 640));
 				return 2.0 * maxHit;
 			}
 		},
 	HEAVY_BALLISTA(ItemID.HEAVY_BALLISTA, 1.25),
 	LIGHT_BALLISTA(ItemID.LIGHT_BALLISTA, 1.25),
 	OSMUMTENS_FANG(ItemID.OSMUMTENS_FANG, 1.1765),
-	OSMUMTENS_FANG_OR(ItemID.OSMUMTENS_FANG_ORNAMENT, 1.1765),
 	SARADOMIN_SWORD(ItemID.SARADOMIN_SWORD, 1.1),
 	SGS(ItemID.SGS, 1.1),
+	SUNSPEAR(ItemID.SUNSPEAR, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				return Math.max(0.0, Math.floor(maxHitBase * 0.7));
+			}
+		},
 	TOXIC_BLOWPIPE(ItemID.TOXIC_BLOWPIPE, 1.5),
+	VOIDWAKER(ItemID.VOIDWAKER, 1.5),
+	WEBWEAVER(ItemID.WILD_CAVE_WEBWEAVER_CHARGED, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				double maxDamagePerHit = Math.ceil(maxHitBase * 0.4);
+				return Math.floor(maxDamagePerHit * 4.0);
+			}
+		},
 	XBOWS_CROSSBOW_DRAGON(ItemID.XBOWS_CROSSBOW_DRAGON, 1.2),
 	ZGS(ItemID.ZGS, 1.1),
+	ZORYAS_TOME(ItemID.ZORYAS_TOME, 1.6),
 	;
 
 	@Getter
