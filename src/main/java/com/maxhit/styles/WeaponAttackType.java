@@ -1,10 +1,11 @@
 package com.maxhit.styles;
-// Copied from https://github.com/cwjoshuak/rl-attack-types/blob/master/src/main/java/com/cwjoshuak/AttackType.java
+// Copied from https://github.com/cwjoshuak/rl-attack-types/blob/master/src/main/java/com/cwjoshuak/WeaponAttackType.java
 
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
-
+// Generated using https://abextm.github.io/cache2/#/viewer/dbtable with Table 78
+// TODO: Change this enum to a class to use cache instead of hard-coding
 enum WeaponAttackType
 {
 	UNARMED(0, AttackType.CRUSH, AttackType.CRUSH, null, AttackType.CRUSH),
@@ -62,7 +63,17 @@ enum WeaponAttackType
 	// BULWARK
 	TYPE_28(28, AttackType.CRUSH, null, null, AttackType.NONE),
 	TYPE_29(29, AttackType.MAGIC, AttackType.MAGIC, null, AttackType.MAGIC),
-	TYPE_30(30, AttackType.STAB, AttackType.STAB, AttackType.CRUSH, AttackType.STAB);
+	TYPE_30(30, AttackType.STAB, AttackType.STAB, AttackType.CRUSH, AttackType.STAB),
+	// I think this is salamanders...?
+	TYPE_31(31, AttackType.STAB, AttackType.RANGED, AttackType.MAGIC, null),
+	TYPE_32(32, AttackType.CRUSH, AttackType.CRUSH, null, AttackType.CRUSH),
+	TYPE_33(33, AttackType.NONE, null, null, null),
+	TYPE_34(34, AttackType.STAB, AttackType.SLASH, AttackType.CRUSH, AttackType.SLASH),
+	TYPE_35(35, AttackType.SLASH, AttackType.SLASH, null, AttackType.SLASH),
+	// Obligator
+	TYPE_36(36, AttackType.CRUSH, AttackType.CRUSH, AttackType.CRUSH, null),
+	TYPE_37(37, AttackType.MAGIC, AttackType.MAGIC, null, AttackType.MAGIC)
+	;
 
 	@Getter
 	private final AttackType[] attackTypes;
