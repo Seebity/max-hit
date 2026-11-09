@@ -86,7 +86,7 @@ public class StrengthBonusCalculator
 		for (EquipmentInventorySlot slot : EquipmentInventorySlot.values())
 		{
 			// Check if weapon is a bow
-			if (slot == EquipmentInventorySlot.WEAPON && skill == Skill.RANGED)
+			if (skill == Skill.RANGED && slot == EquipmentInventorySlot.WEAPON)
 			{
 				// Save off bow ID for checking registry later
 				bowId = EquipmentFunctions.GetEquippedItemId(equippedItems, slot);
@@ -111,18 +111,21 @@ public class StrengthBonusCalculator
 			strengthBonus += getItemStrength(skill, equippedItems, itemManager, slot);
 		}
 
-		// Quiver equipped so get strength of ammo
-		if (quiverEquipped)
+		double quiverAmmoStr = 0.0;
+		// Quiver equipped and using ranged so get strength of ammo
+		if (skill == Skill.RANGED && quiverEquipped)
 		{
-			strengthBonus += getQuiverAmmoStrength(bowId, ammoId, client, equippedItems, itemManager);
+			quiverAmmoStr = getQuiverAmmoStrength(bowId, ammoId, client, equippedItems, itemManager);
+			strengthBonus += quiverAmmoStr;
 		}
 
-		// If ammo doesn't match, and we're not wearing a quiver, set damage to 0.0
+		// If ammo doesn't match, quiver ammo str is 0, and not using self-contained bow or light weapon, set damage to 0.0
 		if (skill == Skill.RANGED)
 		{
 
 			if (!BowAmmoRegistry.isAmmoCompatible(bowId, ammoId) &&
-				!quiverEquipped &&
+				quiverEquipped &&
+				quiverAmmoStr == 0.0 &&
 				!isSelfContainedOrLightWeapon)
 			{
 				strengthBonus = -100;
