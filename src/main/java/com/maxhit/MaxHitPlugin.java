@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.maxhit.calculators.SpecialAttackCalculator;
 import com.maxhit.slayer.Task;
 import com.maxhit.slayer.TaskLocation;
+import com.maxhit.styles.AttackType;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -569,12 +570,13 @@ public class MaxHitPlugin extends Plugin
 	private void replaceCalculatorAndMaxHit()
 	{
 		AttackStyle attackStyle = StyleFactory.getAttackStyle(client);
+		AttackType attackType = StyleFactory.getAttackType(client);
 		if (attackStyle == null || attackStyle == AttackStyle.OTHER)
 		{
 			return;
 		}
 
-		CombatStyle combatStyle = StyleFactory.getCombatType(attackStyle);
+		CombatStyle combatStyle = StyleFactory.getCombatType(attackType);
 		maxHitCalculator = maxHitCalculatorFactory.create(combatStyle, attackStyle);
 		maxHitCalculator.calculateMaxHit();
 	}

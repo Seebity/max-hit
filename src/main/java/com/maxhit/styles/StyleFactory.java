@@ -118,16 +118,16 @@ public class StyleFactory {
 		return attackStyle;
 	}
 
-	//Combat type of equipped weapon (Melee, ranged, magic, other)
-	public static CombatStyle getCombatType(AttackStyle attackStyle) {
-		if (attackStyle == AttackStyle.ACCURATE ||
-			attackStyle == AttackStyle.AGGRESSIVE ||
-			attackStyle == AttackStyle.CONTROLLED ||
-			attackStyle == AttackStyle.DEFENSIVE)
-			return CombatStyle.MELEE;
-		if (attackStyle.getName().contains("ang")) return CombatStyle.RANGED;
-		if (attackStyle.getName().contains("Casting")) return CombatStyle.MAGE;
-		log.debug("Null combat style: {}", attackStyle.getName());
-		return null;
+	// Combat type of equipped weapon (Melee, ranged, magic, other)
+	public static CombatStyle getCombatType(AttackType attackType) {
+		if (attackType == AttackType.RANGED)
+		{
+			return CombatStyle.RANGED;
+		}
+		if (attackType == AttackType.MAGIC)
+		{
+			return CombatStyle.MAGE;
+		}
+		return CombatStyle.MELEE;
 	}
 }
