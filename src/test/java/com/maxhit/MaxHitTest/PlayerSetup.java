@@ -272,7 +272,7 @@ public enum PlayerSetup
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SANGUINESTI_STAFF_OR, 1)
 		)),
-		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+		CombatStyle.MAGE, AttackStyle.DEFENSIVE, MagicMaxHitCalculator.class,
 		0.27, 9.0, 57.0, 0.0),
 	EYE_OF_AYAK(
 		createEquipment(Map.of(
