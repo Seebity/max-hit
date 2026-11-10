@@ -8,6 +8,5 @@ import lombok.RequiredArgsConstructor;
 public enum CombatStyle {
     MELEE,
     RANGED,
-    MAGE,
-    TRIDENT,
+    MAGE
 }
