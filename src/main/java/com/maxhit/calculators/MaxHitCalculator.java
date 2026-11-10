@@ -177,7 +177,7 @@ public abstract class MaxHitCalculator
 
 		for (MonsterFlatArmour monster : MonsterFlatArmour.values())
 		{
-			if (monster.getId() != npcId)
+			if (!monster.getIds().contains(npcId))
 			{
 				continue;
 			}
