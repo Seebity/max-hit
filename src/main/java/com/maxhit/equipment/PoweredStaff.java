@@ -30,8 +30,6 @@ public enum PoweredStaff
 		(skillLevel) -> Math.max(2.0, Math.floor(Math.floor((skillLevel / 3.0)) - 2.0) / 2.0)),
 	SANGUINESTI_STAFF(ItemID.SANGUINESTI_STAFF,
 		(skillLevel) -> Math.max(1.0, Math.floor(skillLevel / 3.0))),
-	SANGUINESTI_STAFF_OR(ItemID.SANGUINESTI_STAFF_OR,
-		(skillLevel) -> Math.max(1.0, Math.floor(skillLevel / 3.0))),
 	EYE_OF_AYAK(ItemID.EYE_OF_AYAK,
 		(skillLevel) -> Math.max(1.0, Math.floor((skillLevel / 3.0)) - 6.0)),
 	TUMEKENS_SHADOW(ItemID.TUMEKENS_SHADOW,
