@@ -14,6 +14,7 @@ import static com.maxhit.regions.TombsRegions.TOA_ROOM_IDS;
 import com.maxhit.styles.AttackStyle;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
+import java.util.Objects;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.NPC;
@@ -360,6 +361,27 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		}
 	}
 
+	private void updateTomeBonus()
+	{
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_FIRE) &&
+			Objects.equals(activeSpell.getElement(), "FIRE"))
+		{
+			tomeBonus = 0.1;
+		}
+
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_WATER) &&
+			Objects.equals(activeSpell.getElement(), "WATER"))
+		{
+			tomeBonus = 0.1;
+		}
+
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.SHIELD, ItemID.TOME_OF_EARTH) &&
+			Objects.equals(activeSpell.getElement(), "EARTH"))
+		{
+			tomeBonus = 0.1;
+		}
+	}
+
 	private void getPrimaryMagicDamage()
 	{
 		updateStrengthBonus(); // I.E. visible bonuses
@@ -377,6 +399,8 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		getVirtusBonus();
 		updatePrayerBonus();
 		getElementalWeakness();
+		updateTomeBonus();
+		double temp = tomeBonus;
 		double tempBonuses = (strengthBonus - voidBonus) * shadowBonus;
 		tempBonuses = Math.min(1.0, tempBonuses);
 		double totalBonus = voidBonus + salveBonus + avariceBonus + standardSpellbookStaffBonus + virtusBonus + prayerBonus;
@@ -404,7 +428,8 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		double accursedCalculation   = Math.floor(sceptreCalculation    * totalAccursedBonus);
 
 		double elementalWeaknessAddition = Math.floor(baseDamageModifier * elementalWeakness);
-		preHitRoll = Math.floor(accursedCalculation * totalTomeBonus) + elementalWeaknessAddition;
+		double withElementalWeakness = accursedCalculation + elementalWeaknessAddition;
+		preHitRoll = Math.floor(withElementalWeakness * totalTomeBonus);
 	}
 
 	private void getMarkOfDarknessBonus()

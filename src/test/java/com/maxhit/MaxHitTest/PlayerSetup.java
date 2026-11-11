@@ -222,19 +222,21 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.DARK_DEMONBANE, MagicMaxHitCalculator.class,
 		0.37, 61.0, 61.0, 3131),
-	DRAGONHUNTER_WAND_GREEN_DRAGON(
-		createEquipment(Map.of(
-			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_WAND, 1)
-		)),
-		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.WATER_SURGE, MagicMaxHitCalculator.class,
-		0.37, 53.0, 56.0, 260), // DPS calculator will report 49 here but 53 is right (I think..)
-	DRAGONHUNTER_WAND_VORKATH(
+	DRAGONHUNTER_WAND_TOME_GREEN_DRAGON(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_WAND, 1),
-			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1)
+			EquipmentInventorySlot.SHIELD.getSlotIdx(), new Item(ItemID.TOME_OF_WATER, 1)
+		)),
+		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.WATER_SURGE, MagicMaxHitCalculator.class,
+		0.37, 58.0, 61.0, 260), // DPS calculator will report 53 here but 58 is right (I think..)
+	DRAGONHUNTER_WAND_TOME_VORKATH(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.DRAGONHUNTER_WAND, 1),
+			EquipmentInventorySlot.AMULET.getSlotIdx(), new Item(ItemID.NZONE_SALVE_AMULET_E, 1),
+			EquipmentInventorySlot.SHIELD.getSlotIdx(), new Item(ItemID.TOME_OF_FIRE, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.CASTING, MagicSpell.FIRE_SURGE, MagicMaxHitCalculator.class,
-		0.32, 59.0, 59.0, 8060),
+		0.32, 64.0, 64.0, 8060), // Since Fire Surge is highest damage, standard will remain the same
 	VIRTUS_MAGE(
 	createEquipment(Map.of(
 		EquipmentInventorySlot.HEAD.getSlotIdx(), new Item(ItemID.VIRTUS_MASK, 1),
