@@ -96,6 +96,25 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
 		90.0, 4.0, 49.0, 0.0, 3131),
+	SILVERLIGHT_VAMPYRE_JUVINATE(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.AGRITH_SILVERLIGHT_DYED, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		90.0, 3.0, 10.0, 0.0, 4427),
+	SILVERLIGHT_VAMPYRE_JUVINATE_EFS_AID(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.RING.getSlotIdx(), new Item(ItemID.VAMPYRE_RING, 1),
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.AGRITH_SILVERLIGHT_DYED, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		78.0, 1.0, 14.0, 0.0, 4427),
+	SILVERLIGHT_VYREWATCH(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.AGRITH_SILVERLIGHT_DYED, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE,  MeleeMaxHitCalculator.class,
+		90.0, 0.0, 0.0, 0.0, 8252),
 	EMBERLIGHT(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.EMBERLIGHT, 1)

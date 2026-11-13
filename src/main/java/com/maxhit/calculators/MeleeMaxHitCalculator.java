@@ -186,6 +186,40 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 
 		damage = addFactor(damage, berserkerBonus);
 
+		if (vampyreLevel != 0)
+		{
+			// Attacking a vampyre
+			boolean efaritaysAidEquipped = EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.RING, ItemID.VAMPYRE_RING);
+			if (efaritaysAidEquipped)
+			{
+				if (vampyreLevel == 1)
+				{
+					damage = factor(damage, 1.1);
+				}
+
+				// Level 2 vampyre and using silver or greater weaponry
+				if (vampyreLevel == 2 && vampyreBonus > 1.0)
+				{
+					// Add additional 10%
+					damage = factor(damage, 1.1);
+				}
+
+				// Level 3 vampyre and using associated weaponry
+				// We don't need to check for weapon tier because vampyre bonus
+				// already checks this
+				if (vampyreLevel == 3 && vampyreBonus > 1.0)
+				{
+					// Add additional 10%
+					damage = factor(damage, 1.1);
+				}
+			}
+
+			if (vampyreBonus != 0.0)
+				damage = factor(damage, vampyreBonus);
+		}
+
+
+
 		return damage;
 	}
 
@@ -199,6 +233,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		getBaseDamage();
 		maxHit = applyBonuses(baseDamage);
 		maxHit -= flatArmour;
+		maxHit = adjustForTarget(maxHit);
 		calculateNextMaxHitRequirements();
 	}
 
@@ -210,7 +245,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		double levelDiff = 0.0;
 
 		// Add guard
-		if (effectiveLevel < 1.0)
+		if (effectiveLevel < 1.0 || capApplied)
 		{
 			return;
 		}
@@ -224,6 +259,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 
 			if (tempMaxHit >= nextMaxHit)
 			{
@@ -243,6 +279,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 
 			if (tempMaxHit >= nextMaxHit)
 			{
@@ -263,6 +300,7 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 			if (tempMaxHit >= nextMaxHit)
 			{
 				prayerDiff = i;

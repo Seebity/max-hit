@@ -5,8 +5,10 @@ import com.maxhit.NextMaxHitReqs;
 import com.maxhit.PrayerType;
 import com.maxhit.equipment.DemonbaneWeapon;
 import com.maxhit.equipment.EquipmentFunctions;
+import com.maxhit.equipment.VampyreBaneWeapon;
 import com.maxhit.monsters.DemonicMonsters;
 import com.maxhit.monsters.MonsterFlatArmour;
+import com.maxhit.monsters.Vampyres;
 import com.maxhit.sets.EquipmentSet;
 import com.maxhit.styles.AttackStyle;
 import javax.annotation.Nullable;
@@ -20,6 +22,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
 
@@ -45,7 +48,10 @@ public abstract class MaxHitCalculator
 	protected double slayerBonus;
 	protected double dragonbaneBonus;
 	protected double demonbaneBonus;
+	protected double vampyreBonus;
+	protected int vampyreLevel;
 	protected double flatArmour;
+	protected boolean capApplied;
 
 	@Nullable
     public Actor opponent;
@@ -86,11 +92,15 @@ public abstract class MaxHitCalculator
 		slayerBonus = 1.0;
 		dragonbaneBonus = 1.0;
 		demonbaneBonus = 1.0;
+		vampyreBonus = 1.0;
+		vampyreLevel = 0;
 		flatArmour = 0.0;
+		capApplied = false;
 		updatePrayerBonus();
 		updateEffectiveLevel();
 		updateStyleBonus();
 		updateVoidBonus();
+		updateVampyreBonus();
 	}
 
 	protected abstract void updateStyleBonus();
@@ -252,6 +262,99 @@ public abstract class MaxHitCalculator
 		demonbaneBonus = 0.0;
 	}
 
+	private void updateVampyreBonus()
+	{
+		// Check if opponent is a vampyre
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+		{
+			vampyreBonus = 1.0;
+			return;
+		}
+
+		for (Vampyres vampyre : Vampyres.values())
+		{
+			if (!vampyre.getIds().contains(npcId))
+			{
+				continue;
+			}
+			vampyreLevel = vampyre.getLevel();
+			break;
+		}
+
+		if (vampyreLevel == 0)
+			return;
+
+		vampyreBonus = VampyreBaneWeapon.GetDamageMultiplier(client, equippedItems, vampyreLevel);
+	}
+
+	protected double adjustForTarget(double maxHit)
+	{
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+		{
+			return maxHit;
+		}
+
+		// Cap damage for Zulrah
+		if (npcId == 2024 ||
+			npcId == 2043 ||
+			npcId == 2044  )
+		{
+			if (maxHit > 50.0)
+			{
+				capApplied = true;
+				return 50.0;
+			}
+		}
+
+		// Opponent is not a vampyre
+		if (vampyreLevel == 0)
+		{
+			return maxHit;
+		}
+
+		//region Attacking a vampyre
+
+		// Attacking a level 3 without a proper vampyrebane weapon
+		if (vampyreLevel == 3 && vampyreBonus == 0.0)
+		{
+			capApplied = true;
+			return 0.0;
+		}
+
+		boolean efaritaysAidEquipped = EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.RING, ItemID.VAMPYRE_RING);
+
+		// Attacking a level 2 with Efaritay's Aid
+		if (vampyreLevel == 2 && efaritaysAidEquipped)
+		{
+			// Half damage
+			return Math.floor(maxHit * 0.5);
+		}
+
+		// Attacking a level 2 without Efaritay's Aid and without a silver weapon
+		if (vampyreLevel == 2 && vampyreBonus == 0)
+		{
+			capApplied = true;
+			return 0.0;
+		}
+
+		// This is wild to me
+		// According to Llemonduck and the DPS Calc, tier 2 vampyres are capped at 10 damage
+		if (vampyreLevel == 2 && vampyreBonus > 0.0)
+		{
+			if (maxHit > 10.0)
+			{
+				capApplied = true;
+				return 10.0;
+			}
+		}
+
+		return maxHit;
+		//endregion
+	}
 	/**
 	 * Multiplies base by factor
 	 * @param base base value
@@ -285,7 +388,9 @@ public abstract class MaxHitCalculator
 		salveBonus = bonusCalculator.getSalveBonus(equippedItems, opponent);
 	}
 
-	protected void getSlayerBonus() {slayerBonus = bonusCalculator.getSlayerBonus(this.plugin, equippedItems, opponent);}
+	protected void getSlayerBonus() {
+		slayerBonus = bonusCalculator.getSlayerBonus(this.plugin, equippedItems, opponent);
+	}
 
 	protected abstract void calculateNextMaxHitRequirements();
 }
