@@ -991,6 +991,10 @@ public enum MonsterWeaknesses {
 		{
 			return false;
 		}
+
+		if (activeSpell == null)
+			return false;
+
 		return Objects.equals(activeSpell.getElement(), element);
 	}
 }
