@@ -273,6 +273,7 @@ public class UndeadMonsters {
 		3616, //Treus Dayth
 		7272, //Twisted Banshee
 		4500, //Ulfric
+		16670, //Undead binder
 		2993, //Undead chicken
 		2992, //Undead cow
 		2145, //Undead Druid

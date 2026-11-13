@@ -111,6 +111,7 @@ public class DemonicMonsters {
 		9465, //Infernal pyrelord
 		7397, //Insatiable Bloodveld
 		7398, //Insatiable mutated Bloodveld
+		16666, //Jelly (Dreadnoth)
 		14180, //Judge of Yama
 		10936, //Judge of Yama (A Kingdom Divided)
 		10938, //Judge of Yama (A Kingdom Divided)
