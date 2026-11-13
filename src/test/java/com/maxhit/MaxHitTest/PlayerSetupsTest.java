@@ -15,6 +15,7 @@ import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +48,15 @@ public class PlayerSetupsTest extends MockedTest
 		when(client.getItemContainer(anyInt())).thenReturn(mockedItemContainer);
 		when(client.getVarpValue(VarPlayerID.SOULREAPER_STACKS)).thenReturn(5);
 		when(client.getItemDefinition(anyInt())).thenReturn(mockedItemComposition);
-		when(mockedItemComposition.getName()).thenReturn("Test");
+		if (mockedItemContainer.contains(ItemID.SLAYER_HELM_I))
+		{
+			when(mockedItemComposition.getName()).thenReturn("slayer helmet (i)");
+		}
+		else
+		{
+			when(mockedItemComposition.getName()).thenReturn("Test");
+		}
+
 	}
 
 	private void testPlayerSetups(PlayerSetup[] setups, boolean standard)
