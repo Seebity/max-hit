@@ -200,6 +200,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		// TODO add support for special attack
 		updateFlatArmour();
 		maxHit -= flatArmour;
+		maxHit = adjustForTarget(maxHit);
 
 		calculateNextMaxHitRequirements();
 	}
@@ -212,7 +213,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 		double levelDiff = 0.0;
 
 		// Add guard
-		if (effectiveLevel < 1.0)
+		if (effectiveLevel < 1.0 || capApplied)
 		{
 			return;
 		}
@@ -226,6 +227,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 
 			if (tempMaxHit >= nextMaxHit)
 			{
@@ -245,6 +247,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 
 			if (tempMaxHit >= nextMaxHit)
 			{
@@ -265,6 +268,7 @@ public class RangedMaxHitCalculator extends MaxHitCalculator
 			getBaseDamage();
 			tempMaxHit = applyBonuses(baseDamage);
 			tempMaxHit -= flatArmour;
+			tempMaxHit = adjustForTarget(tempMaxHit);
 
 			if (tempMaxHit >= nextMaxHit)
 			{

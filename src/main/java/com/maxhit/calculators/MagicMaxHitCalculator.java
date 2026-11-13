@@ -493,6 +493,8 @@ public class MagicMaxHitCalculator extends MaxHitCalculator
 		}
 
 		applyTwinflameModifier();
+
+		maxHit = adjustForTarget(maxHit);
 	}
 
 	private void applyTwinflameModifier()
