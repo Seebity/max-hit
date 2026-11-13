@@ -306,7 +306,13 @@ public enum PlayerSetup
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TUMEKENS_SHADOW, 1)
 		)),
 		CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
-		0.27, 1.0, 72.0, 0.0); // DPS Calc will show 0.81 for str
+		0.27, 1.0, 72.0, 0.0), // DPS Calc will show 0.81 for str
+	SHADOW_ZULRAH(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.TUMEKENS_SHADOW, 1)
+		)),
+	CombatStyle.MAGE, AttackStyle.ACCURATE, MagicMaxHitCalculator.class,
+	0.27, 1.0, 50.0, 0.0, 2043); // DPS Calc will show 0.81 for str
 
 
 	private static Item[] createEquipment(Map<Integer, Item> itemMap) {
