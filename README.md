@@ -17,8 +17,8 @@ link below if they don't match
 
 Currently, this plugin does not support the following weapons/bonuses:
 
+Barbarian Assault Fighter Level<br>
 Blowpipes<br>
-Colossal Blade<br>
 Holy Water<br>
 Lizards/Salamanders<br>
 Nightmare Staff Special Attack(s)<br>
