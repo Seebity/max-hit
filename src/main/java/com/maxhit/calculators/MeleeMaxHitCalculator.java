@@ -214,6 +214,20 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				damage = factor(damage, bonus);
 			}
 		}
+
+		Collection<Integer> scytheIds = ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.SCYTHE_OF_VITUR));
+
+		for(int scythe : scytheIds)
+		{
+			if(!EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, scythe))
+			{
+				continue;
+			}
+
+			damage = getScytheDamage(damage);
+			break;
+		}
+
 		// Apply Keris chance to 3x
 		if (kerisBonus > 1.0)
 		{
@@ -259,6 +273,20 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		return damage;
 	}
 
+	private double getScytheDamage(double damage)
+	{
+		if (npcSize > 1)
+		{
+			double secondHit = Math.max(1.0, Math.floor(damage * 0.5));
+
+			if (npcSize == 2)
+			{
+				return damage + secondHit;
+			}
+
+			double thirdHit = Math.max(1.0, Math.floor(secondHit * 0.5));
+			return damage + secondHit + thirdHit;
+		}
 
 		return damage;
 	}
