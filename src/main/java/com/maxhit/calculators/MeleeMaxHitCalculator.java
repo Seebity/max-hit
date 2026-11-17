@@ -187,7 +187,6 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 
 		// TODO add support for Rev Weapon
 		// TODO add support for Leaf bladed weapons
-		// TODO add support for Colossal Blade
 		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.RAT_BONE_MACE))
 		{
 			damage = damage + 10.0;
