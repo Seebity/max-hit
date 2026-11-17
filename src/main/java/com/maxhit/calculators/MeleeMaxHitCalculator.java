@@ -206,6 +206,14 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.OBLIGATOR))
+		{
+			if (npcSize >= 2)
+			{
+				double bonus = npcSize == 2 ? 1.2 : 1.4;
+				damage = factor(damage, bonus);
+			}
+		}
 		// Apply Keris chance to 3x
 		if (kerisBonus > 1.0)
 		{
