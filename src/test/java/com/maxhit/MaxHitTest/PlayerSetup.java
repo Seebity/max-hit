@@ -146,6 +146,78 @@ public enum PlayerSetup
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
 		157.0, 4.0, 88.0, 0.0),
+	COLOSSAL_CHICKEN(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GIANTS_FOUNDRY_COLOSSAL_BLADE, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		170.0, 6.0, 49.0, 0.0, 1173),
+	COLOSSAL_ABERRANT_SPECTRE(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GIANTS_FOUNDRY_COLOSSAL_BLADE, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		170.0, 8.0, 51.0, 0.0, 2),
+	COLOSSAL_ADAMANT_DRAGON(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GIANTS_FOUNDRY_COLOSSAL_BLADE, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		170.0, 14.0, 57.0, 0.0, 8030),
+	COLOSSAL_ALCH_HYDRA_ELEC(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.GIANTS_FOUNDRY_COLOSSAL_BLADE, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		170.0, 14.0, 57.0, 0.0, 8619),
+	SCYTHE_CHICKEN(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCYTHE_OF_VITUR_OR, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		145.0, 4.0, 42, 0.0, 1173),
+	SCYTHE_ABERRANT_SPECTRE(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCYTHE_OF_VITUR_BL, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		145.0, 6.0, 63.0, 0.0, 2),
+	SCYTHE_ADAMANT_DRAGON(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCYTHE_OF_VITUR_UNCHARGED_OR, 1) // Uncharged
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		120.0, 5.0, 64.0, 0.0, 8030),
+	SCYTHE_HYDRA_ELEC(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.SCYTHE_OF_VITUR, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		145.0, 7.0, 73.0, 0.0, 8619),
+	GATOR_CHICKEN(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OBLIGATOR, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		110.0, 3.0, 35.0, 0.0, 1173),
+	GATOR_ABERRANT_SPECTRE(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OBLIGATOR, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		110.0, 3.0, 42.0, 0.0, 2),
+	GATOR_ADAMANT_DRAGON(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OBLIGATOR, 1) // Uncharged
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		110.0, 4.0, 49.0, 0.0, 8030),
+	GATOR_HYDRA_ELEC(
+		createEquipment(Map.of(
+			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OBLIGATOR, 1)
+		)),
+		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
+		110.0, 4.0, 49.0, 0.0, 8619),
 	ATLATL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.ECLIPSE_ATLATL, 1)
