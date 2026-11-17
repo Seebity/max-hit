@@ -9,6 +9,7 @@ import com.maxhit.equipment.KerisWeapon;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.GolemMonsters;
 import com.maxhit.monsters.KalphiteMonsters;
+import com.maxhit.monsters.LargeMonsters;
 import com.maxhit.sets.BerserkerNecklaceSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
@@ -36,11 +37,13 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 	private double baseDamage;
 	private double kerisBonus;
 	private double golemBonus;
+	private double colossalBonus;
 	private double obsidianBonus;
 	private double inquisitorBonus;
 	private double dharokBonus;
 	private double berserkerBonus;
 	private double soulReaperAxeBonus;
+	private int npcSize;
 
 	protected MeleeMaxHitCalculator(MaxHitPlugin plugin, Client client, ItemManager itemManager, AttackStyle attackStyle)
 	{
@@ -60,10 +63,12 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		baseDamage = 0.0;
 		kerisBonus = 1.0;
 		golemBonus = 1.0;
+		colossalBonus = 0.0;
 		obsidianBonus = 0.0;
 		inquisitorBonus =  0.0;
 		dharokBonus = 1.0;
 		berserkerBonus = 0.0;
+		npcSize = 1;
 	}
 
 	private void getBonuses()
@@ -80,7 +85,30 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		getDharokBonus();
 		getBerserkerBonus();
 		updateFlatArmour();
+		updateNpcSize();
+		updateColossalBonus();
 	}
+
+	private void updateNpcSize()
+	{
+		int npcId = getNpcId();
+
+		if (npcId == -1)
+			return;
+
+		for(LargeMonsters monster : LargeMonsters.values())
+		{
+			if (!monster.getIds().contains(npcId))
+			{
+				continue;
+			}
+
+			npcSize = monster.getSize();
+			break;
+		}
+	}
+
+
 
 	@Override
 	protected void updateStyleBonus()
@@ -155,6 +183,8 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 
 		damage = factor(damage, golemBonus);
 
+		damage = damage + colossalBonus;
+
 		// TODO add support for Rev Weapon
 		// TODO add support for Leaf bladed weapons
 		// TODO add support for Colossal Blade
@@ -218,6 +248,8 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				damage = factor(damage, vampyreBonus);
 		}
 
+		return damage;
+	}
 
 
 		return damage;
@@ -407,6 +439,14 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 				kerisBonus = weapon.getDamageMultiplier();
 				return;
 			}
+		}
+	}
+
+	private void updateColossalBonus()
+	{
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.GIANTS_FOUNDRY_COLOSSAL_BLADE))
+		{
+			colossalBonus = 2 * Math.min(5, npcSize);
 		}
 	}
 }
