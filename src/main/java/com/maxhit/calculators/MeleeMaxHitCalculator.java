@@ -207,7 +207,10 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 			}
 		}
 
-		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.OBLIGATOR))
+		int comMode = client.getVarpValue(VarPlayerID.COM_MODE);
+		// Check if using Obligator (charged) and not using Smash (comMode == 2)
+		if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.OBLIGATOR)
+			&& comMode != 2)
 		{
 			if (npcSize >= 2)
 			{
