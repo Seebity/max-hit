@@ -9,7 +9,6 @@ import com.maxhit.equipment.KerisWeapon;
 import com.maxhit.monsters.DraconicMonsters;
 import com.maxhit.monsters.GolemMonsters;
 import com.maxhit.monsters.KalphiteMonsters;
-import com.maxhit.monsters.LargeMonsters;
 import com.maxhit.sets.BerserkerNecklaceSet;
 import com.maxhit.sets.InquisitorSet;
 import com.maxhit.styles.AttackStyle;
@@ -20,6 +19,8 @@ import com.maxhit.sets.DharokSet;
 import com.maxhit.sets.ObsidianSet;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.NPC;
+import net.runelite.api.NPCComposition;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
@@ -96,16 +97,17 @@ public class MeleeMaxHitCalculator extends MaxHitCalculator
 		if (npcId == -1)
 			return;
 
-		for(LargeMonsters monster : LargeMonsters.values())
-		{
-			if (!monster.getIds().contains(npcId))
-			{
-				continue;
-			}
+		NPC npc = (NPC) opponent;
 
-			npcSize = monster.getSize();
-			break;
-		}
+		if (npc == null)
+			return;
+
+		final NPCComposition composition = npc.getTransformedComposition();
+
+		if (composition == null)
+			return;
+
+		npcSize = composition.getSize();
 	}
 
 
