@@ -217,7 +217,7 @@ public enum PlayerSetup
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.OBLIGATOR, 1)
 		)),
 		CombatStyle.MELEE, AttackStyle.AGGRESSIVE, MeleeMaxHitCalculator.class,
-		110.0, 4.0, 49.0, 0.0, 8619),
+		106.0, 4.0, 47.0, 0.0, 8619),
 	ATLATL(
 		createEquipment(Map.of(
 			EquipmentInventorySlot.WEAPON.getSlotIdx(), new Item(ItemID.ECLIPSE_ATLATL, 1)

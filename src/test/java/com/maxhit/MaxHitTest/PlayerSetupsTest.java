@@ -14,6 +14,7 @@ import net.runelite.api.Item;
 import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.NPC;
+import net.runelite.api.NPCComposition;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
@@ -35,6 +36,7 @@ public class PlayerSetupsTest extends MockedTest
 	private MaxHitCalculatorFactory maxHitCalculatorFactory;
 	private ItemContainer mockedItemContainer;
 	private NPC mockedNpc;
+	private NPCComposition mockedNPCComposition;
 
 	@BeforeEach
 	protected void setUp()
@@ -45,6 +47,8 @@ public class PlayerSetupsTest extends MockedTest
 		mockedItemContainer = mock(ItemContainer.class);
 		ItemComposition mockedItemComposition = mock(ItemComposition.class);
 		mockedNpc = mock(NPC.class);
+		mockedNPCComposition = mock(NPCComposition.class);
+		when(mockedNpc.getTransformedComposition()).thenReturn(mockedNPCComposition);
 		when(client.getItemContainer(anyInt())).thenReturn(mockedItemContainer);
 		when(client.getVarpValue(VarPlayerID.SOULREAPER_STACKS)).thenReturn(5);
 		when(client.getItemDefinition(anyInt())).thenReturn(mockedItemComposition);
@@ -76,6 +80,23 @@ public class PlayerSetupsTest extends MockedTest
 			if (setup.getMagicSpell() != null)
 			{
 				when(client.getVarbitValue(VarbitID.SPELLBOOK)).thenReturn(setup.getMagicSpell().getSpellbook().ordinal());
+			}
+
+			if (setup.name().contains("CHICKEN"))
+			{
+				when(mockedNPCComposition.getSize()).thenReturn(1);
+			}
+			else if (setup.name().contains("ABERRANT"))
+			{
+				when(mockedNPCComposition.getSize()).thenReturn(2);
+			}
+			else if (setup.name().contains("ADAMANT"))
+			{
+				when(mockedNPCComposition.getSize()).thenReturn(5);
+			}
+			else if (setup.name().contains("HYDRA"))
+			{
+				when(mockedNPCComposition.getSize()).thenReturn(6);
 			}
 			maxHitCalculator.opponent = mockedNpc;
 
