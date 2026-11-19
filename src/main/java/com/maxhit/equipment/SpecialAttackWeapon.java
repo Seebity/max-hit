@@ -1,6 +1,9 @@
 package com.maxhit.equipment;
 
+import com.google.common.collect.ImmutableSet;
 import com.maxhit.calculators.StrengthBonusCalculator;
+import java.util.Collection;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.EquipmentInventorySlot;
@@ -10,6 +13,7 @@ import net.runelite.api.gameval.ItemID;
 import net.runelite.api.Client;
 import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.ItemVariationMapping;
 
 @RequiredArgsConstructor
 public enum SpecialAttackWeapon
@@ -34,7 +38,24 @@ public enum SpecialAttackWeapon
 	BRAIN_ANCHOR(ItemID.BRAIN_ANCHOR, 1.1),
 	CRIMSON_KISTEN(ItemID.CRIMSON_KISTEN, 1.7),
 	CRYSTAL_HALBERD(ItemID.CRYSTAL_HALBERD, 1.1),
-	DARKBOW(ItemID.DARKBOW, 1.3),
+	DARKBOW(ItemID.DARKBOW, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				Set<Integer> dragonArrowsOrLower = ImmutableSet.<Integer>builder()
+					.add(ItemID.SEEKING_DRAGON_ARROW)
+					.addAll(ItemVariationMapping.getVariations(ItemVariationMapping.map(ItemID.DRAGON_ARROW))).build();
+				for(Integer arrowId : dragonArrowsOrLower)
+				{
+					if (EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.AMMO, arrowId))
+					{
+						return 1.5;
+					}
+				}
+				return 1.3;
+			}
+		},
 	DAWNBRINGER(ItemID.VERZIK_SPECIAL_WEAPON, -1.0)
 		{
 			@Override
@@ -76,7 +97,7 @@ public enum SpecialAttackWeapon
 				return maxHitBase + 5.0;
 			}
 		},
-	MSB(ItemID.MAGIC_SHORTBOW, -1.0)
+	MAGIC_LONGBOW(ItemID.MAGIC_LONGBOW, -1.0)
 		{
 			@Override
 			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
@@ -87,11 +108,24 @@ public enum SpecialAttackWeapon
 					return 0.0;
 				}
 				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
-				double maxHit = Math.floor(0.5 + ((rangedLevel + 10.0) * (ammoStrength + 64) / 640));
-				return 2.0 * maxHit;
+				return Math.floor(0.5 + ((rangedLevel + 10.0) * (ammoStrength + 64) / 640));
 			}
 		},
-	MSB_COMP(ItemID.TRAIL_COMPOSITE_BOW_MAGIC, -1.0)
+	MAGIC_LONGBOW_COMP(ItemID.TRAIL_COMPOSITE_BOW_MAGIC, -1.0)
+		{
+			@Override
+			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
+			{
+				double rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
+				if (maxHitBase == 0.0)
+				{
+					return 0.0;
+				}
+				double ammoStrength = StrengthBonusCalculator.getItemStrength(Skill.RANGED, equippedItems, itemManager, EquipmentInventorySlot.AMMO);
+				return Math.floor(0.5 + ((rangedLevel + 10.0) * (ammoStrength + 64) / 640));
+			}
+		},
+	MSB(ItemID.MAGIC_SHORTBOW, -1.0)
 		{
 			@Override
 			public double getSpecialAttackDamage(Client client, ItemManager itemManager, ItemContainer equippedItems, double maxHitBase)
