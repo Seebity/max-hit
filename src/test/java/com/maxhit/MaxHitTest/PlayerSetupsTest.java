@@ -138,7 +138,7 @@ public class PlayerSetupsTest extends MockedTest
 					{
 						if (specialAttackWeapon.getItemId() == weapon.getId())
 						{
-							assertEquals(setup.getMaxedSpecialHit(), calc.getSpecialMaxHit(maxHitCalculator.getMaxHit()),
+							assertEquals(setup.getMaxedSpecialHit(), calc.getSpecialMaxHit(maxHitCalculator.getMaxHit(), setup.getNpcId()),
 								() -> String.format("%s special max hit should be %.0f", setup.name(), setup.getMaxedSpecialHit()));
 						}
 					}
