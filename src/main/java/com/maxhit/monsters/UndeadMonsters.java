@@ -166,6 +166,7 @@ public class UndeadMonsters {
 		7390, //Screaming banshee
 		7391, //Screaming twisted banshee
 		5633, //Shade (Temple Trekking)
+		16917, //Shade
 		7258, //Shade
 		6740, //Shade
 		7604, //Skeletal Mystic
