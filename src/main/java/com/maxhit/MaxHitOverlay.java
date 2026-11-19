@@ -76,7 +76,7 @@ public class MaxHitOverlay extends Overlay
 		{
 			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Max Special:")
-				.right(Double.toString(Math.floor(plugin.getSpecialAttackCalculator().getSpecialMaxHit(maxHit))))
+				.right(Double.toString(Math.floor(plugin.getSpecialAttackCalculator().getSpecialMaxHit(maxHit, maxHitCalculator.getNpcId()))))
 				.build());
 		}
 

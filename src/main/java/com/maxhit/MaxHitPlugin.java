@@ -2,6 +2,8 @@ package com.maxhit;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.maxhit.calculators.SpecialAttackCalculator;
+import com.maxhit.equipment.EnchantedBolt;
+import com.maxhit.equipment.EquipmentFunctions;
 import com.maxhit.slayer.Task;
 import com.maxhit.slayer.TaskLocation;
 import com.maxhit.styles.AttackType;
@@ -47,6 +49,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -67,12 +70,10 @@ import com.maxhit.styles.CombatStyle;
 @Slf4j
 public class MaxHitPlugin extends Plugin
 {
-
 	private static final int WEAPON_SPECIAL_REQS = 906;
 	private static final Duration WAIT = Duration.ofSeconds(5);
 	private static final String MARK_OF_DARKNESS_MESSAGE = "You have placed a Mark of Darkness upon yourself.</col>";
 	private static final String MARK_OF_DARKNESS_EXPIRED_MESSAGE = "Your Mark of Darkness has faded away.";
-
 
 	@Inject
 	private Client client;
@@ -163,7 +164,6 @@ public class MaxHitPlugin extends Plugin
 			}
 			// Safe to assume combat Varbits have been set here?
 			replaceCalculatorAndMaxHit();
-
 		});
 	}
 
@@ -593,6 +593,31 @@ public class MaxHitPlugin extends Plugin
 			isWieldingSpecialAttackWeapon = false;
 			return;
 		}
+
 		isWieldingSpecialAttackWeapon = client.getEnum(WEAPON_SPECIAL_REQS).getIntValue(weapon.getId()) > 0;
+
+		String weaponName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.WEAPON);
+
+		// Don't check for enchanted bolts if already have special attack weapon equipped
+		if (isWieldingSpecialAttackWeapon)
+		{
+			return;
+		}
+
+		// Don't check for enchanted bolts if weapon isn't null but is not a crossbow
+		if (!weaponName.contains("rossbow"))
+		{
+			return;
+		}
+
+		// Okay now check for enchanted bolts
+		for (EnchantedBolt bolt : EnchantedBolt.values())
+		{
+			if (bolt.isEquipped(client, equippedItems))
+			{
+				isWieldingSpecialAttackWeapon = true;
+				return;
+			}
+		}
 	}
 }

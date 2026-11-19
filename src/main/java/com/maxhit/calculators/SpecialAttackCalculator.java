@@ -9,6 +9,7 @@ import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemVariationMapping;
 
@@ -26,7 +27,7 @@ public class SpecialAttackCalculator
 		this.itemManager = itemManager;
 	}
 
-	public double getSpecialMaxHit(double maxHitBase)
+	public double getSpecialMaxHit(double maxHitBase, int npcId)
 	{
 		Item weapon = equippedItems.getItem(EquipmentInventorySlot.WEAPON.getSlotIdx());
 
@@ -45,14 +46,22 @@ public class SpecialAttackCalculator
 
 		String weaponName = EquipmentFunctions.GetEquippedItemString(client, equippedItems, EquipmentInventorySlot.WEAPON);
 
-		if (weaponName.contains("rossbo"))
+		if (weaponName.contains("rossbow"))
 		{
 			int rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
+			boolean zaryteEquipped = EquipmentFunctions.HasEquipped(equippedItems, EquipmentInventorySlot.WEAPON, ItemID.ZARYTE_XBOW);
 			for (EnchantedBolt bolt : EnchantedBolt.values())
 			{
 				if (bolt.isEquipped(client, equippedItems))
 				{
-					return bolt.getDamageMultiplier(maxHitBase, rangedLevel);
+					if (zaryteEquipped)
+					{
+						return bolt.getZaryteDamageMultiplier(maxHitBase, rangedLevel, npcId);
+					}
+					else
+					{
+						return bolt.getDamageMultiplier(maxHitBase, rangedLevel, npcId);
+					}
 				}
 			}
 		}
