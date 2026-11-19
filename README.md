@@ -23,7 +23,6 @@ Holy Water<br>
 Lizards/Salamanders<br>
 Nightmare Staff Special Attack(s)<br>
 Revenant Weapons<br>
-Zaryte Crossbow Passive Effect<br>
 
 ## Help and discussion
 
